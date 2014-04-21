@@ -23,8 +23,58 @@ void setValue(Map map, key, value) {
   map[key] = value;
 }
 
+
+dynamic clone(dynamic source) {
+  var rt;
+  if (source is Map) {
+    rt = {};
+    source.forEach((k, v) {
+      rt[k] = clone(v);
+    });
+  } else if (source is Iterable) {
+    if (source is List) {
+      rt = [];
+    } else if (source is Set) {
+      rt = new Set();
+    }
+
+    if (rt != null) {
+      source.forEach((item) {
+        rt.add(clone(item));
+      });
+    } else {
+      rt = new Iterable.generate(source.length, (item) {
+        return clone(item);
+      });
+    }
+  } else {
+    rt = source;
+  }
+  return rt;
+}
+
 Map merge(Map map1, Map map2, [Map map3 = null, Map map4 = null]) {
-  Map rt = new Map.from(map1);
+  Map rt = map1 == null ? {} : clone(map1);
+
+  void _mergeIterable(mergeTo, Iterable itr) {
+    int i = 0;
+    for (; i < mergeTo.length && i < itr.length; i++) {
+      var item = itr.elementAt(i);
+      if (item is Map) {
+        var targetItem = mergeTo.elementAt(i);
+        targetItem = merge(mergeTo.elementAt(i), item);
+      } else if (item is Iterable) {
+        _mergeIterable(mergeTo, item);
+      } else {
+        mergeTo = itr;
+      }
+    }
+
+    for (; i < itr.length; i++) {
+      mergeTo.add(clone(itr.elementAt(i)));
+    }
+
+  }
 
   void _merge(Map map) {
     map.forEach((k, v) {
@@ -32,25 +82,12 @@ Map merge(Map map1, Map map2, [Map map3 = null, Map map4 = null]) {
         if (v is Map) {
           rt[k] = merge(rt[k], map[k]);
         } else if (v is Iterable){
-          int i = 0;
-          List listLeft = rt[k];
-          for (; i < v.length && i < rt[k].length; i++) {
-            if (v[i] is Map) {
-              listLeft[i] = merge(listLeft[i], v[i]);
-            } else {
-              listLeft[i] = v[i];
-            }
-          }
-
-          for (; i < v.length; i++) {
-            listLeft.add(v[i]);
-          }
-
+          _mergeIterable(rt[k], v);
         } else {
           rt[k] = v;
         }
       } else {
-        rt[k] = v;
+        rt [k] = clone(v);
       }
     });
   }
