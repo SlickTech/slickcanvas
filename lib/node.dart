@@ -7,6 +7,7 @@ abstract class Node extends NodeBase {
   _I_Reflection _reflection;
   TransformMatrix _transformMatrix = new TransformMatrix();
   num _x0, _y0;
+  bool _listening = false;
 
   Node([Map<String, dynamic> config = null]): super() {
     if (config == null) {
@@ -125,6 +126,13 @@ abstract class Node extends NodeBase {
       }
       _eventListeners[event].add(new EventHandler(id, handler));
 
+      if (!_listening) {
+        _listening = _isDomEvent(event);
+        if (_listening && this is! _ReflectionNode && _parent != null) {
+            (_parent as Group)._reflectionAdd(this);
+        }
+      }
+
       if (_impl != null) {
         _impl.on(event, handler, id);
       }
@@ -133,7 +141,24 @@ abstract class Node extends NodeBase {
         (_reflection as Node).on(event, handler, id);
       }
     });
+    // allow chaining
     return this;
+  }
+
+  bool _isDomEvent(String event) {
+    switch(event) {
+      case MOUSEDOWN:
+      case MOUSEUP:
+      case MOUSEENTER:
+      case MOUSELEAVE:
+      case MOUSEOVER:
+      case MOUSEOUT:
+      case CLICK:
+      case DBLCLICK:
+        return true;
+      default:
+        return false;
+    }
   }
 
   Node clone([Map<String, dynamic> config]) {
@@ -203,7 +228,7 @@ abstract class Node extends NodeBase {
    * A node is reflectable if the node was draggable or listening
    */
   bool get reflectable {
-    return draggable || listening;
+    return draggable || _listening;
   }
 
   /**
@@ -229,10 +254,13 @@ abstract class Node extends NodeBase {
   void set id(String value) => setAttribute(ID, value);
   String get id => getAttribute(ID);
 
-  void set x(num value) { translateX = value; }
+  void set className(String value) => setAttribute(CLASS, value);
+  String get className => getAttribute(CLASS, '');
+
+  void set x(num value) { translateX = value - _x0; }
   num get x { return _x0 + _transformMatrix.tx; }
 
-  void set y(num value) { translateY = value; }
+  void set y(num value) { translateY = value - _y0; }
   num get y { return _y0 + _transformMatrix.ty; }
 
   void set offsetX(num value) {
@@ -282,8 +310,7 @@ abstract class Node extends NodeBase {
   void set draggalbe(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
 
-  void set listening(bool value) => setAttribute(LISTENING, value);
-  bool get listening => getAttribute(LISTENING, false);
+  bool get listening => _listening;
 
   void set visible(bool value) {
     if (!value) {

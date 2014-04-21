@@ -52,7 +52,6 @@ const String SCALE_X = 'scaleX';
 const String SCALE_Y = 'scaleY';
 const String TRANSFORM = 'transform';
 const String DRAGGABLE = 'draggable';
-const String LISTENING = 'listening';
 const String TEXT = 'text';
 const String PADDING = 'padding';
 const String POINTS = 'points';

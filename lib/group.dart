@@ -50,7 +50,7 @@ class Group extends Node implements Container<Node> {
     // if the group already reflected, add children to its reflecton
     if (_reflection != null) {
       (_reflection as _I_Container_Reflection).reflectionAdd(child);
-    } else {
+    } else if (parent != null){
       // this group wasn't reflectable before, since the child is
       // reflectable, the group is reflectable now. Reflect the group.
       (parent as Group)._reflectionAdd(this);

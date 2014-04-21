@@ -1,5 +1,7 @@
 part of smartcanvas.svg;
 
+bool _isMobile = isMobile();
+
 abstract class SvgNode extends NodeImpl {
   SVG.SvgElement _element;
   SVG.Matrix _elMatrix = new SVG.SvgSvgElement().createSvgMatrix();
@@ -26,7 +28,7 @@ abstract class SvgNode extends NodeImpl {
       _startDragHandling();
     }
 
-    if(getAttribute(LISTENING) == true) {
+    if(shell.listening) {
       this.eventListeners.forEach((k, v) {
         _registerDOMEvent(k, v);
       });
@@ -157,6 +159,9 @@ abstract class SvgNode extends NodeImpl {
         _registeredDOMEvents.add(DBLCLICK);
         _element.onDoubleClick.listen(eventHandler);
         break;
+      default:
+        _registeredDOMEvents.add(event);
+        _element.on[event].listen(eventHandler);
      }
   }
 
@@ -183,17 +188,25 @@ abstract class SvgNode extends NodeImpl {
     this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.ty; // * stage.scaleY;
 
     if (_dragMoveHandler == null) {
-      _dragMoveHandler = this.stage.element.onMouseMove.listen(_dragMove);
+      if (_isMobile) {
+        _dragMoveHandler = this.stage.element.onTouchMove.listen(_dragMove);
+      } else {
+        _dragMoveHandler = this.stage.element.onMouseMove.listen(_dragMove);
+      }
     }
     _dragMoveHandler.resume();
 
     if (_dragEndHandler == null) {
-      _dragEndHandler = this.stage.element.onMouseUp.listen(_dragEnd);
+      if (_isMobile) {
+        _dragEndHandler = this.stage.element.onTouchEnd.listen(_dragEnd);
+      } else {
+        _dragEndHandler = this.stage.element.onMouseUp.listen(_dragEnd);
+      }
     }
     _dragEndHandler.resume();
   }
 
-  void _dragMove(DOM.MouseEvent e) {
+  void _dragMove(e) {
     if (_dragging) {
       e.preventDefault();
       e.stopPropagation();
@@ -213,7 +226,7 @@ abstract class SvgNode extends NodeImpl {
     }
   }
 
-  void _dragEnd(DOM.MouseEvent e) {
+  void _dragEnd(e) {
     e.preventDefault();
     e.stopPropagation();
     _dragging = false;
@@ -232,10 +245,8 @@ abstract class SvgNode extends NodeImpl {
 
   NodeBase on(String event, Function handler, [String id]) {
     super.on(event, handler, id);
-    if(getAttribute(LISTENING) == true) {
-      if (!_registeredDOMEvents.contains(event)) {
-        _registerDOMEvent(event, eventListeners[event]);
-      }
+    if (!_registeredDOMEvents.contains(event)) {
+      _registerDOMEvent(event, eventListeners[event]);
     }
     return this;
   }
@@ -243,6 +254,8 @@ abstract class SvgNode extends NodeImpl {
   void _handleAttrChange(String attr, oldValue, newValue) {
     if (_isStyle(attr)) {
       _setElementStyle(attr);
+    } else if (attr == CLASS) {
+      _setClassName();
     } else {
       // apply attribute change to svg element
       var elementAttr = _mapToElementAttr(attr);
