@@ -11,6 +11,8 @@ import 'dart:html' as DOM;
 @MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'])
 import 'dart:mirrors';
 
+import 'package:dart_ext/dart_ext.dart';
+
 import 'impl/svg/svg.dart';
 import 'impl/canvas/canvas.dart';
 
@@ -46,6 +48,8 @@ part 'shapes/text.dart';
 part 'shapes/polygon.dart';
 part 'shapes/path.dart';
 part 'shapes/polyline.dart';
+
+part 'gradients/gradient.dart';
 
 part 'impl/node_impl.dart';
 part 'impl/layer_impl.dart';
