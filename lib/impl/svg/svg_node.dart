@@ -171,8 +171,7 @@ abstract class SvgNode extends NodeImpl {
 
   void dragStart(DOM.MouseEvent e) {
     if (e.button != 0 ||
-        !DOM.window.navigator.userAgent.contains('Mac OS') ||
-        e.ctrlKey ||
+        (DOM.window.navigator.userAgent.contains('Mac OS') && e.ctrlKey) || // simulated right click on Mac
         stage.dragging) {
       return;
     }
