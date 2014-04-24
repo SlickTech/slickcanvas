@@ -8,27 +8,27 @@ void main() {
   Stage stage = new Stage(container, svg, {
       WIDTH: container.clientWidth,
       HEIGHT: 900,
-      DRAGGABLE: true
+//      DRAGGABLE: true
     });
 
-    Circle circle = new Circle({
-      X: 50,
-      Y: 50,
-      R: 40,
-      STROKE: 'green',
-      FILL: 'yellow',
-      LISTENING: true
-    });
-
-    Rect rect = new Rect({
-      'x': 30,
-      'y': 30,
-      'width': 40,
-      'height': 40,
-      'stroke': 'red',
-      'strokeWidth': 2,
-//      'draggable': true,
-    });
+//    Circle circle = new Circle({
+//      X: 50,
+//      Y: 50,
+//      R: 40,
+//      STROKE: 'green',
+//      FILL: 'yellow',
+//      LISTENING: true
+//    });
+//
+//    Rect rect = new Rect({
+//      'x': 30,
+//      'y': 30,
+//      'width': 40,
+//      'height': 40,
+//      'stroke': 'red',
+//      'strokeWidth': 2,
+////      'draggable': true,
+//    });
 //
 //    Ellipse ellipse = new Ellipse({
 //      'x': 300,
@@ -54,45 +54,46 @@ void main() {
 //      'fill': 'none'
 //    });
 //
-    Group g = new Group({
-      'draggable': true,
-      'listening': true,
-      'name': 'group'
-    });
-    g.add(circle);
-    g.add(rect);
+//    Group g = new Group({
+//      'draggable': true,
+//      'listening': true,
+//      'name': 'group'
+//    });
+//    g.add(circle);
+//    g.add(rect);
+//
+//    print('pos g - ${g.position.x}, ${g.position.y}');
+//    print('pos rect - ${rect.position.x}, ${rect.position.y}');
+//    print('abs g rect - ${g.absolutePosition.x}, ${g.absolutePosition.y}');
+//    print('abs pos rect - ${rect.absolutePosition.x}, ${rect.absolutePosition.y}');
+//    print('rect: ${rect.x}, ${rect.y}');
+//
+//    stage.add(g);
+//
+//    g.x = 100;
+//    g.y = 100;
+//
+//    print('pos: g - ${g.position.x}, ${g.position.y}');
+//    print('pos rect - ${rect.position.x}, ${rect.position.y}');
+//    print('abs g rect - ${g.absolutePosition.x}, ${g.absolutePosition.y}');
+//    print('abs pos rect - ${rect.absolutePosition.x}, ${rect.absolutePosition.y}');
 
-    print('pos g - ${g.position.x}, ${g.position.y}');
-    print('pos rect - ${rect.position.x}, ${rect.position.y}');
-    print('abs g rect - ${g.absolutePosition.x}, ${g.absolutePosition.y}');
-    print('abs pos rect - ${rect.absolutePosition.x}, ${rect.absolutePosition.y}');
-    print('rect: ${rect.x}, ${rect.y}');
 
-    stage.add(g);
+//    stage.add(new Circle({
+//      X: 130,
+//      Y: 130,
+//      FILL: 'blue',
+//      R: 2
+//    }));
 
-    g.x = 100;
-    g.y = 100;
-
-    print('pos: g - ${g.position.x}, ${g.position.y}');
-    print('pos rect - ${rect.position.x}, ${rect.position.y}');
-    print('abs g rect - ${g.absolutePosition.x}, ${g.absolutePosition.y}');
-    print('abs pos rect - ${rect.absolutePosition.x}, ${rect.absolutePosition.y}');
-
-
-    stage.add(new Circle({
-      X: 130,
-      Y: 130,
-      FILL: 'blue',
-      R: 2
-    }));
 //    g.on('mousedown', (e) {
 //      print('group mousedown');}
 //    );
 //    circle.on('click', (e) {
 //      print ("circle clicked");
 //    });
-    circle.on(MOUSEOVER, (e) {print('***** Circle MouseEnter *****');});
-    circle.on(MOUSEOUT, (e) {print('***** Circle MouseOut *****'); });
+//    circle.on(MOUSEOVER, (e) {print('***** Circle MouseEnter *****');});
+//    circle.on(MOUSEOUT, (e) {print('***** Circle MouseOut *****'); });
 //    g.on(mousemove, (e) => print('....'));
 //    g.on(click, (e) => print('group clicked'));
 //    g.on(dblclick, (e) => print('group double clicked'));
@@ -123,22 +124,33 @@ void main() {
 //    g.add(circle);
 //    circle.moveToBottom();
 
-//    Circle c2 = new Circle({
-//      'x': 100,
-//      'y': 100,
-//      'r': 50,
-//      'fill': 'red',
+    Group g1 = new Group();
+    Circle c2 = new Circle({
+      'x': 100,
+      'y': 100,
+      'r': 50,
+      'fill': 'red',
 //      'listening': true,
-//      'draggable': true
-//    });
-//
-//    Layer layer2 = new Layer(svg, {
-//      'id': 'two'
-//    });
-//
-//    c2.on(MOUSEDOWN, (e) => print('c2 clicked'));
-//    layer2.add(c2);
-//    stage.add(layer2);
+      'draggable': true
+    });
+
+    Layer layer2 = new Layer(svg, {
+      'id': 'two'
+    });
+
+//    c2.on(MOUSEDOWN, (e) => print('c2 mousedown'));
+//    c2.on(DBLCLICK, (e) => print('c2 double click'));
+
+    g1.add(c2);
+    stage.add(g1);
+    stage.add(layer2);
+
+    Group g2 = new Group({
+//      LISTENING: true
+    });
+    layer2.add(g2);
+
+    c2.moveTo(g2);
 //
 //    stage.add(ellipse);
 //
@@ -193,29 +205,29 @@ void main() {
 //    stage.scaleX = 1.67;
 //    stage.scaleX = 0.5;
 //    stage.scaleY = 0.5;
-
-    // test pattern
-    SCPattern fillPattern = new SCPattern({
-      ID: 'grid',
-      WIDTH: 8,
-      HEIGHT: 8,
-      PATTERN_UNITS: "userSpaceOnUse"
-    });
-    fillPattern.add(new Path({
-      D: 'M8 0 L0 0 0 8',
-      FILL: 'none',
-      STROKE: 'red',
-      STROKE_WIDTH: 0.5
-    }));
-    Rect grid = new Rect({
-       WIDTH: stage.width,
-       HEIGHT: stage.height,
-       FILL: fillPattern
-    });
-    stage.add(grid);
-
-    grid.remove();
 //
+//    // test pattern
+//    SCPattern fillPattern = new SCPattern({
+//      ID: 'grid',
+//      WIDTH: 8,
+//      HEIGHT: 8,
+//      PATTERN_UNITS: "userSpaceOnUse"
+//    });
+//    fillPattern.add(new Path({
+//      D: 'M8 0 L0 0 0 8',
+//      FILL: 'none',
+//      STROKE: 'red',
+//      STROKE_WIDTH: 0.5
+//    }));
+//    Rect grid = new Rect({
+//       WIDTH: stage.width,
+//       HEIGHT: stage.height,
+//       FILL: fillPattern
+//    });
+//    stage.add(grid);
+//
+////    grid.remove();
+////
 //    dom.window.onResize.listen((e) {
 //      stage.width = container.clientWidth;
 //      grid.width = stage.width;

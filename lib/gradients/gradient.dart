@@ -1,5 +1,9 @@
 part of smartcanvas;
 
-class Gradient extends Node {
+abstract class Gradient extends Node {
 
+  Gradient(Map<String, dynamic> config): super(config) {}
+
+  void set stops(List<num> value) => setAttribute(STOPS, value);
+  List<num> get stops => getAttribute(STOPS, []);
 }

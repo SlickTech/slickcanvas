@@ -1,4 +1,4 @@
-SmartCanvas for Dart
+#SmartCanvas for Dart
 ============
 
 SmartCanvas is a dart SVG/Canvas framework. 

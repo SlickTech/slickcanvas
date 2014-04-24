@@ -44,6 +44,16 @@ class Group extends Node implements Container<Node> {
         _reflectionAdd(child);
       }
     }
+
+    _addDefs();
+  }
+
+  void _addDefs() {
+    if (layer != null) {
+      _defs.forEach((def) {
+        layer.addDef(def);
+      });
+    }
   }
 
   void _reflectionAdd(Node child) {
@@ -94,6 +104,8 @@ class Group extends Node implements Container<Node> {
       }
       _reflectionInsert(node);
     }
+
+    _addDefs();
   }
 
   void _reflectionInsert(Node child) {
@@ -158,5 +170,13 @@ class Group extends Node implements Container<Node> {
       }
     }
     return rt;
+  }
+
+  List get _defs {
+    List defs = [];
+    _children.forEach((child) {
+      defs.addAll(child._defs);
+    });
+    return defs;
   }
 }

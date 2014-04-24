@@ -102,7 +102,8 @@ abstract class SvgNode extends NodeImpl {
   void _setElementStyle(String name) {
     var value = getAttribute(name);
     if (value != null) {
-      if (value is SCPattern) {
+      if (value is SCPattern ||
+          value is Gradient) {
         _element.setAttribute(name, 'url(#${value.id})');
         return;
       }

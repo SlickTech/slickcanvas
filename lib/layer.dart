@@ -34,34 +34,36 @@ class Layer extends Group {
     }
   }
 
-  void add(Node child) {
-    super.add(child);
-    if (child.fill is SCPattern) {
-      this.addPattern(child.fill);
-    } else if (child.stroke is SCPattern) {
-      this.addPattern(child.stroke);
+//  void add(Node child) {
+//    super.add(child);
+//    if (child.fill is SCPattern ||
+//        child.fill is Gradient) {
+//      this.addDef(child.fill);
+//    } else if (child.stroke is SCPattern) {
+//      this.addDef(child.stroke);
+//    }
+//  }
+//
+//  void insert(int index, Node node) {
+//    super.insert(index, node);
+//    if (node.fill is SCPattern ||
+//        node.fill is Gradient) {
+//      this.addDef(node.fill);
+//    } else if (node.stroke is SCPattern) {
+//      this.addDef(node.stroke);
+//    }
+//  }
+
+  void addDef(def) {
+    if (def._impl == null) {
+      def._impl = def.createImpl(type);
     }
+    _impl.addDef(def._impl);
   }
 
-  void insert(int index, Node node) {
-    super.insert(index, node);
-    if (node.fill is SCPattern) {
-      this.addPattern(node.fill);
-    } else if (node.stroke is SCPattern) {
-      this.addPattern(node.stroke);
-    }
-  }
-
-  void addPattern(SCPattern pattern) {
-    if (pattern._impl == null) {
-      pattern._impl = pattern.createImpl(type);
-    }
-    _impl.addPattern(pattern.impl as SvgPattern);
-  }
-
-  void removePattern(SCPattern pattern) {
-    if (pattern.impl != null) {
-      _impl.removePattern(pattern.impl);
+  void removeDef(pattern) {
+    if (pattern._impl != null) {
+      _impl.removeDef(pattern._impl);
     }
   }
 
@@ -73,14 +75,6 @@ class Layer extends Group {
 
   void remove() {
     if (_parent != null) {
-      if (layer != null) {
-        if (fill is SCPattern) {
-          layer.removePattern(fill);
-        } else if (stroke is SCPattern) {
-          layer.removePattern(stroke);
-        }
-      }
-
       if (_impl != null) {
         _impl.remove();
       }

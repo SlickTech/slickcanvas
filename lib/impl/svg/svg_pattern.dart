@@ -13,4 +13,6 @@ class SvgPattern extends SvgGroup {
     rt.addAll([WIDTH, HEIGHT, PATTERN_UNITS]);
     return rt;
   }
+
+  String get _nodeName => SC_PATTERN;
 }

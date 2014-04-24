@@ -78,6 +78,9 @@ const String OFFSET_X = 'offsetX';
 const String OFFSET_Y = 'offsetY';
 const String PATTERN_UNITS = 'patternUnits';
 const String DISABLE_SHADOW_ROOT = 'disableShadowRoot';
+const String STOPS = 'stops';
+const String OFFSET = 'offset';
+const String COLOR = 'color';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
@@ -90,6 +93,9 @@ const String SC_PATH = '__sc_path';
 const String SC_LINE = '__sc_line';
 const String SC_ELLIPSE = '__sc_ellipse';
 const String SC_CIRCLE = '__sc_circle';
+const String SC_PATTERN = '__sc_pattern';
+const String SC_LINEAR_GRADIENT = '__sc_linear_gradient';
+const String SC_RADIAL_GRADIENT = '__sc_radial_gradient';
 
 // exception
 const String ExpNotImplemented = 'Not Implemented';

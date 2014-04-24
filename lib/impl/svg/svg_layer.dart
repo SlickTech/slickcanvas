@@ -2,8 +2,8 @@ part of smartcanvas.svg;
 
 class SvgLayer extends SvgNode implements LayerImpl {
   List<SvgNode> _children = new List<SvgNode>();
-  List<SvgPattern> _patterns = new List<SvgPattern>();
-  SVG.DefsElement _defs;
+  List _defs = [];
+  SVG.DefsElement _defsEl;
 
   SvgLayer(shell): super(shell) {
     shell
@@ -48,21 +48,21 @@ class SvgLayer extends SvgNode implements LayerImpl {
     ..padding = ZERO;
   }
 
-  void addPattern(SvgPattern pattern) {
-    _patterns.add(pattern);
-    if (_patterns.length == 1 && _defs == null) {
-      _defs = new SVG.DefsElement();
-      _element.nodes.insert(0, _defs);
+  void addDef(def) {
+    _defs.add(def);
+    if (_defs.length == 1 && _defsEl == null) {
+      _defsEl = new SVG.DefsElement();
+      _element.nodes.insert(0, _defsEl);
     }
-    _defs.append(pattern.element);
+    _defsEl.append(def.element);
   }
 
-  void removePattern(SvgPattern pattern) {
-    _patterns.remove(pattern);
-    pattern.element.remove();
-    if (_defs.nodes.isEmpty) {
-      _defs.remove();
-      _defs = null;
+  void removeDef(def) {
+    _defs.remove(def);
+    def.element.remove();
+    if (_defsEl.nodes.isEmpty) {
+      _defsEl.remove();
+      _defsEl = null;
     }
   }
 

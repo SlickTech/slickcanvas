@@ -32,10 +32,11 @@ abstract class Node extends NodeBase {
   void remove() {
     if (_parent != null) {
       if (layer != null) {
-        if (fill is SCPattern) {
-          layer.removePattern(fill);
+        if (fill is SCPattern ||
+            fill is Gradient) {
+          layer.removeDef(fill);
         } else if (stroke is SCPattern) {
-          layer.removePattern(stroke);
+          layer.removeDef(stroke);
         }
       }
 
@@ -394,6 +395,19 @@ abstract class Node extends NodeBase {
       parent = parent.parent;
     }
     return pos;
+  }
+
+  List get _defs {
+    List defs = [];
+    if (fill is SCPattern ||
+        fill is Gradient) {
+        defs.add(fill);
+    }
+
+    if (stroke is SCPattern) {
+      defs.add(stroke);
+    }
+    return defs;
   }
 
   bool get isReflection => this is _I_Reflection;
