@@ -34,25 +34,15 @@ class Group extends Node implements Container<Node> {
       if (child._impl == null || child._impl.type != _impl.type) {
         child._impl = child.createImpl(_impl.type);
       }
+
       (_impl as Container).add(child._impl);
     }
-
 
     if (stage != null && !(this is _I_Reflection)) {
       // only reflect reflectable node
       if (child.reflectable) {
         _reflectionAdd(child);
       }
-    }
-
-    _addDefs();
-  }
-
-  void _addDefs() {
-    if (layer != null) {
-      _defs.forEach((def) {
-        layer.addDef(def);
-      });
     }
   }
 
@@ -104,8 +94,6 @@ class Group extends Node implements Container<Node> {
       }
       _reflectionInsert(node);
     }
-
-    _addDefs();
   }
 
   void _reflectionInsert(Node child) {
@@ -113,10 +101,6 @@ class Group extends Node implements Container<Node> {
     if (this._reflection != null) {
       (this._reflection as _I_Container_Reflection).insertNode(_createReflection(child));
     }
-    // otherwise, insert the child to its nearest reflectable parent
-//    else if (_parent != null){
-//      _parent.insertNode(_createReflection(child));
-//    }
   }
 
   List<Node> get children => _children;

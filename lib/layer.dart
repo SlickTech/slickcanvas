@@ -34,39 +34,6 @@ class Layer extends Group {
     }
   }
 
-//  void add(Node child) {
-//    super.add(child);
-//    if (child.fill is SCPattern ||
-//        child.fill is Gradient) {
-//      this.addDef(child.fill);
-//    } else if (child.stroke is SCPattern) {
-//      this.addDef(child.stroke);
-//    }
-//  }
-//
-//  void insert(int index, Node node) {
-//    super.insert(index, node);
-//    if (node.fill is SCPattern ||
-//        node.fill is Gradient) {
-//      this.addDef(node.fill);
-//    } else if (node.stroke is SCPattern) {
-//      this.addDef(node.stroke);
-//    }
-//  }
-
-  void addDef(def) {
-    if (def._impl == null) {
-      def._impl = def.createImpl(type);
-    }
-    _impl.addDef(def._impl);
-  }
-
-  void removeDef(pattern) {
-    if (pattern._impl != null) {
-      _impl.removeDef(pattern._impl);
-    }
-  }
-
   void _handleStageDragMove(e) {
     _transformMatrix.tx = _parent._transformMatrix.tx;
     _transformMatrix.ty = _parent._transformMatrix.ty;

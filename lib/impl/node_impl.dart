@@ -47,6 +47,13 @@ abstract class NodeImpl extends NodeBase {
 
   num get width => getAttribute(WIDTH);
   num get height => getAttribute(HEIGHT);
+
+  void set fill(dynamic value) => setAttribute(FILL, value);
+  dynamic get fill => getAttribute(FILL);
+
+  void set stroke(dynamic value) => setAttribute(STROKE, value);
+  dynamic get stroke => getAttribute(STROKE);
+
   bool get isDragging;
   Position get absolutePosition;
   TransformMatrix get transformMatrix => shell._transformMatrix;

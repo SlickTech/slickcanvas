@@ -119,6 +119,11 @@ abstract class SvgNode extends NodeImpl {
       (parent as Container).children.remove(this);
     }
     parent = null;
+    _defs.forEach((def) {
+      if (layer != null) {
+        (layer as SvgLayer).removeDef(def);
+      }
+    });
   }
 
   void _registerDOMEvent(String event, EventHandlers handler) {
@@ -305,4 +310,17 @@ abstract class SvgNode extends NodeImpl {
   bool get isDragging => _dragging;
 
   Position get absolutePosition => new Position();
+
+  List get _defs {
+    List defs = [];
+    if (fill is SCPattern ||
+        fill is Gradient) {
+        defs.add(fill);
+    }
+
+    if (stroke is SCPattern) {
+      defs.add(stroke);
+    }
+    return defs;
+  }
 }

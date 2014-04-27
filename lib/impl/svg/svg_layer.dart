@@ -2,7 +2,7 @@ part of smartcanvas.svg;
 
 class SvgLayer extends SvgNode implements LayerImpl {
   List<SvgNode> _children = new List<SvgNode>();
-  List _defs = [];
+  Map<Node, SvgNode> _defNodes = {};
   SVG.DefsElement _defsEl;
 
   SvgLayer(shell): super(shell) {
@@ -48,21 +48,24 @@ class SvgLayer extends SvgNode implements LayerImpl {
     ..padding = ZERO;
   }
 
-  void addDef(def) {
-    _defs.add(def);
-    if (_defs.length == 1 && _defsEl == null) {
+  void addDef(Node defNode, SvgNode defImpl) {
+    _defNodes[defNode] = defImpl;
+    if (_defNodes.length == 1 && _defsEl == null) {
       _defsEl = new SVG.DefsElement();
       _element.nodes.insert(0, _defsEl);
     }
-    _defsEl.append(def.element);
+    _defsEl.append(defImpl.element);
   }
 
-  void removeDef(def) {
-    _defs.remove(def);
-    def.element.remove();
-    if (_defsEl.nodes.isEmpty) {
-      _defsEl.remove();
-      _defsEl = null;
+  void removeDef(Node defNode) {
+    SvgNode defImpl = _defNodes[defNode];
+    if (defImpl != null) {
+      defImpl.element.remove();
+      _defNodes.remove(defNode);
+      if (_defsEl.nodes.isEmpty) {
+        _defsEl.remove();
+        _defsEl = null;
+      }
     }
   }
 
@@ -70,6 +73,15 @@ class SvgLayer extends SvgNode implements LayerImpl {
     _children.add(child);
     child.parent = this;
     this._element.append(child._element);
+
+    _addDefs(child);
+  }
+
+  void _addDefs(SvgNode child) {
+      child._defs.forEach((def) {
+        SvgNode defImpl = def.createImpl(svg);
+        this.addDef(def, defImpl);
+      });
   }
 
   void removeChild(SvgNode node) {
@@ -85,6 +97,7 @@ class SvgLayer extends SvgNode implements LayerImpl {
     node.parent = this;
     _children.insert(index, node);
     this._element.nodes.insert(index, node._element);
+    _addDefs(node);
   }
 
   void resume() {}
@@ -141,6 +154,8 @@ class SvgLayer extends SvgNode implements LayerImpl {
   List<SvgNode> get children => _children;
 
   String get _nodeName => SC_LAYER;
+
+  LayerImpl get layer => this;
 
   Position get position {
     var viewBox = (_element as SVG.SvgSvgElement).viewBox;
