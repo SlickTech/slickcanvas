@@ -74,14 +74,16 @@ class SvgLayer extends SvgNode implements LayerImpl {
     child.parent = this;
     this._element.append(child._element);
 
-    _addDefs(child);
+    if (!shell.isReflection) {
+      _addDefs(child);
+    }
   }
 
   void _addDefs(SvgNode child) {
-      child._defs.forEach((def) {
-        SvgNode defImpl = def.createImpl(svg);
-        this.addDef(def, defImpl);
-      });
+    child._defs.forEach((def) {
+      SvgNode defImpl = def.createImpl(svg);
+      this.addDef(def, defImpl);
+    });
   }
 
   void removeChild(SvgNode node) {

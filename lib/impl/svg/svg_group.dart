@@ -13,7 +13,9 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     child.parent = this;
     this._element.append(child._element);
 
-    _addDefs();
+    if (!shell.isReflection) {
+      _addDefs();
+    }
   }
 
   void _addDefs() {
