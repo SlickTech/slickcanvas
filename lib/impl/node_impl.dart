@@ -14,7 +14,7 @@ abstract class NodeImpl extends NodeBase {
   String get type;
 
   void remove();
-  void translate();
+//  void translate();
 
   NodeImpl clone() {
     ClassMirror cm = reflectClass(this.runtimeType);
@@ -22,7 +22,7 @@ abstract class NodeImpl extends NodeBase {
     return clone;
   }
 
-  void dragStart(DOM.MouseEvent e);
+//  void dragStart(DOM.MouseEvent e);
 
   Node get shell => _shell;
 
@@ -54,7 +54,7 @@ abstract class NodeImpl extends NodeBase {
   void set stroke(dynamic value) => setAttribute(STROKE, value);
   dynamic get stroke => getAttribute(STROKE);
 
-  bool get isDragging;
+//  bool get isDragging;
   Position get absolutePosition;
   TransformMatrix get transformMatrix => shell._transformMatrix;
 }

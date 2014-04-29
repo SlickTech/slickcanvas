@@ -39,7 +39,7 @@ class _ReflectionGroup extends Group implements _I_Container_Reflection {
   }
 
   void _onDragMove(DOM.MouseEvent e) {
-    _node._impl.translate();
+    (_node._impl as SvgNode).translate();
   }
 
   void add(Node child) {

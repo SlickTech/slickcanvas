@@ -176,7 +176,7 @@ abstract class Node extends NodeBase {
 
   void dragStart(DOM.MouseEvent e) {
     if (_reflection != null) {
-      (_reflection as Node)._impl.dragStart(e);
+      ((_reflection as Node)._impl as SvgNode).dragStart(e);
     }
   }
 
@@ -314,8 +314,8 @@ abstract class Node extends NodeBase {
   bool get visible => !hasAttribute(DISPLAY);
 
   bool get isDragging {
-    if (_impl != null) {
-      return _impl.isDragging;
+    if (_reflection != null && (_reflection as Node)._impl != null) {
+      return ((_reflection as Node)._impl as SvgNode).isDragging;
     }
     return false;
   }
