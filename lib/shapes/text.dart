@@ -59,11 +59,7 @@ class Text extends Node {
   num get padding => getAttribute(PADDING, 0);
 
   num get width {
-    if (_impl != null) {
-      return _impl.width;
-    } else {
-      return s_textMeasure.measureText(font, text);
-    }
+    return s_textMeasure.measureText(font, text);
   }
 
   void set textAnchor(String value) => setAttribute(TEXT_ANCHOR, value);
