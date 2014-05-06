@@ -1,7 +1,6 @@
 part of smartcanvas;
 
 abstract class NodeImpl extends NodeBase {
-//  Stage _stage;
   NodeImpl parent;
   Node _shell;
   TransformMatrix _transformMatrix;
@@ -14,15 +13,12 @@ abstract class NodeImpl extends NodeBase {
   String get type;
 
   void remove();
-//  void translate();
 
   NodeImpl clone() {
     ClassMirror cm = reflectClass(this.runtimeType);
     NodeImpl clone = cm.newInstance(const Symbol(EMPTY), [_attrs]).reflectee;
     return clone;
   }
-
-//  void dragStart(DOM.MouseEvent e);
 
   Node get shell => _shell;
 
@@ -54,7 +50,5 @@ abstract class NodeImpl extends NodeBase {
   void set stroke(dynamic value) => setAttribute(STROKE, value);
   dynamic get stroke => getAttribute(STROKE);
 
-//  bool get isDragging;
-  Position get absolutePosition;
   TransformMatrix get transformMatrix => shell._transformMatrix;
 }

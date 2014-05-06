@@ -174,11 +174,11 @@ abstract class Node extends NodeBase {
     return new BBox(x: pos.x, y: pos.y, width: this.width, height: this.height);
   }
 
-  void dragStart(DOM.MouseEvent e) {
-    if (_reflection != null) {
-      ((_reflection as Node)._impl as SvgNode).dragStart(e);
-    }
-  }
+//  void dragStart(DOM.MouseEvent e) {
+//    if (_reflection != null) {
+//      ((_reflection as Node)._impl as SvgNode).dragStart(e);
+//    }
+//  }
 
   Position getRelativePosition(Node referenceParent) {
     Position pos = position;
@@ -257,15 +257,21 @@ abstract class Node extends NodeBase {
 
   void set offsetX(num value) {
     num oldValue = getAttribute(OFFSET_X, 0);
-    _attrs[OFFSET_X] = value;
-    _transformMatrix.tx += value - oldValue;
+    if (oldValue != value) {
+      _attrs[OFFSET_X] = value;
+      _transformMatrix.tx += value - oldValue;
+      fire('offsetXChanged', oldValue, value);
+    }
   }
   num get offsetX => getAttribute(OFFSET_X, 0);
 
   void set offsetY(num value) {
     num oldValue = getAttribute(OFFSET_Y, 0);
-    _attrs[OFFSET_Y] = value;
-    _transformMatrix.ty += value - oldValue;
+    if (oldValue != value) {
+      _attrs[OFFSET_Y] = value;
+      _transformMatrix.ty += value - oldValue;
+      fire('offsetYChanged', oldValue, value);
+    }
   }
   num get offsetY => getAttribute(OFFSET_Y, 0);
 
