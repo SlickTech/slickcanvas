@@ -1,3 +1,11 @@
+#v0.0.14
+
+##Bugs
+* Fixed dragging stopped working
+* Pattern didn't apply after node added into a canvas
+* Pattern didn't apply if pattern didn't have id attribute
+* When node removed, pattern/gradient didn't remvoed from DOM svg element
+
 #v0.0.13
 
 ##Features
