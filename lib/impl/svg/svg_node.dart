@@ -6,6 +6,7 @@ abstract class SvgNode extends NodeImpl {
   SVG.SvgElement _element;
   SVG.Matrix _elMatrix = new SVG.SvgSvgElement().createSvgMatrix();
 
+  bool _dragstarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
   num _dragOffsetX;
@@ -107,7 +108,7 @@ abstract class SvgNode extends NodeImpl {
         _element.setAttribute(name, 'url(#${value.id})');
         return;
       }
-      _element.style.setProperty(name, '${getAttribute(name)}');
+      _element.style.setProperty(name, '${value}');
     } else {
       _element.style.removeProperty(name);
     }
@@ -118,12 +119,12 @@ abstract class SvgNode extends NodeImpl {
     if (parent != null) {
       (parent as Container).children.remove(this);
     }
-    parent = null;
     _defs.forEach((def) {
       if (layer != null) {
         (layer as SvgLayer).removeDef(def);
       }
     });
+    parent = null;
   }
 
   void _registerDOMEvent(String event, EventHandlers handler) {
@@ -178,13 +179,14 @@ abstract class SvgNode extends NodeImpl {
   void dragStart(DOM.MouseEvent e) {
     if (e.button != 0 ||
         (DOM.window.navigator.userAgent.contains('Mac OS') && e.ctrlKey) || // simulated right click on Mac
-        stage.dragging) {
+        stage.dragging ||
+        _dragstarting) {
       return;
     }
 
     e.preventDefault();
     e.stopPropagation();
-    this._dragging = true;
+    this._dragstarting = true;
 
     var pointerPosition = this.stage.pointerPosition;
     var m = (_element as SVG.GraphicsElement).getCtm();
@@ -212,11 +214,12 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void _dragMove(e) {
-    if (_dragging) {
+    if (_dragstarting) {
       e.preventDefault();
       e.stopPropagation();
 
       if (!_dragStarted) {
+        this._dragging = true;
         fire('dragstart', e);
         _dragStarted = true;
       }
@@ -234,6 +237,7 @@ abstract class SvgNode extends NodeImpl {
   void _dragEnd(e) {
     e.preventDefault();
     e.stopPropagation();
+    _dragstarting = false;
     _dragging = false;
 
     if (stage != null) {
@@ -258,6 +262,8 @@ abstract class SvgNode extends NodeImpl {
 
   void _handleAttrChange(String attr, oldValue, newValue) {
     if (_isStyle(attr)) {
+      _updateDef(attr, oldValue, remove: true);
+      _updateDef(attr, newValue);
       _setElementStyle(attr);
     } else if (attr == CLASS) {
       _setClassName();
@@ -266,6 +272,19 @@ abstract class SvgNode extends NodeImpl {
       var elementAttr = _mapToElementAttr(attr);
       if (elementAttr != null) {
         _setElementAttribute(elementAttr);
+      }
+    }
+  }
+
+  void _updateDef(String attr, value, {bool remove: false}) {
+    if (value is SCPattern ||
+        value is Gradient) {
+      if (layer != null && remove) {
+        (layer as SvgLayer).removeDef(value);
+        _element.attributes.remove(attr);
+      } else if (layer != null) {
+        var defImpl = value.createImpl(svg);
+        (layer as SvgLayer).addDef(value, defImpl);
       }
     }
   }
@@ -308,8 +327,6 @@ abstract class SvgNode extends NodeImpl {
   String get _nodeName;
 
   bool get isDragging => _dragging;
-
-  Position get absolutePosition => new Position();
 
   List get _defs {
     List defs = [];

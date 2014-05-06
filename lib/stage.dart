@@ -9,6 +9,7 @@ class Stage extends NodeBase implements Container<Node> {
   List<Node> _children = new List<Node>();
   Position _pointerPosition;
 
+  bool _dragstarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
   num _dragOffsetX = 0;
@@ -102,7 +103,7 @@ class Stage extends NodeBase implements Container<Node> {
   void _onMouseMove(e) {
     _setPointerPosition(e);
     fire('stageMouseMove', e);
-    if (_dragging) {
+    if (_dragstarting) {
       _dragMove(e);
     }
   }
@@ -195,9 +196,14 @@ class Stage extends NodeBase implements Container<Node> {
   }
 
   void _dragStart(DOM.MouseEvent e) {
+    if (this._dragstarting) {
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
-    this._dragging = true;
+
+    this._dragstarting = true;
 
     this._dragOffsetX = _pointerPosition.x - _transformMatrix.tx;
     this._dragOffsetY = _pointerPosition.y - _transformMatrix.ty;
@@ -207,6 +213,7 @@ class Stage extends NodeBase implements Container<Node> {
     e.preventDefault();
     e.stopPropagation();
     if (!_dragStarted) {
+      this._dragging = true;
       fire('dragstart', e);
       _dragStarted = true;
     }
@@ -218,6 +225,7 @@ class Stage extends NodeBase implements Container<Node> {
   void _dragEnd(DOM.MouseEvent e) {
     e.preventDefault();
     e.stopPropagation();
+    _dragstarting = false;
     _dragging = false;
   }
 
