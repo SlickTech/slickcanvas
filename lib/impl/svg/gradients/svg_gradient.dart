@@ -18,6 +18,14 @@ abstract class SvgGradient extends SvgNode {
     return rt;
   }
 
+  dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
+    if (attr == ID) {
+      return super.getAttribute(attr, shell.uid);
+    } else {
+      return super.getAttribute(attr, defaultValue);
+    }
+  }
+
   List<SVG.StopElement> _getStopElements() {
     List<SVG.StopElement> stopElements = [];
     stops.forEach((stop) {

@@ -14,5 +14,13 @@ class SvgPattern extends SvgGroup {
     return rt;
   }
 
+  dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
+    if (attr == ID) {
+      return super.getAttribute(attr, defaultValue != null ? defaultValue : '__sc_node_${shell.uid}');
+    } else {
+      return super.getAttribute(attr, defaultValue);
+    }
+  }
+
   String get _nodeName => SC_PATTERN;
 }

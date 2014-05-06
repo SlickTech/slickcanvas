@@ -63,6 +63,23 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     }
   }
 
+  List get _defs {
+    List defs = [];
+    if (fill is SCPattern ||
+        fill is Gradient) {
+        defs.add(fill);
+    }
+
+    if (stroke is SCPattern) {
+      defs.add(stroke);
+    }
+
+    _children.forEach((child) {
+      defs.addAll(child._defs);
+    });
+    return defs;
+  }
+
   List<SvgNode> get children => _children;
 
   String get _nodeName => SC_GROUP;
