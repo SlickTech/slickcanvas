@@ -1,21 +1,20 @@
 library smartcanvas.test;
 
 import 'dart:html' as dom;
-import 'package:unittest/unittest.dart';
 
 import '../lib/smartcanvas.dart';
+import './svg_tests/svg_tests.dart';
+import './canvas_tests/canvas_tests.dart';
 
-part 'svg_tests/gradient_tests.dart';
-
-Stage _stage;
+Stage stage;
 
 void main() {
   dom.Element container = dom.document.querySelector('#canvas');
 
-  _stage = new Stage(container, svg, {
+  stage = new Stage(container, svg, {
     WIDTH: container.clientWidth,
     HEIGHT: 900,
   });
 
-  GradientTests.run();
+  SvgTests.run();
 }

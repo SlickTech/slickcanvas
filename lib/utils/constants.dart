@@ -96,6 +96,7 @@ const String SC_CIRCLE = '__sc_circle';
 const String SC_PATTERN = '__sc_pattern';
 const String SC_LINEAR_GRADIENT = '__sc_linear_gradient';
 const String SC_RADIAL_GRADIENT = '__sc_radial_gradient';
+const String SC_CANVAS = '__sc_canvas';
 
 // exception
 const String ExpNotImplemented = 'Not Implemented';
