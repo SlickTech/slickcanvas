@@ -1,3 +1,8 @@
+#v0.0.15
+
+##Bugs
+* Group removeChild should remove child impl as well.
+
 #v0.0.14
 
 ##Bugs
