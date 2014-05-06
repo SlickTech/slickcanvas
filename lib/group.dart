@@ -61,6 +61,10 @@ class Group extends Node implements Container<Node> {
     node._parent = null;
     _children.remove(node);
 
+    if (_impl != null && node.impl != null) {
+      (_impl as Container).removeChild(node.impl);
+    }
+
     if (_reflection != null && node._reflection != null) {
       (_reflection as Group).removeChild(node._reflection as Node);
     }
