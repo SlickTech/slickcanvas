@@ -38,7 +38,7 @@ class Group extends Node implements Container<Node> {
       (_impl as Container).add(child._impl);
     }
 
-    if (stage != null && !(this is _I_Reflection)) {
+    if (layer != null && !(this is _I_Reflection)) {
       // only reflect reflectable node
       if (child.reflectable) {
         _reflectionAdd(child);
