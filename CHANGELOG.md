@@ -1,11 +1,19 @@
+#v0.0.16
+
+###Bugs
+* Fixed issue [#5](https://github.com/kzhdev/dart-smart-canvas/issues/5) - A reflectable node might be reflected when adding the node to a group which was on a unstaged layer
+
+###Features
+* Implemented cavas tile
+
 #v0.0.15
 
-##Bugs
+###Bugs
 * Group removeChild should remove child impl as well.
 
 #v0.0.14
 
-##Bugs
+###Bugs
 * Fixed dragging stopped working
 * Pattern didn't apply after node added into a canvas
 * Pattern didn't apply if pattern didn't have id attribute
@@ -13,7 +21,7 @@
 
 #v0.0.13
 
-##Features
+###Features
 * SVG gradient support
 * Moved def to svg implementation
 * def won't be created for reflection
