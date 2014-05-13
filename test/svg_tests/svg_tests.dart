@@ -13,6 +13,6 @@ class SvgTests {
   static void run() {
 //    group('svg layer tests -', LayerTests.run);
     group('svg gradient tests -', SvgGradientTests.run);
-//    group('svg pattern tests -', SvgPatternTests.run);
+    group('svg pattern tests -', SvgPatternTests.run);
   }
 }

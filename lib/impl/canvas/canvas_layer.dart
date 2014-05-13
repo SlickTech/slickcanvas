@@ -2,16 +2,21 @@ part of smartcanvas.canvas;
 
 class CanvasLayer extends CanvasNode implements LayerImpl {
 
+  List<CanvasTile> _tiles = new List<CanvasTile>();
   List<CanvasNode> _children = new List<CanvasNode>();
   bool _suspended = false;
   DOM.Element _element;
   Set<String> _classNames = new Set<String>();
 
   CanvasLayer(Layer shell): super(shell) {
-    _element = new DOM.CanvasElement();
+    _element = new DOM.DivElement();
     _element.dataset['scNode'] = '${shell.uid}';
     _setElementAttributes();
     _setElementStyles();
+
+    _updateTiles();
+
+    _registerEvents();
   }
 
   void _setClassName() {
@@ -28,7 +33,7 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
   }
 
   Set<String> _getElementAttributeNames() {
-    return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
+    return new Set<String>.from([ID, CLASS]);
   }
 
   void _setElementAttribute(String attr) {
@@ -46,7 +51,64 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     ..top = ZERO
     ..left = ZERO
     ..margin = ZERO
-    ..padding = ZERO;
+    ..padding = ZERO
+    ..width = '${width}px'
+    ..height = '${height}px';
+  }
+
+  void _updateTiles() {
+    if (width != null && width > 0 &&
+        height != null && height > 0) {
+      num nTilesInRow = (width / CanvasTile.MAX_WIDTH).ceil();
+      num nRows = (height / CanvasTile.MAX_HEIGHT).ceil();
+      num nTiles = 0;
+      for (num i = 0; i < nRows; i++ ) {
+        for (num j = 0; j < nTilesInRow; j++) {
+          ++nTiles;
+          if ((i * nTilesInRow + j) < _tiles.length) {
+            continue;
+          } else {
+            _tiles.add(new CanvasTile(this, {
+              X: j * CanvasTile.MAX_WIDTH,
+              Y: i * CanvasTile.MAX_HEIGHT
+            }));
+          }
+          _element.append(_tiles.last._element);
+        }
+      }
+
+      while (nTiles < _tiles.length) {
+        CanvasTile tile = _tiles[nTiles];
+        tile.remove();
+        _tiles.remove(tile);
+      }
+    }
+  }
+
+  void _registerEvents() {
+    shell
+      .on('widthChanged', _onWidthChanged)
+      .on('heightChanged', _onHeightChanged)
+      .on('opacityChanged', _onOpacityChanged)
+      .on('stageSet', _onStageSet);
+  }
+
+  void _onWidthChanged(oldValue, newValue) {
+    _element.style.width = '${newValue}px';
+    _updateTiles();
+  }
+
+  void _onHeightChanged(oldValue, newValue) {
+    _element.style.height = '${newValue}px';
+    _updateTiles();
+  }
+
+  void _onOpacityChanged(num oldValue, num newValue) {
+    _element.style.opacity = '$newValue';
+  }
+
+  void _onStageSet() {
+
   }
 
   void add(CanvasNode node) {
@@ -69,8 +131,22 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void _draw() {
     if (!_suspended) {
-
+      _tiles.forEach((tile) {
+        tile.draw();
+      });
     }
+  }
+
+  void remove() {
+    _element.remove();
+    if (parent != null) {
+      (parent as Container).children.remove(this);
+    }
+    _tiles.forEach((tile) {
+      tile.remove();
+    });
+    _tiles.clear();
+    parent = null;
   }
 
   List<CanvasNode> get children => _children;

@@ -15,7 +15,7 @@ class Layer extends Group {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw new CanvasLayer(this);
+    return new CanvasLayer(this);
   }
 
   Layer _clone() {

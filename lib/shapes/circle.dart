@@ -4,8 +4,8 @@ class Circle extends Node {
 
   Circle(Map<String, dynamic> config): super(config) {}
 
-  void populateConfig(Map<String, dynamic> config) {
-    super.populateConfig(config);
+  void populateConfig() {
+    super.populateConfig();
     num r = _attrs[R];
     if (r == null) {
       r = _attrs[R] = 0;

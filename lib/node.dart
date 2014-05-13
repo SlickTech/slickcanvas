@@ -9,15 +9,11 @@ abstract class Node extends NodeBase {
   num _x0, _y0;
   bool _listening = false;
 
-  Node([Map<String, dynamic> config = null]): super() {
-    if (config == null) {
-      config = {};
-    }
-    populateConfig(config);
+  Node([Map<String, dynamic> config = const {}]): super(config) {
+    populateConfig();
   }
 
-  void populateConfig(Map<String, dynamic> config) {
-    _attrs.addAll(config);
+  void populateConfig() {
     _x0 = getAttribute(X, 0);
     _y0 = getAttribute(Y, 0);
     if (hasAttribute(OFFSET_X)) {

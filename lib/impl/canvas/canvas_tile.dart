@@ -1,0 +1,119 @@
+part of smartcanvas.canvas;
+
+num _getPixelRatio() {
+  DOM.CanvasElement canvas = new DOM.CanvasElement();
+  return DOM.window.devicePixelRatio / canvas.context2D.backingStorePixelRatio;
+}
+
+class CanvasTile extends NodeBase {
+
+  static num MAX_WIDTH = 500;
+  static num MAX_HEIGHT = 500;
+
+  TransformMatrix _transformMatrix;
+
+  DOM.CanvasElement _element;
+  DOM.CanvasRenderingContext2D _context;
+  CanvasLayer _layer;
+  num _pixelRatio = _getPixelRatio();
+
+  CanvasTile(this._layer, Map<String, dynamic> config): super(config) {
+    _element = new DOM.CanvasElement();
+    _element.dataset['scNode'] = '${uid}';
+    _setElementAttributes();
+    _setElementStyles();
+
+    _context = _element.context2D;
+    _context.scale(_pixelRatio, _pixelRatio);
+
+    this
+      .on('pixelRatioChanged', _onPixelRatioChanged)
+      .on('widthChanged', _onWidthChanged)
+      .on('heightChanged', _onHeightChanged);
+  }
+
+  void _setElementAttributes() {
+    var attrs = _getElementAttributeNames();
+    attrs.forEach(_setElementAttribute);
+  }
+
+  void _setElementAttribute(String attr) {
+    var value = getAttribute(attr);
+    if (value != null) {
+      if (!(value is String) || !value.isEmpty) {
+        _element.attributes[attr] = '$value';
+      }
+    }
+  }
+
+  void _setElementStyles() {
+    _element.style
+    ..position = ABSOLUTE
+    ..top = '${y}px'
+    ..left = '${x}px'
+    ..margin = ZERO
+    ..padding = ZERO
+    ..border = ZERO
+    ..background = 'transparent'
+    ..width = '${width}px'
+    ..height = '${height}px';
+  }
+
+  Set<String> _getElementAttributeNames() {
+    return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
+  }
+
+  dynamic getAttribute(String attr, [dynamic defaultValue]) {
+    switch (attr) {
+      case WIDTH:
+        return CanvasTile.MAX_WIDTH * _pixelRatio;
+      case HEIGHT:
+        return CanvasTile.MAX_HEIGHT * _pixelRatio;
+      default:
+        return super.getAttribute(attr, defaultValue);
+    }
+  }
+
+  void _onPixelRatioChanged(oldValue, newValue) {
+    _context.scale(newValue, newValue);
+    width = (width / oldValue) * newValue;
+    height = (height / oldValue) * newValue;
+  }
+
+  void _onWidthChanged(oldValue, newValue) {
+    _element.setAttribute(WIDTH, newValue);
+    _element.style.width = '${newValue}px';
+  }
+
+  void _onHeightChanged(oldValue, newValue) {
+    _element.setAttribute(HEIGHT, newValue);
+    _element.style.height = '${newValue}px';
+  }
+
+  void remove() {
+    _element.remove();
+  }
+
+  void draw() {}
+
+  void set x(num value) => setAttribute(X, value);
+  num get x => getAttribute(X, 0);
+
+  void set y(num value) => setAttribute(Y, value);
+  num get y => getAttribute(Y, 0);
+
+  void set width(num value) => setAttribute(WIDTH, value);
+  num get width => getAttribute(WIDTH, MAX_WIDTH);
+
+  void set height(num value) => setAttribute(HEIGHT, value);
+  num get height => getAttribute(HEIGHT, MAX_HEIGHT);
+
+  void set pixelRatio(num value) {
+    num oldValue = _pixelRatio;
+    _pixelRatio = value;
+    if (oldValue != value) {
+      fire('pixelRatioChanged', oldValue, value);
+    }
+  }
+  num get pixelRatio => _pixelRatio;
+}
