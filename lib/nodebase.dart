@@ -10,6 +10,9 @@ class NodeBase extends EventBus {
   Map<String, dynamic> _attrs = {};
 
   NodeBase([Map<String, dynamic> config = const {}]) {
+    if (config == null) {
+      config = {};
+    }
     _attrs.addAll(config);
     _uid = ++_guid;
   }
