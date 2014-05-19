@@ -43,6 +43,12 @@ class Stage extends NodeBase implements Container<Node> {
     _element.onMouseUp.listen(_onMouseUp);
     _element.onMouseEnter.listen(_setPointerPosition);
     _element.onMouseLeave.listen(_setPointerPosition);
+
+    this.on('draggableChanged', (oldValue, newValue) {
+      if (!newValue) {
+        _dragEnd();
+      }
+    });
   }
 
   void _createElement() {
@@ -222,9 +228,11 @@ class Stage extends NodeBase implements Container<Node> {
     fire(DRAGMOVE, e);
   }
 
-  void _dragEnd(DOM.MouseEvent e) {
-    e.preventDefault();
-    e.stopPropagation();
+  void _dragEnd([DOM.MouseEvent e]) {
+    if (e != null) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     _dragstarting = false;
     _dragging = false;
   }
