@@ -235,6 +235,7 @@ class Stage extends NodeBase implements Container<Node> {
     }
     _dragstarting = false;
     _dragging = false;
+    _dragStarted = false;
   }
 
 
