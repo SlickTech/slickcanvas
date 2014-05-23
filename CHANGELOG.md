@@ -1,4 +1,10 @@
+#v0.0.18
+
+###Bugs
+* Fixed an issue where stage stuck in dragging mode on second time of dragging the stage.
+
 #v0.0.17
+
 ###Bugs
 * Fixed an bug where set stage.draggable to false while dragging the stage caused it stuck in dragging mode.
 
