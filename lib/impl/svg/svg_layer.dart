@@ -106,6 +106,12 @@ class SvgLayer extends SvgNode implements LayerImpl {
   void suspend() {}
 
   void _onStageSet() {
+
+    _translateViewBoxX(shell.stage.tx);
+    _translateViewBoxY(shell.stage.ty);
+    _scaleViewBoxWidth(shell.stage.scaleX);
+    _scaleViewBoxHeight(shell.stage.scaleY);
+
     shell.stage
       .on('scaleXChanged', _onScaleXChanged)
       .on('scaleYChanged', _onScaleYChanged)
@@ -130,27 +136,41 @@ class SvgLayer extends SvgNode implements LayerImpl {
   }
 
   void _onScaleXChanged(num oldValue, num newValue) {
-    if (newValue == 0) {
-      newValue = 0.0000001;
-    }
-    (_element as SVG.SvgSvgElement).viewBox.baseVal
-    ..width = getAttribute(WIDTH, 0) / newValue;
+    _scaleViewBoxWidth(newValue);
   }
 
   void _onScaleYChanged(num oldValue, num newValue) {
-    if (newValue == 0) {
-      newValue = 0.0000001;
+    _scaleViewBoxHeight(newValue);
+  }
+
+  void _scaleViewBoxWidth(num scaleX) {
+    if (scaleX == 0) {
+      scaleX = 0.0000001;
     }
-    (_element as SVG.SvgSvgElement).viewBox.baseVal
-    ..height = getAttribute(HEIGHT, 0) / newValue;
+    (_element as SVG.SvgSvgElement).viewBox.baseVal.width = getAttribute(WIDTH, 0) / scaleX;
+  }
+
+  void _scaleViewBoxHeight(num scaleY) {
+    if (scaleY == 0) {
+      scaleY = 0.0000001;
+    }
+    (_element as SVG.SvgSvgElement).viewBox.baseVal.height = getAttribute(HEIGHT, 0) / scaleY;
   }
 
   void _onTranslateXChanged(oldValue, newValue) {
-    (_element as SVG.SvgSvgElement).viewBox.baseVal.x = -newValue;
+    _translateViewBoxX(newValue);
   }
 
   void _onTranslateYChanged(oldValue, newValue) {
-    (_element as SVG.SvgSvgElement).viewBox.baseVal.y = -newValue;
+    _translateViewBoxY(newValue);
+  }
+
+  void _translateViewBoxX(num translateX) {
+    (_element as SVG.SvgSvgElement).viewBox.baseVal.x = -translateX;
+  }
+
+  void _translateViewBoxY(num translateY) {
+    (_element as SVG.SvgSvgElement).viewBox.baseVal.y = -translateY;
   }
 
   List<SvgNode> get children => _children;
