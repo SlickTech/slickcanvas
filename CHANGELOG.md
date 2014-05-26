@@ -1,3 +1,8 @@
+#v0.0.19
+
+###Bugs
+* When adding svg layer to stage, set the viewbox correctly.
+
 #v0.0.18
 
 ###Bugs
