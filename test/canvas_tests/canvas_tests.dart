@@ -9,6 +9,6 @@ part 'layer_tests.dart';
 
 class CanvasTests {
   static void run() {
-    group('svg layer tests -', LayerTests.run);
+    group('canvas layer tests -', LayerTests.run);
   }
 }

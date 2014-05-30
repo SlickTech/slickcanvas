@@ -62,18 +62,25 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
       num nTilesInRow = (width / CanvasTile.MAX_WIDTH).ceil();
       num nRows = (height / CanvasTile.MAX_HEIGHT).ceil();
       num nTiles = 0;
+      num tileWidth = width / (width / CanvasTile.MAX_WIDTH).ceil();
+      num tileHeight = height / (height / CanvasTile.MAX_HEIGHT).ceil();
       for (num i = 0; i < nRows; i++ ) {
         for (num j = 0; j < nTilesInRow; j++) {
-          ++nTiles;
           if ((i * nTilesInRow + j) < _tiles.length) {
+            CanvasTile tile = _tiles[nTiles];
+            _adjustTileSize(tile, tileWidth, tileHeight);
+            ++nTiles;
             continue;
           } else {
-            _tiles.add(new CanvasTile(this, {
-              X: j * CanvasTile.MAX_WIDTH,
-              Y: i * CanvasTile.MAX_HEIGHT
-            }));
+            CanvasTile tile = new CanvasTile(this, {
+              X: j * tileWidth,
+              Y: i * tileHeight
+            });
+            _adjustTileSize(tile, tileWidth, tileHeight);
+            _tiles.add(tile);
           }
           _element.append(_tiles.last._element);
+          ++nTiles;
         }
       }
 
@@ -82,6 +89,20 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
         tile.remove();
         _tiles.remove(tile);
       }
+    }
+  }
+
+  void _adjustTileSize(CanvasTile tile, num tileWidth, num tileHeight) {
+    if ((tile.x + tileWidth) > width) {
+      tile.width = width - tile.x;
+    } else {
+      tile.width = tileWidth;
+    }
+
+    if ((tile.y + tileHeight) > height) {
+      tile.height = height - tile.y;
+    } else {
+      tile.height = tileHeight;
     }
   }
 

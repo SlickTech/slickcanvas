@@ -7,29 +7,41 @@ num _getPixelRatio() {
 
 class CanvasTile extends NodeBase {
 
-  static num MAX_WIDTH = 500;
-  static num MAX_HEIGHT = 500;
+  static num MAX_WIDTH = 800;
+  static num MAX_HEIGHT = 600;
+  static num _defaultPixelRatio = _getPixelRatio();
 
   TransformMatrix _transformMatrix;
 
   DOM.CanvasElement _element;
   DOM.CanvasRenderingContext2D _context;
   CanvasLayer _layer;
-  num _pixelRatio = _getPixelRatio();
+  num _pixelRatio = _defaultPixelRatio;
+
+  bool _dirty = false;
+  bool _suspended =false;
 
   CanvasTile(this._layer, Map<String, dynamic> config): super(config) {
     _element = new DOM.CanvasElement();
     _element.dataset['scNode'] = '${uid}';
+    _context = _element.context2D;
     _setElementAttributes();
     _setElementStyles();
-
-    _context = _element.context2D;
-    _context.scale(_pixelRatio, _pixelRatio);
 
     this
       .on('pixelRatioChanged', _onPixelRatioChanged)
       .on('widthChanged', _onWidthChanged)
       .on('heightChanged', _onHeightChanged);
+  }
+
+  void _scaleCanvas() {
+    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
+      _element.setAttribute(WIDTH, '${this.width * _pixelRatio}');
+      _element.setAttribute(HEIGHT, '${this.height * _pixelRatio}');
+      _element.style.width = '${this.width}px';
+      _element.style.height = '${this.height}px';
+      _context.scale(_pixelRatio, _pixelRatio);
+    }
   }
 
   void _setElementAttributes() {
@@ -40,7 +52,11 @@ class CanvasTile extends NodeBase {
   void _setElementAttribute(String attr) {
     var value = getAttribute(attr);
     if (value != null) {
-      if (!(value is String) || !value.isEmpty) {
+      if (value is! String || !value.isEmpty) {
+        if ((attr == WIDTH || attr == HEIGHT) &&
+            DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
+          value = value * _pixelRatio;
+        }
         _element.attributes[attr] = '$value';
       }
     }
@@ -75,26 +91,49 @@ class CanvasTile extends NodeBase {
   }
 
   void _onPixelRatioChanged(oldValue, newValue) {
-    _context.scale(newValue, newValue);
-    width = (width / oldValue) * newValue;
-    height = (height / oldValue) * newValue;
+    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
+      _context.scale(newValue, newValue);
+      _element.setAttribute(WIDTH, '${this.width * newValue}');
+      _element.setAttribute(HEIGHT, '${this.height * newValue}');
+    }
   }
 
   void _onWidthChanged(oldValue, newValue) {
-    _element.setAttribute(WIDTH, newValue);
     _element.style.width = '${newValue}px';
+    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
+      _element.setAttribute(WIDTH, '${this.width * newValue}');
+    } else {
+      _element.setAttribute(WIDTH, '$newValue');
+    }
   }
 
   void _onHeightChanged(oldValue, newValue) {
-    _element.setAttribute(HEIGHT, newValue);
     _element.style.height = '${newValue}px';
+    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
+      _element.setAttribute(HEIGHT, '${this.width * newValue}');
+    } else {
+      _element.setAttribute(HEIGHT, '$newValue');
+    }
   }
 
   void remove() {
     _element.remove();
   }
 
-  void draw() {}
+  void draw() {
+    if (_suspended || !_dirty) {
+      return;
+    }
+  }
+
+  void suspend() {
+    _suspended = true;
+  }
+
+  void resume() {
+    _suspended = false;
+    draw();
+  }
 
   void set x(num value) => setAttribute(X, value);
   num get x => getAttribute(X, 0);
@@ -116,4 +155,12 @@ class CanvasTile extends NodeBase {
     }
   }
   num get pixelRatio => _pixelRatio;
+
+  void set dirty(bool value) {
+    _dirty = value;
+    if (value) {
+      draw();
+    }
+  }
+  bool get dirty => _dirty;
 }
