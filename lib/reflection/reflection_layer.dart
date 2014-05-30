@@ -1,6 +1,6 @@
 part of smartcanvas;
 
-class _ReflectionLayer extends Layer implements _I_Container_Reflection {
+class _ReflectionLayer extends Layer implements I_Container_Reflection {
 
   Node _node;
   _ReflectionLayer _layer;
@@ -9,12 +9,12 @@ class _ReflectionLayer extends Layer implements _I_Container_Reflection {
   _ReflectionLayer(Map<String, dynamic> config)
     :super(svg, merge(config, {
       ID: '__reflection_layer',
-      OPACITY: 0
+      OPACITY: 0.5
     }))
   {}
 
   void add(Node child) {
-    if (!(child is _I_Reflection)) {
+    if (!(child is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
 
@@ -22,14 +22,14 @@ class _ReflectionLayer extends Layer implements _I_Container_Reflection {
   }
 
   void insert(int index, Node node) {
-    if (!(node is _I_Reflection)) {
+    if (!(node is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
 
     super.insert(index, node);
   }
 
-  void insertNode(_I_Reflection node) {
+  void insertNode(I_Reflection node) {
     // find next reflectable node in the same layer
     Node realNode = node._node;
     Node nextReflectableNode = realNode.layer.firstReflectableNode(startIndex:realNode.layer._children.indexOf(realNode) + 1);

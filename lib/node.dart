@@ -4,7 +4,7 @@ abstract class Node extends NodeBase {
   Layer _layer;
   NodeImpl _impl;
   Container<Node> _parent;
-  _I_Reflection _reflection;
+  I_Reflection _reflection;
   TransformMatrix _transformMatrix = new TransformMatrix();
   num _x0, _y0;
   bool _listening = false;
@@ -116,7 +116,7 @@ abstract class Node extends NodeBase {
 
       if (!_listening) {
         _listening = _isDomEvent(event);
-        if (_listening && this is! _ReflectionNode && _parent != null) {
+        if (_listening && this is! ReflectionNode && _parent != null) {
             (_parent as Group)._reflectionAdd(this);
         }
       }
@@ -390,5 +390,7 @@ abstract class Node extends NodeBase {
     return pos;
   }
 
-  bool get isReflection => this is _I_Reflection;
+  bool get isReflection => this is I_Reflection;
+
+  I_Reflection get reflection => _reflection;
 }

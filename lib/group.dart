@@ -38,7 +38,7 @@ class Group extends Node implements Container<Node> {
       (_impl as Container).add(child._impl);
     }
 
-    if (layer != null && !(this is _I_Reflection)) {
+    if (layer != null && !(this is I_Reflection)) {
       // only reflect reflectable node
       if (child.reflectable) {
         _reflectionAdd(child);
@@ -49,7 +49,7 @@ class Group extends Node implements Container<Node> {
   void _reflectionAdd(Node child) {
     // if the group already reflected, add children to its reflecton
     if (_reflection != null) {
-      (_reflection as _I_Container_Reflection).reflectionAdd(child);
+      (_reflection as I_Container_Reflection).reflectionAdd(child);
     } else if (parent != null){
       // this group wasn't reflectable before, since the child is
       // reflectable, the group is reflectable now. Reflect the group.
@@ -85,7 +85,7 @@ class Group extends Node implements Container<Node> {
       (_impl as Container).insert(index, node._impl);
     }
 
-    if (stage != null && !(this is _I_Reflection)) {
+    if (stage != null && !(this is I_Reflection)) {
       // only reflect reflectable node
       if (!node.reflectable) {
         // if group wasn't reflectable, reflect its children.
@@ -103,7 +103,7 @@ class Group extends Node implements Container<Node> {
   void _reflectionInsert(Node child) {
     // if the group already reflected, insert children to its reflecton
     if (this._reflection != null) {
-      (this._reflection as _I_Container_Reflection).insertNode(_createReflection(child));
+      (this._reflection as I_Container_Reflection).insertNode(_createReflection(child));
     }
   }
 

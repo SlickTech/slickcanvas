@@ -1,9 +1,9 @@
 part of smartcanvas;
 
-class _ReflectionGroup extends Group implements _I_Container_Reflection {
+class ReflectionGroup extends Group implements I_Container_Reflection {
   Group _node;
 
-  _ReflectionGroup(Node node): super(node._attrs) {
+  ReflectionGroup(Node node): super(node._attrs) {
     _node = node;
     _node._reflection = this;
     this._attrs = _node.attrs;
@@ -43,14 +43,14 @@ class _ReflectionGroup extends Group implements _I_Container_Reflection {
   }
 
   void add(Node child) {
-    if (!(child is _I_Reflection)) {
+    if (!(child is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
     super.add(child);
   }
 
   void insert(int index, Node node) {
-    if (!(node is _I_Reflection)) {
+    if (!(node is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
     super.insert(index, node);
@@ -60,7 +60,7 @@ class _ReflectionGroup extends Group implements _I_Container_Reflection {
     add(_createReflection(child) as Node);
   }
 
-  void insertNode(_I_Reflection node) {
+  void insertNode(I_Reflection node) {
     // find next reflectable node in the same group
     Node realNode = node._node;
     Node nextReflectableNode = _node.firstReflectableNode(startIndex:_node._children.indexOf(realNode) + 1);

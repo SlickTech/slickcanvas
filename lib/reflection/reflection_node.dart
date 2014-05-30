@@ -1,9 +1,9 @@
 part of smartcanvas;
 
-class _ReflectionNode extends Node implements _I_Reflection {
+class ReflectionNode extends Node implements I_Reflection {
   Node _node;
 
-  _ReflectionNode(Node node): super(node.attrs) {
+  ReflectionNode(Node node): super(node.attrs) {
     _node = node;
     _node._reflection = this;
     this._attrs = _node.attrs;
