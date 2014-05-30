@@ -9,7 +9,7 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
   _ReflectionLayer(Map<String, dynamic> config)
     :super(svg, merge(config, {
       ID: '__reflection_layer',
-      OPACITY: 0.5
+      OPACITY: 0
     }))
   {}
 
