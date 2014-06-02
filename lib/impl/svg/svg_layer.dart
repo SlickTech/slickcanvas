@@ -122,13 +122,13 @@ class SvgLayer extends SvgNode implements LayerImpl {
   void _onWidthChanged(oldValue, newValue) {
     _element.setAttribute(WIDTH, '$newValue');
     (_element as SVG.SvgSvgElement).viewBox.baseVal
-    ..width = newValue / getAttribute(SCALE_Y, 1);
+    ..width = newValue / (getAttribute(SCALE_X, 1) * shell.stage.scaleX);
   }
 
   void _onHeightChanged(oldValue, newValue) {
     _element.setAttribute(HEIGHT, '$newValue');
     (_element as SVG.SvgSvgElement).viewBox.baseVal
-    ..height = newValue / getAttribute(SCALE_Y, 1);
+    ..height = newValue / (getAttribute(SCALE_Y, 1) * shell.stage.scaleY);
   }
 
   void _onOpacityChanged(num oldValue, num newValue) {
