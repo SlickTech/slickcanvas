@@ -1,3 +1,11 @@
+#v0.0.20
+
+* Expose reflection classes
+* Dynamically adjust canvas tile size
+
+###Bugs
+* When layer width changed the viewbox size needs to consider stage scale
+
 #v0.0.19
 
 ###Bugs
