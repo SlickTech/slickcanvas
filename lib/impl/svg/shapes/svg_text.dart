@@ -22,13 +22,15 @@ class SvgText extends SvgNode{
     Text txt = shell as Text;
     _element.style.setProperty(FONT_SIZE, '${txt.fontSize}');
     _element.style.setProperty(FONT_FAMILY, '${txt.fontFamily}');
+    _element.style.setProperty(FONT_WEIGHT, '${txt.fontWeight}');
     _element.style.setProperty(TEXT_ANCHOR, '${txt.textAnchor}');
   }
 
   bool _isStyle(String attr) {
     if (attr == FONT_SIZE ||
         attr == FONT_FAMILY ||
-        attr == TEXT_ANCHOR) {
+        attr == TEXT_ANCHOR ||
+        attr == FONT_WEIGHT) {
       return true;
     }
     return super._isStyle(attr);

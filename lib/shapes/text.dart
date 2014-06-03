@@ -45,6 +45,9 @@ class Text extends Node {
   void set fontSize(num value) => setAttribute(FONT_SIZE, value);
   num get fontSize => getAttribute(FONT_SIZE, 12);
 
+  void set fontWeight(String value) => setAttribute(FONT_WEIGHT, value);
+  String get fontWeight => getAttribute(FONT_WEIGHT, NORMAL);
+
   /**
    * get font.
    */

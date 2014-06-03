@@ -1,3 +1,7 @@
+#v0.0.21
+
+* Added font-weight property in text.
+
 #v0.0.20
 
 * Expose reflection classes
