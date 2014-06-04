@@ -11,7 +11,7 @@ class LayerTests {
       CLASS: '__my_canvas'
     });
 
-    stage.add(layer);
+    stage.addChild(layer);
 
     var layerEl = stage.element.querySelector('.__my_canvas');
     expect(layerEl, isNotNull);

@@ -56,7 +56,7 @@ abstract class Node extends NodeBase {
     if (_parent != null) {
       _parent.removeChild(this);
     }
-    parent.add(this);
+    parent.addChild(this);
   }
 
   void moveUp() {
@@ -66,7 +66,7 @@ abstract class Node extends NodeBase {
       index = container.children.indexOf(this);
       if (index != container.children.length - 1) {
         remove();
-        container.insert(index + 1, this);
+        container.insertChild(index + 1, this);
       }
     }
   }
@@ -78,7 +78,7 @@ abstract class Node extends NodeBase {
       index = container.children.indexOf(this);
       if (index > 0) {
         remove();
-        container.insert(index - 1, this);
+        container.insertChild(index - 1, this);
       }
     }
   }
@@ -89,7 +89,7 @@ abstract class Node extends NodeBase {
       int index = container.children.indexOf(this);
       if (index != container.children.length - 1) {
         this.remove();
-        container.add(this);
+        container.addChild(this);
       }
     }
   }
@@ -101,7 +101,7 @@ abstract class Node extends NodeBase {
       index = container.children.indexOf(this);
       if (index > 0) {
         this.remove();
-        container.insert(0, this);
+        container.insertChild(0, this);
       }
     }
   }

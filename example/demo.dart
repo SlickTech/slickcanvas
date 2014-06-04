@@ -8,7 +8,7 @@ void main() {
   Stage stage = new Stage(container, svg, {
       WIDTH: container.clientWidth,
       HEIGHT: 900,
-//      DRAGGABLE: true
+      DRAGGABLE: true
     });
 
 //    Circle circle = new Circle({
@@ -141,14 +141,14 @@ void main() {
 //    c2.on(MOUSEDOWN, (e) => print('c2 mousedown'));
 //    c2.on(DBLCLICK, (e) => print('c2 double click'));
 
-    g1.add(c2);
-    stage.add(g1);
-    stage.add(layer2);
+    g1.addChild(c2);
+    stage.addChild(g1);
+    stage.addChild(layer2);
 
     Group g2 = new Group({
 //      LISTENING: true
     });
-    layer2.add(g2);
+    layer2.addChild(g2);
 
     c2.moveTo(g2);
 //

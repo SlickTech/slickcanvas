@@ -132,13 +132,16 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   }
 
-  void add(CanvasNode node) {
+  void addChild(CanvasNode node) {
   }
 
-  void insert(int index, CanvasNode node) {
+  void insertChild(int index, CanvasNode node) {
   }
 
   void removeChild(CanvasNode node) {
+  }
+
+  void clearChildren() {
   }
 
   void suspend() {

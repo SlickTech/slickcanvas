@@ -22,7 +22,7 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
       }
 
       Node _reflectionChild = _createReflection(child) as Node;
-      add(_reflectionChild);
+      addChild(_reflectionChild);
     });
   }
 
@@ -42,22 +42,22 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
     (_node._impl as SvgNode).translate();
   }
 
-  void add(Node child) {
+  void addChild(Node child) {
     if (!(child is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
-    super.add(child);
+    super.addChild(child);
   }
 
-  void insert(int index, Node node) {
+  void insertChild(int index, Node node) {
     if (!(node is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
-    super.insert(index, node);
+    super.insertChild(index, node);
   }
 
   void reflectionAdd(Node child) {
-    add(_createReflection(child) as Node);
+    addChild(_createReflection(child) as Node);
   }
 
   void insertNode(I_Reflection node) {
@@ -65,9 +65,9 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
     Node realNode = node._node;
     Node nextReflectableNode = _node.firstReflectableNode(startIndex:_node._children.indexOf(realNode) + 1);
     if (nextReflectableNode != null) {
-      insert(_children.indexOf(nextReflectableNode._reflection as Node), node as Node);
+      insertChild(_children.indexOf(nextReflectableNode._reflection as Node), node as Node);
     } else {
-      add(node as Node);
+      addChild(node as Node);
     }
   }
 

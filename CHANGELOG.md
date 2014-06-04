@@ -1,3 +1,11 @@
+#v0.0.22
+###Bugs
+* Fix an issue where gradient doesn't apply when changed from a fill color.
+
+###Breaking change
+* changed Container interface functions from add, removeChild, insert to addChild, removeChild, insertChild
+* added clearChildren interface in Container.
+
 #v0.0.21
 
 * Added font-weight property in text.

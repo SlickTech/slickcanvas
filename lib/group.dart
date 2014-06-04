@@ -11,7 +11,7 @@ class Group extends Node implements Container<Node> {
       if (node.impl == null || node._impl.type != svg) {
         node._impl = node.createImpl(svg);
       }
-      impl.add(node._impl);
+      impl.addChild(node._impl);
     });
     return impl;
   }
@@ -20,7 +20,7 @@ class Group extends Node implements Container<Node> {
     throw ExpNotImplemented;
   }
 
-  void add(Node child) {
+  void addChild(Node child) {
     if (child._parent != null) {
       child.remove();
     }
@@ -35,7 +35,7 @@ class Group extends Node implements Container<Node> {
         child._impl = child.createImpl(_impl.type);
       }
 
-      (_impl as Container).add(child._impl);
+      (_impl as Container).addChild(child._impl);
     }
 
     if (layer != null && !(this is I_Reflection)) {
@@ -70,7 +70,13 @@ class Group extends Node implements Container<Node> {
     }
   }
 
-  void insert(int index, Node node) {
+  void clearChildren() {
+    while (_children.isNotEmpty) {
+      this.removeChild(_children.first);
+    }
+  }
+
+  void insertChild(int index, Node node) {
     if (node._parent != null) {
       node.remove();
     }
@@ -82,7 +88,7 @@ class Group extends Node implements Container<Node> {
       if (node._impl == null || node._impl.type != _impl.type) {
         node._impl = node.createImpl(_impl.type);
       }
-      (_impl as Container).insert(index, node._impl);
+      (_impl as Container).insertChild(index, node._impl);
     }
 
     if (stage != null && !(this is I_Reflection)) {
@@ -125,7 +131,7 @@ class Group extends Node implements Container<Node> {
     Node clone = cm.newInstance(const Symbol(EMPTY), [cnfg]).reflectee;
 
     _children.forEach((child) {
-      (clone as Container).add(child.clone());
+      (clone as Container).addChild(child.clone());
     });
     return clone;
   }

@@ -8,7 +8,7 @@ class SvgLayerTests {
   }
 
   static void layerElementTest() {
-    stage.add(_layer);
+    stage.addChild(_layer);
 
     var svgEl = stage.element.querySelector('.__svg_layer');
     expect(svgEl, isNotNull);

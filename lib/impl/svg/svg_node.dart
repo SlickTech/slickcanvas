@@ -105,7 +105,7 @@ abstract class SvgNode extends NodeImpl {
     if (value != null) {
       if (value is SCPattern ||
           value is Gradient) {
-        _element.setAttribute(name, 'url(#${value.id})');
+        _element.style.setProperty(name, 'url(#${value.id})');
         return;
       }
       _element.style.setProperty(name, '${value}');
@@ -281,7 +281,7 @@ abstract class SvgNode extends NodeImpl {
         value is Gradient) {
       if (layer != null && remove) {
         (layer as SvgLayer).removeDef(value);
-        _element.attributes.remove(attr);
+        _element.style.removeProperty(attr);
       } else if (layer != null) {
         var defImpl = value.createImpl(svg);
         (layer as SvgLayer).addDef(value, defImpl);

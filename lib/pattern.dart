@@ -8,7 +8,7 @@ class SCPattern extends Group{
     SvgPattern impl = new SvgPattern(this);
     _children.forEach((node) {
       node._impl = node.createImpl(svg);
-      impl.add(node._impl);
+      impl.addChild(node._impl);
     });
     return impl;
   }

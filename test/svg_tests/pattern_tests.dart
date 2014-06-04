@@ -14,7 +14,7 @@ class SvgPatternTests {
       HEIGHT: 20,
       PATTERN_UNITS: "userSpaceOnUse"
     });
-    pattern.add(new Path({
+    pattern.addChild(new Path({
       D: "M 0 0 Q 5 20 10 10 T 20 20",
       STROKE: 'black',
       FILL: 'none'
@@ -25,7 +25,7 @@ class SvgPatternTests {
       HEIGHT: 100
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
     rect.fill =pattern;
     var elRect = stage.element.querySelector('.__sc_rect');
     var elPattern = stage.element.querySelector('#${pattern.id}');
@@ -42,7 +42,7 @@ class SvgPatternTests {
       HEIGHT: 20,
       PATTERN_UNITS: "userSpaceOnUse"
     });
-    pattern.add(new Path({
+    pattern.addChild(new Path({
       D: "M 0 0 Q 5 20 10 10 T 20 20",
       STROKE: 'black',
       FILL: 'none'
@@ -53,7 +53,7 @@ class SvgPatternTests {
       HEIGHT: 100
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
     rect.fill =pattern;
 
     var elRect = stage.element.querySelector('.__sc_rect');
@@ -70,7 +70,7 @@ class SvgPatternTests {
       HEIGHT: 20,
       PATTERN_UNITS: "userSpaceOnUse"
     });
-    pattern.add(new Path({
+    pattern.addChild(new Path({
       D: "M 0 0 Q 5 20 10 10 T 20 20",
       STROKE: 'black',
       FILL: 'none'
@@ -81,7 +81,7 @@ class SvgPatternTests {
       HEIGHT: 100
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
     rect.fill =pattern;
 
     var elRect = stage.element.querySelector('.__sc_rect');

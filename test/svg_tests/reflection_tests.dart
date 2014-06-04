@@ -6,14 +6,14 @@ class SvgReflectionTests {
 
       // Add layer
       Layer layer = new Layer(svg, {ID: 'unstaged_layer'});
-      stage.add(layer);
+      stage.addChild(layer);
 
       // Add group block with a reflectable node
       Group group = new Group({ID: '_containerGroup'});
       Rect rect = new Rect({ID: 'reflectableNode1', X: 100, Y:100, WIDTH: 100, HEIGHT: 100, DRAGGABLE: true});
-      group.add(rect);
+      group.addChild(rect);
 
-      layer.add(group);
+      layer.addChild(group);
 
       var reflectionLayerEl = stage.element.querySelector('#__reflection_layer');
       expect(reflectionLayerEl, isNotNull);
@@ -28,10 +28,10 @@ class SvgReflectionTests {
 
       // add another reflectable node to group
       Rect rect2 = new Rect({ID: 'reflectableNode2', X: 200, Y:100, WIDTH: 100, HEIGHT: 100});
-      group.add(rect2);
+      group.addChild(rect2);
       rect2.on(CLICK, (){print('reflectableNode2 clicked');});
 
-      stage.add(layer);
+      stage.addChild(layer);
 
       var reflectRect2El = reflectionLayerEl.querySelector('#reflectableNode2');
       expect(reflectRect2El, isNotNull);

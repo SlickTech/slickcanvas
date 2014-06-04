@@ -13,20 +13,20 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
     }))
   {}
 
-  void add(Node child) {
+  void addChild(Node child) {
     if (!(child is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
 
-    super.add(child);
+    super.addChild(child);
   }
 
-  void insert(int index, Node node) {
+  void insertChild(int index, Node node) {
     if (!(node is I_Reflection)) {
       throw 'Reflection Layer can only add reflection node';
     }
 
-    super.insert(index, node);
+    super.insertChild(index, node);
   }
 
   void insertNode(I_Reflection node) {
@@ -34,7 +34,7 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
     Node realNode = node._node;
     Node nextReflectableNode = realNode.layer.firstReflectableNode(startIndex:realNode.layer._children.indexOf(realNode) + 1);
     if (nextReflectableNode != null) {
-      insert(_children.indexOf(nextReflectableNode._reflection as Node), node as Node);
+      insertChild(_children.indexOf(nextReflectableNode._reflection as Node), node as Node);
     } else {
       reflectNode(realNode);
     }
@@ -50,12 +50,6 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
     }
 
     if (!node.reflectable) {
-//      // if group wasn't reflectable, reflect its children
-//      if (node is Container) {
-//        (node as Container).children.forEach((child){
-//          reflectNode(child);
-//        });
-//      }
       return;
     }
 
@@ -77,13 +71,13 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
       var index = firstReflectableNode == null ? -1 : this._children.indexOf(firstReflectableNode._reflection);
 
       if (index != -1) {
-        insert(index, reflection as Node);
+        insertChild(index, reflection as Node);
       } else {
         // top layer doesn't have any reflectable node yet, just add the node
-        add(reflection as Node);
+        addChild(reflection as Node);
       }
     } else {
-      add(reflection as Node);
+      addChild(reflection as Node);
     }
   }
 }

@@ -8,7 +8,7 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     return new SVG.GElement();
   }
 
-  void add(SvgNode child) {
+  void addChild(SvgNode child) {
     _children.add(child);
     child.parent = this;
     this._element.append(child._element);
@@ -32,11 +32,14 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     node.remove();
   }
 
-  void removeChildren() {
+  void clearChildren() {
+    while(_children.isNotEmpty){
+      removeChild(_children.first);
+    }
     _children.forEach((child) => child.remove());
   }
 
-  void insert(int index, SvgNode node) {
+  void insertChild(int index, SvgNode node) {
     node.parent = this;
     _children.insert(index, node);
     this._element.nodes.insert(index, node._element);

@@ -1,6 +1,7 @@
 library smartcanvas.test;
 
 import 'dart:html' as dom;
+import 'package:unittest/html_config.dart';
 
 import '../lib/smartcanvas.dart';
 import './svg_tests/svg_tests.dart';
@@ -13,8 +14,11 @@ void main() {
 
   stage = new Stage(container, svg, {
     WIDTH: container.clientWidth,
-    HEIGHT: 900,
+    HEIGHT: 800,
   });
 
+  useHtmlConfiguration();
+
   SvgTests.run();
+  CanvasTests.run();
 }

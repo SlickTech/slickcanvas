@@ -69,7 +69,7 @@ class SvgLayer extends SvgNode implements LayerImpl {
     }
   }
 
-  void add(SvgNode child) {
+  void addChild(SvgNode child) {
     _children.add(child);
     child.parent = this;
     this._element.append(child._element);
@@ -91,11 +91,13 @@ class SvgLayer extends SvgNode implements LayerImpl {
     node.remove();
   }
 
-  void removeChildren() {
-    _children.forEach((child) => child.remove());
+  void clearChildren() {
+    while(_children.isNotEmpty) {
+      this.removeChild(_children.first);
+    }
   }
 
-  void insert(int index, SvgNode node) {
+  void insertChild(int index, SvgNode node) {
     node.parent = this;
     _children.insert(index, node);
     this._element.nodes.insert(index, node._element);

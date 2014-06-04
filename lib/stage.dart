@@ -137,7 +137,7 @@ class Stage extends NodeBase implements Container<Node> {
 
   Position get pointerPosition => _pointerPosition;
 
-  void add(Node node) {
+  void addChild(Node node) {
     if (node is Layer) {
       node.stage = this;
       node._reflection = _reflectionLayer;
@@ -162,9 +162,9 @@ class Stage extends NodeBase implements Container<Node> {
           WIDTH: width,
           HEIGHT: height
         });
-        add(_defaultLayer);
+        addChild(_defaultLayer);
       }
-      _defaultLayer.add(node);
+      _defaultLayer.addChild(node);
     }
   }
 
@@ -177,7 +177,13 @@ class Stage extends NodeBase implements Container<Node> {
     }
   }
 
-  void insert(int index, Node node) {
+  void clearChildren() {
+    while (_children.isNotEmpty) {
+      this.removeChild(_children.first);
+    }
+  }
+
+  void insertChild(int index, Node node) {
     if (node is Layer) {
       node.stage = this;
 
@@ -197,7 +203,7 @@ class Stage extends NodeBase implements Container<Node> {
 //      }
 
     } else {
-      _defaultLayer.insert(index, node);
+      _defaultLayer.insertChild(index, node);
     }
   }
 

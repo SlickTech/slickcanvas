@@ -3,6 +3,7 @@ part of smartcanvas.test.svg;
 class SvgGradientTests {
   static void run() {
       test('linearGradient', linearGradientTest);
+      test('fillChangedToLinearGradient', fillChangedToLinearGradientTest);
       test('linearGroupInsideGroup', linearGradientInsideGroupTest);
       test('radialGradient', radialGradientTest);
       test('radialGradientInsideGroup', radialGradientInsideGroupTest);
@@ -31,7 +32,7 @@ class SvgGradientTests {
       FILL: gradient
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
 
     var defs = stage.element.querySelector('defs');
     expect(defs, isNotNull);
@@ -56,7 +57,65 @@ class SvgGradientTests {
 
     var rectEl = stage.element.querySelector('.__sc_rect');
     expect(rectEl, isNotNull);
-    expect(rectEl.getAttribute('fill'), equals('url(#linear_gradient)'));
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#linear_gradient)'));
+
+    rect.remove();
+
+    // make sure gradient and rect are removed
+    defs = stage.element.querySelector('defs');
+    expect(defs, isNull);
+    rectEl = stage.element.querySelector('.__sc_rect');
+    expect(rectEl, isNull);
+  }
+
+  static void fillChangedToLinearGradientTest() {
+    Rect rect = new Rect({
+      X: 50,
+      Y: 50,
+      WIDTH: 200,
+      HEIGHT: 200,
+      FILL: 'red'
+    });
+
+    stage.addChild(rect);
+    rect.fill = new LinearGradient({
+      ID:'linear_gradient',
+      STOPS: [
+        {
+          OFFSET: '0%',
+          COLOR: 'green'
+        },
+        {
+          OFFSET: '95%',
+          COLOR: 'gold'
+        }
+      ]
+    });
+
+    var defs = stage.element.querySelector('defs');
+    expect(defs, isNotNull);
+
+    var grad = defs.querySelector('#linear_gradient');
+    expect(grad, isNotNull);
+    expect(grad.nodes.length, equals(2));
+    for(int i = 0; i < 2; i++) {
+      expect(grad.nodes[i].tagName, equals('stop'));
+      var stop = grad.nodes[i];
+      switch (i) {
+        case 0:
+          expect(stop.getAttribute(OFFSET), equals('0%'));
+          expect(stop.getAttribute(STYLE), equals('stop-color: rgb(0, 128, 0);'));
+          break;
+        case 1:
+          expect(stop.getAttribute(OFFSET), equals('95%'));
+          expect(stop.getAttribute(STYLE), equals('stop-color: rgb(255, 215, 0);'));
+          break;
+      }
+    }
+
+    var rectEl = stage.element.querySelector('.__sc_rect');
+    expect(rectEl, isNotNull);
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#linear_gradient)'));
 
     rect.remove();
 
@@ -90,8 +149,8 @@ class SvgGradientTests {
     });
 
     Group g = new Group();
-    g.add(rect);
-    stage.add(g);
+    g.addChild(rect);
+    stage.addChild(g);
 
     var defs = stage.element.querySelector('defs');
     expect(defs, isNotNull);
@@ -119,7 +178,7 @@ class SvgGradientTests {
 
     var rectEl = gEl.querySelector('.__sc_rect');
     expect(rectEl, isNotNull);
-    expect(rectEl.getAttribute('fill'), equals('url(#linear_gradient)'));
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#linear_gradient)'));
 
     g.remove();
 
@@ -155,7 +214,7 @@ class SvgGradientTests {
       FILL: gradient
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
 
     var defs = stage.element.querySelector('defs');
     expect(defs, isNotNull);
@@ -180,7 +239,7 @@ class SvgGradientTests {
 
     var rectEl = stage.element.querySelector('.__sc_rect');
     expect(rectEl, isNotNull);
-    expect(rectEl.getAttribute('fill'), equals('url(#radial_gradient)'));
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#radial_gradient)'));
 
     rect.remove();
 
@@ -213,9 +272,9 @@ class SvgGradientTests {
     });
 
     Group g = new Group();
-    stage.add(g);
+    stage.addChild(g);
 
-    g.add(rect);
+    g.addChild(rect);
 
     var defs = stage.element.querySelector('defs');
     expect(defs, isNotNull);
@@ -243,7 +302,7 @@ class SvgGradientTests {
 
     var rectEl = gEl.querySelector('.__sc_rect');
     expect(rectEl, isNotNull);
-    expect(rectEl.getAttribute('fill'), equals('url(#radial_gradient)'));
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#radial_gradient)'));
 
     g.remove();
 
@@ -276,7 +335,7 @@ class SvgGradientTests {
       HEIGHT: 200,
     });
 
-    stage.add(rect);
+    stage.addChild(rect);
     rect.fill = gradient;
 
     var grad = stage.element.querySelector('#radial_gradient');
@@ -298,7 +357,7 @@ class SvgGradientTests {
       }
     }
     expect(rectEl, isNotNull);
-    expect(rectEl.getAttribute('fill'), equals('url(#radial_gradient)'));
+    expect((rectEl as SVG.SvgElement).style.getPropertyValue('fill'), equals('url(#radial_gradient)'));
 
     rect.fill = 'none';
     expect((rect.impl as SvgNode).element.attributes['fill'], isNull);
