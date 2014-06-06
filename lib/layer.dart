@@ -55,6 +55,10 @@ class Layer extends Group {
       }
 
       _parent.children.remove(this);
+      String sUid = uid.toString();
+      _parent
+        .off('widthChanged', sUid)
+        .off('heightChanged', sUid);
       _parent = null;
     }
   }
@@ -66,9 +70,11 @@ class Layer extends Group {
   void set stage(Stage value) {
     _parent = value;
     _transformMatrix = _parent._transformMatrix;
+
+    String sUid = uid.toString();
     _parent
-    .on('widthChanged', (oldValue, newValue) { width = newValue; })
-    .on('heightChanged', (oldValue, newValue) { height = newValue; })
+    .on('widthChanged', (oldValue, newValue) { width = newValue; }, sUid)
+    .on('heightChanged', (oldValue, newValue) { height = newValue; }, sUid)
     ;
     fire('stageSet');
   }

@@ -107,6 +107,16 @@ class SvgLayer extends SvgNode implements LayerImpl {
   void resume() {}
   void suspend() {}
 
+  void remove() {
+    String sUid = uid.toString();
+    shell.stage
+      .off('scaleXChanged', sUid)
+      .off('scaleYChanged', sUid)
+      .off('translateXChanged', sUid)
+      .off('translateYChanged', sUid);
+    super.remove();
+  }
+
   void _onStageSet() {
 
     _translateViewBoxX(shell.stage.tx);
@@ -114,11 +124,12 @@ class SvgLayer extends SvgNode implements LayerImpl {
     _scaleViewBoxWidth(shell.stage.scaleX);
     _scaleViewBoxHeight(shell.stage.scaleY);
 
+    String sUid = uid.toString();
     shell.stage
-      .on('scaleXChanged', _onScaleXChanged)
-      .on('scaleYChanged', _onScaleYChanged)
-      .on('translateXChanged', _onTranslateXChanged)
-      .on('translateYChanged', _onTranslateYChanged);
+      .on('scaleXChanged', _onScaleXChanged, sUid)
+      .on('scaleYChanged', _onScaleYChanged, sUid)
+      .on('translateXChanged', _onTranslateXChanged, sUid)
+      .on('translateYChanged', _onTranslateYChanged, sUid);
   }
 
   void _onWidthChanged(oldValue, newValue) {
