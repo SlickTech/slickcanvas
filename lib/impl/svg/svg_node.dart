@@ -240,10 +240,15 @@ abstract class SvgNode extends NodeImpl {
     _dragstarting = false;
     _dragging = false;
 
-    if (stage != null) {
+    if (_dragStarted) {
+      fire(DRAGEND, e);
+    }
+    _dragStarted = false;
+
+//    if (stage != null) {
       _dragMoveHandler.pause();
       _dragEndHandler.pause();
-    }
+//    }
   }
 
   void _onMouseMove(DOM.MouseEvent e) {

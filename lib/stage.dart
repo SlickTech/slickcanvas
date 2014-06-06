@@ -226,7 +226,7 @@ class Stage extends NodeBase implements Container<Node> {
     e.stopPropagation();
     if (!_dragStarted) {
       this._dragging = true;
-      fire('dragstart', e);
+      fire(DRAGSTART, e);
       _dragStarted = true;
     }
     tx = _pointerPosition.x - _dragOffsetX;
@@ -241,6 +241,9 @@ class Stage extends NodeBase implements Container<Node> {
     }
     _dragstarting = false;
     _dragging = false;
+    if (_dragStarted) {
+      fire(DRAGEND, e);
+    }
     _dragStarted = false;
   }
 
