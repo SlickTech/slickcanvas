@@ -1,3 +1,7 @@
+#v0.0.23
+* Fire dragend event
+* Unsubscribe stage events when layer removed
+
 #v0.0.22
 ###Bugs
 * Fix an issue where gradient doesn't apply when changed from a fill color.
