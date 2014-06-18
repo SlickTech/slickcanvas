@@ -1,3 +1,6 @@
+#v0.0.24
+* Fix stage pointer position
+
 #v0.0.23
 * Fire dragend event
 * Unsubscribe stage events when layer removed
