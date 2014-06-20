@@ -126,7 +126,7 @@ class Stage extends NodeBase implements Container<Node> {
     var elementClientRect = _element.getBoundingClientRect();
     num x = (e.client.x - elementClientRect.left) ~/ _transformMatrix.sx;
     num y = (e.client.y - elementClientRect.top) ~/ _transformMatrix.sy;
-    print('cx: ${e.client.x}, ${e.client.y} - offset:${_element.offsetLeft}, ${_element.offsetTop} - t: ${_transformMatrix.tx}, ${_transformMatrix.ty} - pp: $x, $y');
+//    print('cx: ${e.client.x}, ${e.client.y} - offset:${_element.offsetLeft}, ${_element.offsetTop} - t: ${_transformMatrix.tx}, ${_transformMatrix.ty} - pp: $x, $y');
     this._pointerPosition = new Position(x: x, y: y);
 //    add(new Circle({
 //      X: x * _transformMatrix.sx,
