@@ -31,7 +31,7 @@ class SvgPatternTests {
     var elPattern = stage.element.querySelector('#${pattern.id}');
     expect(elRect, isNotNull);
     expect(elPattern, isNotNull);
-    expect(elRect.attributes[FILL], equals('url(#${pattern.id})'));
+    expect(elRect.style.getPropertyValue(FILL), equals('url(#${pattern.id})'));
     rect.remove();
   }
 
@@ -60,7 +60,7 @@ class SvgPatternTests {
     var elPattern = stage.element.querySelector('#${pattern.id}');
     expect(elRect, isNotNull);
     expect(elPattern, isNotNull);
-    expect(elRect.attributes[FILL], equals('url(#${pattern.id})'));
+    expect(elRect.style.getPropertyValue(FILL), equals('url(#${pattern.id})'));
     rect.remove();
   }
 
@@ -88,7 +88,7 @@ class SvgPatternTests {
     var elPattern = stage.element.querySelector('#${pattern.id}');
     expect(elRect, isNotNull);
     expect(elPattern, isNotNull);
-    expect(elRect.attributes[FILL], equals('url(#${pattern.id})'));
+    expect(elRect.style.getPropertyValue(FILL), equals('url(#${pattern.id})'));
     rect.remove();
   }
 }
