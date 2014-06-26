@@ -41,6 +41,8 @@ const String CX = 'cx';
 const String CY = 'cy';
 const String RX = 'rx';
 const String RY = 'ry';
+const String FX = 'fx';
+const String FY = 'fy';
 const String R = 'r';
 const String FONT_SIZE = 'font-size';
 const String FONT_FAMILY = 'font-family';
@@ -86,6 +88,7 @@ const String DISABLE_SHADOW_ROOT = 'disableShadowRoot';
 const String STOPS = 'stops';
 const String OFFSET = 'offset';
 const String COLOR = 'color';
+const String SPREAD_METHOD = 'spreadMethod';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';

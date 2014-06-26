@@ -13,5 +13,5 @@ class SCPattern extends Group{
     return impl;
   }
 
-  String get id => getAttribute(ID, '__sc_node_${uid}');
+  String get id => getAttribute(ID, '__sc_pattern_${uid}');
 }

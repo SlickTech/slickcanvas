@@ -12,15 +12,9 @@ abstract class SvgGradient extends SvgNode {
 
   SVG.SvgElement __createElement();
 
-  Set<String> _getElementAttributeNames() {
-    var rt = super._getElementAttributeNames();
-    rt.addAll([X1, Y1, X2, Y2]);
-    return rt;
-  }
-
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     if (attr == ID) {
-      return super.getAttribute(attr, shell.uid);
+      return super.getAttribute(attr, defaultValue != null ? defaultValue : shell.id);
     } else {
       return super.getAttribute(attr, defaultValue);
     }

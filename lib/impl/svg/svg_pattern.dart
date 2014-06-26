@@ -16,7 +16,7 @@ class SvgPattern extends SvgGroup {
 
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     if (attr == ID) {
-      return super.getAttribute(attr, defaultValue != null ? defaultValue : '__sc_node_${shell.uid}');
+      return super.getAttribute(attr, defaultValue != null ? defaultValue : shell.id);
     } else {
       return super.getAttribute(attr, defaultValue);
     }

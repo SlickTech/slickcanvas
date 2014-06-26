@@ -7,5 +7,11 @@ class SvgLinearGradient extends SvgGradient {
     return new SVG.LinearGradientElement();
   }
 
+  Set<String> _getElementAttributeNames() {
+    var rt = super._getElementAttributeNames();
+    rt.addAll([X1, Y1, X2, Y2, SPREAD_METHOD]);
+    return rt;
+  }
+
   String get _nodeName => SC_LINEAR_GRADIENT;
 }

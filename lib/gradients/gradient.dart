@@ -7,5 +7,5 @@ abstract class Gradient extends Node {
   void set stops(List<num> value) => setAttribute(STOPS, value);
   List<num> get stops => getAttribute(STOPS, []);
 
-  String get id => getAttribute(ID, '__sc_node_${uid}');
+  String get id => getAttribute(ID, '__sc_gradient_${uid}');
 }
