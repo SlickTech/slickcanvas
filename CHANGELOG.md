@@ -1,3 +1,9 @@
+#v0.0.25
+###Bugs
+* Fix gradient/pattern def beging added multiple times
+* Gradient doesn't work if id didn't present in configuration
+* Moved X1, Y1, X2, Y2 attribute to linear griadent. Added CX, CY, R, FX, FY attributes to radial gradient. Added spreadModel for both.
+
 #v0.0.24
 * Fix stage pointer position
 
