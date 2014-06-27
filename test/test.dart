@@ -2,8 +2,7 @@ library smartcanvas.test;
 
 import 'dart:html' as dom;
 import 'package:unittest/html_config.dart';
-
-import '../lib/smartcanvas.dart';
+import 'package:smartcanvas/smartcanvas.dart';
 import './svg_tests/svg_tests.dart';
 import './canvas_tests/canvas_tests.dart';
 

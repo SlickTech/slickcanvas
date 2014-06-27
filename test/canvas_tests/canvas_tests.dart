@@ -1,8 +1,8 @@
 library smartcanvas.test.canvas;
 
 import 'package:unittest/unittest.dart';
-import '../../lib/smartcanvas.dart';
-import '../../lib/impl/canvas/canvas.dart';
+import 'package:smartcanvas/smartcanvas.dart';
+import 'package:smartcanvas/impl/canvas/canvas.dart';
 import '../test.dart';
 
 part 'layer_tests.dart';

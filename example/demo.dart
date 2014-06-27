@@ -1,5 +1,5 @@
 import 'dart:html' as dom hide Text;
-import '../lib/smartcanvas.dart';
+import 'package:smartcanvas/smartcanvas.dart';
 
 void main() {
   dom.Element container = dom.document.querySelector('#smartCanvas');
@@ -10,6 +10,20 @@ void main() {
       HEIGHT: 900,
       DRAGGABLE: true
     });
+
+  Layer layer = new Layer(canvas, {});
+
+  Rect rect = new Rect({
+    X: 50,
+    Y: 50,
+    WIDTH: 100,
+    HEIGHT: 100,
+    FILL: 'red',
+    DRAGGABLE: true
+  });
+
+  layer.addChild(rect);
+  stage.addChild(layer);
 
 //    Circle circle = new Circle({
 //      X: 50,
@@ -124,33 +138,31 @@ void main() {
 //    g.add(circle);
 //    circle.moveToBottom();
 
-    Group g1 = new Group();
-    Circle c2 = new Circle({
-      'x': 100,
-      'y': 100,
-      'r': 50,
-      'fill': 'red',
-//      'listening': true,
-      'draggable': true
-    });
-
-    Layer layer2 = new Layer(svg, {
-      'id': 'two'
-    });
+//    Group g1 = new Group();
+//    Circle c2 = new Circle({
+//      'x': 100,
+//      'y': 100,
+//      'r': 50,
+//      'fill': 'red',
+//      'draggable': true
+//    });
+//
+//    Layer layer2 = new Layer(svg, {
+//      'id': 'two'
+//    });
 
 //    c2.on(MOUSEDOWN, (e) => print('c2 mousedown'));
 //    c2.on(DBLCLICK, (e) => print('c2 double click'));
 
-    g1.addChild(c2);
-    stage.addChild(g1);
-    stage.addChild(layer2);
-
-    Group g2 = new Group({
-//      LISTENING: true
-    });
-    layer2.addChild(g2);
-
-    c2.moveTo(g2);
+//    g1.addChild(c2);
+//    stage.addChild(g1);
+//    stage.addChild(layer2);
+//
+//    Group g2 = new Group({
+//    });
+//    layer2.addChild(g2);
+//
+//    c2.moveTo(g2);
 //
 //    stage.add(ellipse);
 //

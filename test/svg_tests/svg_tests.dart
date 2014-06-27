@@ -2,8 +2,8 @@ library smartcanvas.test.svg;
 
 import 'dart:svg' as SVG;
 import 'package:unittest/unittest.dart';
-import '../../lib/smartcanvas.dart';
-import '../../lib/impl/svg/svg.dart';
+import 'package:smartcanvas/smartcanvas.dart';
+import 'package:smartcanvas/impl/svg/svg.dart';
 import '../test.dart';
 
 part 'gradient_tests.dart';
