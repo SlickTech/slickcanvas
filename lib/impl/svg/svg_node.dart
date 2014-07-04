@@ -43,7 +43,7 @@ abstract class SvgNode extends NodeImpl {
         _stopDragHandling();
       }
     })
-    .on(ANY_CHANGED, _handleAttrChange)
+    .on(ATTR_CHANGED, _handleAttrChange)
     .on('translateXChanged', (oldValue, newValue) { translate(); })
     .on('translateYChanged', (oldValue, newValue) { translate(); });
   }

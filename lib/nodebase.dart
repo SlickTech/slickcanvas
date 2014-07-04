@@ -37,7 +37,7 @@ class NodeBase extends EventBus {
       if (hasListener(event)) {
         fire(event, oldValue, value);
       } else{
-        fire(ANY_CHANGED, attr, oldValue, value);
+        fire(ATTR_CHANGED, attr, oldValue, value);
       }
     }
   }
@@ -54,7 +54,7 @@ class NodeBase extends EventBus {
     if (hasListener(event)) {
       fire(event, oldValue, null);
     } else{
-      fire(ANY_CHANGED, attr, oldValue, null);
+      fire(ATTR_CHANGED, attr, oldValue, null);
     }
   }
 

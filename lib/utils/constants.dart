@@ -22,7 +22,7 @@ const String DRAGSTART = 'dragstart';
 const String DRAGMOVE = 'dragmove';
 const String DRAGEND = 'dragend';
 const String CHANGED = 'Changed';
-const String ANY_CHANGED = '*Changed';
+const String ATTR_CHANGED = '*Changed';
 
 // attributes & styles
 const String X = 'x';
