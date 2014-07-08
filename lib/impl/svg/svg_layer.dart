@@ -119,8 +119,8 @@ class SvgLayer extends SvgNode implements LayerImpl {
 
   void _onStageSet() {
 
-    _translateViewBoxX(shell.stage.tx);
-    _translateViewBoxY(shell.stage.ty);
+    _translateViewBoxX(shell.stage.translateX);
+    _translateViewBoxY(shell.stage.translateY);
     _scaleViewBoxWidth(shell.stage.scaleX);
     _scaleViewBoxHeight(shell.stage.scaleY);
 

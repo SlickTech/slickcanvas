@@ -230,8 +230,8 @@ class Stage extends NodeBase implements Container<Node> {
       fire(DRAGSTART, e);
       _dragStarted = true;
     }
-    tx = _pointerPosition.x - _dragOffsetX;
-    ty = _pointerPosition.y - _dragOffsetY;
+    translateX = _pointerPosition.x - _dragOffsetX;
+    translateX = _pointerPosition.y - _dragOffsetY;
     fire(DRAGMOVE, e);
   }
 
@@ -303,23 +303,23 @@ class Stage extends NodeBase implements Container<Node> {
   num get scaleX => _transformMatrix.scaleX;
   num get scaleY => _transformMatrix.scaleY;
 
-  void set tx(num tx) {
+  void set translateX(num tx) {
     var oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
     if (oldValue != tx) {
       fire('translateXChanged', oldValue, tx);
     }
   }
-  num get tx => _transformMatrix.translateX;
+  num get translateX => _transformMatrix.translateX;
 
-  void set ty(num ty) {
+  void set translateY(num ty) {
     var oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
     if (oldValue != ty) {
       fire('translateYChanged', oldValue, ty);
     }
   }
-  num get ty => _transformMatrix.translateY;
+  num get translateY => _transformMatrix.translateY;
 
   DOM.Element get container => _container;
 

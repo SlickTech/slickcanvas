@@ -191,8 +191,8 @@ abstract class SvgNode extends NodeImpl {
     var pointerPosition = this.stage.pointerPosition;
     var m = (_element as SVG.GraphicsElement).getCtm();
 
-    this._dragOffsetX = pointerPosition.x - m.e / m.a + stage.tx; //* stage.scaleX;
-    this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.ty; // * stage.scaleY;
+    this._dragOffsetX = pointerPosition.x - m.e / m.a + stage.translateX; //* stage.scaleX;
+    this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.translateY; // * stage.scaleY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -226,10 +226,9 @@ abstract class SvgNode extends NodeImpl {
       var pointerPosition = this.stage.pointerPosition;
       var m = (_element as SVG.GraphicsElement).getCtm();
 
-      transformMatrix.translateX = (pointerPosition.x - this._dragOffsetX);
-      transformMatrix.translateY = (pointerPosition.y - this._dragOffsetY);
+      shell.translateX = (pointerPosition.x - this._dragOffsetX);
+      shell.translateY = (pointerPosition.y - this._dragOffsetY);
 
-      translate();
       fire(DRAGMOVE, e);
     }
   }
@@ -306,14 +305,14 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void scale() {
-    _elMatrix.a = transformMatrix.scaleX;
-    _elMatrix.d = transformMatrix.scaleY;
+    _elMatrix.a = shell.scaleX;
+    _elMatrix.d = shell.scaleY;
     _setTransform();
   }
 
   void translate() {
-    _elMatrix.e = transformMatrix.translateX;
-    _elMatrix.f = transformMatrix.translateY;
+    _elMatrix.e = shell.translateX;
+    _elMatrix.f = shell.translateY;
     _setTransform();
   }
 
