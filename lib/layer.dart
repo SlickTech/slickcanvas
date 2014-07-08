@@ -35,8 +35,8 @@ class Layer extends Group {
   }
 
   void _handleStageDragMove(e) {
-    _transformMatrix.tx = _parent._transformMatrix.tx;
-    _transformMatrix.ty = _parent._transformMatrix.ty;
+    _transformMatrix.translateX = _parent._transformMatrix.translateX;
+    _transformMatrix.translateY = _parent._transformMatrix.translateY;
     fire('translateChanged');
   }
 

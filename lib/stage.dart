@@ -124,8 +124,8 @@ class Stage extends NodeBase implements Container<Node> {
 
   void _setPointerPosition(e) {
     var elementClientRect = _element.getBoundingClientRect();
-    num x = (e.client.x - elementClientRect.left) ~/ _transformMatrix.sx;
-    num y = (e.client.y - elementClientRect.top) ~/ _transformMatrix.sy;
+    num x = (e.client.x - elementClientRect.left) ~/ _transformMatrix.scaleX;
+    num y = (e.client.y - elementClientRect.top) ~/ _transformMatrix.scaleY;
 //    print('cx: ${e.client.x}, ${e.client.y} - offset:${_element.offsetLeft}, ${_element.offsetTop} - t: ${_transformMatrix.tx}, ${_transformMatrix.ty} - pp: $x, $y');
     this._pointerPosition = new Position(x: x, y: y);
 //    add(new Circle({
@@ -218,8 +218,8 @@ class Stage extends NodeBase implements Container<Node> {
 
     this._dragstarting = true;
 
-    this._dragOffsetX = _pointerPosition.x - _transformMatrix.tx;
-    this._dragOffsetY = _pointerPosition.y - _transformMatrix.ty;
+    this._dragOffsetX = _pointerPosition.x - _transformMatrix.translateX;
+    this._dragOffsetY = _pointerPosition.y - _transformMatrix.translateY;
   }
 
   void _dragMove(DOM.MouseEvent e) {
@@ -266,15 +266,15 @@ class Stage extends NodeBase implements Container<Node> {
   num get height => getAttribute(HEIGHT);
 
   void set scaleX(num x) {
-    num oldValue = _transformMatrix.sx;
-    _transformMatrix.sx = x;
+    num oldValue = _transformMatrix.scaleX;
+    _transformMatrix.scaleX = x;
     if (oldValue != x) {
       fire('scaleXChanged', oldValue, x);
     }
   }
   void set scaleY(num y) {
-    num oldValue = _transformMatrix.sy;
-    _transformMatrix.sy = y;
+    num oldValue = _transformMatrix.scaleY;
+    _transformMatrix.scaleY = y;
     if (oldValue != y) {
       fire('scaleYChanged', oldValue, y);
     }
@@ -300,26 +300,26 @@ class Stage extends NodeBase implements Container<Node> {
     scaleY = y;
   }
 
-  num get scaleX => _transformMatrix.sx;
-  num get scaleY => _transformMatrix.sy;
+  num get scaleX => _transformMatrix.scaleX;
+  num get scaleY => _transformMatrix.scaleY;
 
   void set tx(num tx) {
-    var oldValue = _transformMatrix.tx;
-    _transformMatrix.tx = tx;
+    var oldValue = _transformMatrix.translateX;
+    _transformMatrix.translateX = tx;
     if (oldValue != tx) {
       fire('translateXChanged', oldValue, tx);
     }
   }
-  num get tx => _transformMatrix.tx;
+  num get tx => _transformMatrix.translateX;
 
   void set ty(num ty) {
-    var oldValue = _transformMatrix.ty;
-    _transformMatrix.ty = ty;
+    var oldValue = _transformMatrix.translateY;
+    _transformMatrix.translateY = ty;
     if (oldValue != ty) {
       fire('translateYChanged', oldValue, ty);
     }
   }
-  num get ty => _transformMatrix.ty;
+  num get ty => _transformMatrix.translateY;
 
   DOM.Element get container => _container;
 

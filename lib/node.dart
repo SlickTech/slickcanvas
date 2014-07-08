@@ -17,11 +17,11 @@ abstract class Node extends NodeBase {
     _x0 = getAttribute(X, 0);
     _y0 = getAttribute(Y, 0);
     if (hasAttribute(OFFSET_X)) {
-      _transformMatrix.tx -= getAttribute(OFFSET_X);
+      _transformMatrix.translateX -= getAttribute(OFFSET_X);
     }
 
     if (hasAttribute(OFFSET_Y)) {
-      _transformMatrix.ty -= getAttribute(OFFSET_Y);
+      _transformMatrix.translateY -= getAttribute(OFFSET_Y);
     }
   }
 
@@ -246,16 +246,16 @@ abstract class Node extends NodeBase {
   String get className => getAttribute(CLASS, '');
 
   void set x(num value) { translateX = value - _x0; }
-  num get x { return _x0 + _transformMatrix.tx; }
+  num get x { return _x0 + _transformMatrix.translateX; }
 
   void set y(num value) { translateY = value - _y0; }
-  num get y { return _y0 + _transformMatrix.ty; }
+  num get y { return _y0 + _transformMatrix.translateY; }
 
   void set offsetX(num value) {
     num oldValue = getAttribute(OFFSET_X, 0);
     if (oldValue != value) {
       _attrs[OFFSET_X] = value;
-      _transformMatrix.tx += value - oldValue;
+      _transformMatrix.translateX += value - oldValue;
       fire('offsetXChanged', oldValue, value);
     }
   }
@@ -265,7 +265,7 @@ abstract class Node extends NodeBase {
     num oldValue = getAttribute(OFFSET_Y, 0);
     if (oldValue != value) {
       _attrs[OFFSET_Y] = value;
-      _transformMatrix.ty += value - oldValue;
+      _transformMatrix.translateY += value - oldValue;
       fire('offsetYChanged', oldValue, value);
     }
   }
@@ -323,45 +323,45 @@ abstract class Node extends NodeBase {
   }
 
   void set scaleX(num x) {
-    num oldValue = _transformMatrix.sx;
-    _transformMatrix.sx = x;
+    num oldValue = _transformMatrix.scaleX;
+    _transformMatrix.scaleX = x;
     if (oldValue != x) {
       fire('scaledXChanged', oldValue, x);
     }
   }
-  num get scaleX => _transformMatrix.sx;
+  num get scaleX => _transformMatrix.scaleX;
 
   void set scaleY(num y) {
-    num oldValue = _transformMatrix.sy;
-    _transformMatrix.sy = y;
+    num oldValue = _transformMatrix.scaleY;
+    _transformMatrix.scaleY = y;
     if (oldValue != y) {
       fire('scaledYChanged', oldValue, y);
     }
   }
-  num get scaleY => _transformMatrix.sy;
+  num get scaleY => _transformMatrix.scaleY;
 
   void set translateX(num tx) {
-    num oldValue = _transformMatrix.tx;
-    _transformMatrix.tx = tx;
+    num oldValue = _transformMatrix.translateX;
+    _transformMatrix.translateY = tx;
     if (oldValue != tx) {
       fire('translateXChanged', oldValue, tx);
     }
   }
-  num get translateX => _transformMatrix.tx;
+  num get translateX => _transformMatrix.translateX;
 
   void set translateY(num ty) {
-    num oldValue = _transformMatrix.ty;
-    _transformMatrix.ty = ty;
+    num oldValue = _transformMatrix.translateY;
+    _transformMatrix.translateY = ty;
     if (oldValue != ty) {
       fire('translateYChanged', oldValue, ty);
     }
   }
-  num get translateY => _transformMatrix.ty;
+  num get translateY => _transformMatrix.translateY;
 
   TransformMatrix get transformMatrix => _transformMatrix;
 
   Position get position {
-    return new Position(x: _x0 +  transformMatrix.tx, y: _y0 + transformMatrix.ty);
+    return new Position(x: _x0 +  transformMatrix.translateX, y: _y0 + transformMatrix.translateY);
   }
 
   void set absolutePosition(Position pos) {

@@ -52,12 +52,12 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     num y = attrs[Y];
     bool b = false;
     if (x != null) {
-      transformMatrix.tx = x;
+      transformMatrix.translateX = x;
       b = true;
     }
 
     if (y != null) {
-      transformMatrix.ty = y;
+      transformMatrix.translateY = y;
       b = true;
     }
 

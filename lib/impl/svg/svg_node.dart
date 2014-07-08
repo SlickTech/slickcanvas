@@ -226,8 +226,8 @@ abstract class SvgNode extends NodeImpl {
       var pointerPosition = this.stage.pointerPosition;
       var m = (_element as SVG.GraphicsElement).getCtm();
 
-      transformMatrix.tx = (pointerPosition.x - this._dragOffsetX);
-      transformMatrix.ty = (pointerPosition.y - this._dragOffsetY);
+      transformMatrix.translateX = (pointerPosition.x - this._dragOffsetX);
+      transformMatrix.translateY = (pointerPosition.y - this._dragOffsetY);
 
       translate();
       fire(DRAGMOVE, e);
@@ -306,14 +306,14 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void scale() {
-    _elMatrix.a = transformMatrix.sx;
-    _elMatrix.d = transformMatrix.sy;
+    _elMatrix.a = transformMatrix.scaleX;
+    _elMatrix.d = transformMatrix.scaleY;
     _setTransform();
   }
 
   void translate() {
-    _elMatrix.e = transformMatrix.tx;
-    _elMatrix.f = transformMatrix.ty;
+    _elMatrix.e = transformMatrix.translateX;
+    _elMatrix.f = transformMatrix.translateY;
     _setTransform();
   }
 
