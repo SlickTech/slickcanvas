@@ -6,7 +6,7 @@ abstract class Node extends NodeBase {
   Container<Node> _parent;
   I_Reflection _reflection;
   TransformMatrix _transformMatrix = new TransformMatrix();
-  num _x0, _y0;
+  num _x0, _y0, _rotation;
   bool _listening = false;
 
   Node([Map<String, dynamic> config = const {}]): super(config) {
@@ -169,12 +169,6 @@ abstract class Node extends NodeBase {
     Position pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(x: pos.x, y: pos.y, width: this.width, height: this.height);
   }
-
-//  void dragStart(DOM.MouseEvent e) {
-//    if (_reflection != null) {
-//      ((_reflection as Node)._impl as SvgNode).dragStart(e);
-//    }
-//  }
 
   Position getRelativePosition(Node referenceParent) {
     Position pos = position;
@@ -342,7 +336,7 @@ abstract class Node extends NodeBase {
 
   void set translateX(num tx) {
     num oldValue = _transformMatrix.translateX;
-    _transformMatrix.translateY = tx;
+    _transformMatrix.translateX = tx;
     if (oldValue != tx) {
       fire('translateXChanged', oldValue, tx);
     }
@@ -357,6 +351,15 @@ abstract class Node extends NodeBase {
     }
   }
   num get translateY => _transformMatrix.translateY;
+
+  void set rotation(num r) {
+    num oldValue = _rotation;
+    _rotation = r;
+    if (oldValue != r) {
+      fire('rotationChanged', oldValue, r);
+    }
+  }
+  num get rotation => _rotation;
 
   TransformMatrix get transformMatrix => _transformMatrix;
 
