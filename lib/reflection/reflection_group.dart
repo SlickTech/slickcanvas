@@ -7,7 +7,6 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
     _node = node;
     _node._reflection = this;
     this._attrs = _node.attrs;
-    this._transformMatrix = _node._transformMatrix;
     _eventListeners.addAll(_node._eventListeners);
     _buildReflectionGroup(_node._children);
   }
@@ -21,25 +20,27 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
         return;
       }
 
-      Node _reflectionChild = _createReflection(child) as Node;
-      addChild(_reflectionChild);
+      Node reflectionChild = _createReflection(child) as Node;
+      addChild(reflectionChild);
     });
+
+    // If all children were not reflectable, reflect the firt child.
+    // We need some solid shape inside the group
+    if (_children.isEmpty && children.isNotEmpty) {
+      Node reflectionChild = _createReflection(children.first) as Node;
+      addChild(reflectionChild);
+    }
   }
 
   NodeImpl _createSvgImpl() {
     assert(_node._impl != null);
     SvgGroup rt = super._createSvgImpl();
-    rt.on(DRAGMOVE, _onDragMove);
     return rt;
   }
 
 
   NodeImpl _createCanvasImpl() {
     throw 'Reflection Node should alwyas on svg canvas';
-  }
-
-  void _onDragMove(DOM.MouseEvent e) {
-    (_node._impl as SvgNode).translate();
   }
 
   void addChild(Node child) {
@@ -71,4 +72,15 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
     }
   }
 
+  void set scaleX(num x) { _node.scaleX = x; }
+  num get scaleX => _node.scaleX;
+
+  void set scaleY(num y) { _node.scaleY = y; }
+  num get scaleY => _node.scaleY;
+
+  void set translateX(num tx) { _node.translateX = tx; }
+  num get translateX => _node.translateX;
+
+  void set translateY(num ty) { _node.translateY = ty; }
+  num get translateY => _node.translateY;
 }

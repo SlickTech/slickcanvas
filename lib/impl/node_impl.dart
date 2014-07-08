@@ -3,7 +3,6 @@ part of smartcanvas;
 abstract class NodeImpl extends NodeBase {
   NodeImpl parent;
   Node _shell;
-  TransformMatrix _transformMatrix;
 
   NodeImpl(this._shell): super() {
     this._attrs = _shell._attrs;
@@ -13,6 +12,8 @@ abstract class NodeImpl extends NodeBase {
   String get type;
 
   void remove();
+
+  void translate();
 
   NodeImpl clone() {
     ClassMirror cm = reflectClass(this.runtimeType);
@@ -49,6 +50,4 @@ abstract class NodeImpl extends NodeBase {
 
   void set stroke(dynamic value) => setAttribute(STROKE, value);
   dynamic get stroke => getAttribute(STROKE);
-
-  TransformMatrix get transformMatrix => shell._transformMatrix;
 }

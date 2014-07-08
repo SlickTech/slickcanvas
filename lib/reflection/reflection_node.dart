@@ -7,14 +7,12 @@ class ReflectionNode extends Node implements I_Reflection {
     _node = node;
     _node._reflection = this;
     this._attrs = _node.attrs;
-    this._transformMatrix = _node._transformMatrix;
     _eventListeners.addAll(_node._eventListeners);
   }
 
   NodeImpl _createSvgImpl() {
     assert(_node._impl != null);
     NodeImpl reflectionImpl = _node._createSvgImpl();
-    reflectionImpl.on(DRAGMOVE, _onDragMove);
     return reflectionImpl;
   }
 
@@ -22,7 +20,15 @@ class ReflectionNode extends Node implements I_Reflection {
     throw 'Reflection Node should alwyas on svg canvas';
   }
 
-  void _onDragMove(DOM.MouseEvent e) {
-    (_node._impl as SvgNode).translate();
-  }
+  void set scaleX(num x) { _node.scaleX = x; }
+  num get scaleX => _node.scaleX;
+
+  void set scaleY(num y) { _node.scaleY = y; }
+  num get scaleY => _node.scaleY;
+
+  void set translateX(num tx) { _node.translateX = tx; }
+  num get translateX => _node.translateX;
+
+  void set translateY(num ty) { _node.translateY = ty; }
+  num get translateY => _node.translateY;
 }
