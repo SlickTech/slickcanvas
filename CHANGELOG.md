@@ -1,3 +1,6 @@
+#v0.0.27
+## Fixed stage dragging
+
 #v0.0.26
 * Removed transformMatrix from NodeImpl.
 * Dragging is apply to Node directly.
