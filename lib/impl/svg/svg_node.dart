@@ -116,14 +116,14 @@ abstract class SvgNode extends NodeImpl {
 
   void remove() {
     _element.remove();
-    if (parent != null) {
-      (parent as Container).children.remove(this);
-    }
     _defs.forEach((def) {
       if (layer != null) {
         (layer as SvgLayer).removeDef(def);
       }
     });
+    if (parent != null) {
+      (parent as Container).children.remove(this);
+    }
     parent = null;
   }
 
@@ -318,12 +318,17 @@ abstract class SvgNode extends NodeImpl {
 
   void _setTransform() {
     try {
-      SVG.GraphicsElement el = _element as SVG.GraphicsElement;
-      SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(_elMatrix);
-      if (el.transform.baseVal.length == 0) {
-        el.transform.baseVal.appendItem(tr);
-      } else {
-        el.transform.baseVal.replaceItem(tr, 0);
+      if (_element is SVG.GraphicsElement) {
+        SVG.GraphicsElement el = _element as SVG.GraphicsElement;
+        SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(_elMatrix);
+        if (el.transform.baseVal.length == 0) {
+          el.transform.baseVal.appendItem(tr);
+        } else {
+          el.transform.baseVal.replaceItem(tr, 0);
+        }
+//      print('translate: ${_elMatrix.e}, ${_elMatrix.f}');
+//      print('shell: ${shell.x}, ${shell.y}');
+//      print('shell abs: ${shell.absolutePosition.x}, ${shell.absolutePosition.y}');
       }
     } catch(e) {}
   }

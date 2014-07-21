@@ -87,7 +87,6 @@ class SvgLayer extends SvgNode implements LayerImpl {
   }
 
   void removeChild(SvgNode node) {
-    node.parent = null;
     node.remove();
   }
 

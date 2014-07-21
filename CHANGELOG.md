@@ -1,3 +1,14 @@
+#v0.0.26
+* Removed transformMatrix from NodeImpl.
+* Dragging is apply to Node directly.
+* Fixed an issue where a draggable group can't be dragged if all its children were not reflectable.
+* Fixed stage style.
+* Fixed an issue where move block from one layer to another then move it back caused a def being added multiple times.
+
+### Breaking changes
+* Rename TransformMatrix properties' name;
+* Rename Stage tx/ty to translateX/translateY;
+
 #v0.0.25
 ###Bugs
 * Fix gradient/pattern def beging added multiple times

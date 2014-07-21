@@ -13,8 +13,6 @@ abstract class NodeImpl extends NodeBase {
 
   void remove();
 
-  void translate();
-
   NodeImpl clone() {
     ClassMirror cm = reflectClass(this.runtimeType);
     NodeImpl clone = cm.newInstance(const Symbol(EMPTY), [_attrs]).reflectee;
@@ -50,4 +48,7 @@ abstract class NodeImpl extends NodeBase {
 
   void set stroke(dynamic value) => setAttribute(STROKE, value);
   dynamic get stroke => getAttribute(STROKE);
+
+  void set strokeWidth(dynamic value) => setAttribute(STROKE_WIDTH, value);
+  dynamic get strokeWidth => getAttribute(STROKE_WIDTH);
 }

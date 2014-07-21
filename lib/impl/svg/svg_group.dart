@@ -28,7 +28,6 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
   }
 
   void removeChild(SvgNode node) {
-    node.parent = null;
     node.remove();
   }
 
