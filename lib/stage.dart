@@ -65,8 +65,8 @@ class Stage extends NodeBase implements Container<Node> {
     _element.style
       ..display = 'inline-block'
       ..position = 'relative'
-      ..width = '${getAttribute(WIDTH)}'
-      ..height = '${getAttribute(HEIGHT)}'
+      ..width = '${getAttribute(WIDTH)}px'
+      ..height = '${getAttribute(HEIGHT)}px'
       ..margin = '0'
       ..padding = '0';
   }
