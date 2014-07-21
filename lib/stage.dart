@@ -231,7 +231,7 @@ class Stage extends NodeBase implements Container<Node> {
       _dragStarted = true;
     }
     translateX = _pointerPosition.x - _dragOffsetX;
-    translateX = _pointerPosition.y - _dragOffsetY;
+    translateY = _pointerPosition.y - _dragOffsetY;
     fire(DRAGMOVE, e);
   }
 
