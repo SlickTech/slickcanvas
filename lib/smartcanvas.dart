@@ -2,6 +2,8 @@ library smartcanvas;
 
 // external dependencies
 import 'dart:html' as DOM;
+import 'dart:async';
+
 //
 //@MirrorsUsed(metaTargets: const [Group, SvgGroup, Circle, SvgCircle,
 //                                 Ellipse, SvgEllipse, Line, SvgLine,
@@ -23,6 +25,7 @@ part 'stage.dart';
 part 'group.dart';
 part 'layer.dart';
 part 'pattern.dart';
+part 'animation_loop.dart';
 
 part 'event/event_handler.dart';
 part 'event/event_bus.dart';

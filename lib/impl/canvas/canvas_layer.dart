@@ -2,8 +2,8 @@ part of smartcanvas.canvas;
 
 class CanvasLayer extends CanvasNode implements LayerImpl {
 
-  List<CanvasTile> _tiles = new List<CanvasTile>();
-  List<CanvasNode> _children = new List<CanvasNode>();
+  List<CanvasGraphNode> _children = new List<CanvasGraphNode>();
+
   bool _suspended = false;
   DOM.Element _element;
   Set<String> _classNames = new Set<String>();
@@ -15,7 +15,6 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     _setElementStyles();
 
     _updateTiles();
-
     _registerEvents();
   }
 
@@ -90,6 +89,10 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
         _tiles.remove(tile);
       }
     }
+
+    _children.forEach((node) {
+      node._updateTiles();
+    });
   }
 
   void _adjustTileSize(CanvasTile tile, num tileWidth, num tileHeight) {
@@ -104,6 +107,8 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     } else {
       tile.height = tileHeight;
     }
+
+    print('tile $tileWidth $tileHeight w:${tile.width} h:${tile.height}');
   }
 
   void _registerEvents() {
@@ -129,19 +134,50 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
   }
 
   void _onStageSet() {
-
+    if (_children.isNotEmpty) {
+      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+    }
   }
 
-  void addChild(CanvasNode node) {
+  void addChild(CanvasGraphNode node) {
+    if (_children.isEmpty && stage != null) {
+      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+    }
+
+    _children.add(node);
+    node.parent = this;
+    node._updateTiles();
   }
 
-  void insertChild(int index, CanvasNode node) {
+  void insertChild(int index, CanvasGraphNode node) {
+    if (_children.isEmpty) {
+      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+    }
+
+    _children.insert(index, node);
+    node.parent = this;
+    node._updateTiles();
   }
 
   void removeChild(CanvasNode node) {
+    _tiles.forEach((tile) {
+      if (tile.children.contains(node)) {
+        tile.children.remove(node);
+      }
+    });
+
+    node.parent = null;
+    _children.remove(node);
+
+    if (_children.isEmpty) {
+      AnimationLoop.instance.unsubscribe(this.uid.toString());
+    }
   }
 
   void clearChildren() {
+    _children.forEach((node) {
+      this.removeChild(node);
+    });
   }
 
   void suspend() {
@@ -150,10 +186,9 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void resume() {
     _suspended = false;
-    _draw();
   }
 
-  void _draw() {
+  void _draw(num timestamp) {
     if (!_suspended) {
       _tiles.forEach((tile) {
         tile.draw();
@@ -173,10 +208,9 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     parent = null;
   }
 
+  void translate() {}
+
   List<CanvasNode> get children => _children;
   DOM.Element get element => _element;
-
-  Position get absolutePosition {
-    return null;
-  }
+  LayerImpl get layer => this;
 }
