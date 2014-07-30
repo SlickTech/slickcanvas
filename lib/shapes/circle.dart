@@ -23,6 +23,11 @@ class Circle extends Node {
     throw ExpNotImplemented;
   }
 
+  BBox getBBox(bool isAbsolute) {
+    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    return new BBox(x: pos.x - r, y: pos.y - r, width: this.width, height: this.height);
+  }
+
   void set r(num value) => setAttribute(R, value);
   num get r => getAttribute(R);
 }
