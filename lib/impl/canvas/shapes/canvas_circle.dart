@@ -10,12 +10,9 @@ class CanvasCircle extends CanvasGraphNode {
 
   void __drawGraph(DOM.CanvasRenderingContext2D context) {
     var r = getAttribute(R, 0);
-//    _cacheContext.save();
-//    _cacheContext.translate(r + 1, r + 1);
     context.beginPath();
     context.arc(0, 0, r, 0, PI * 2, false);
     context.closePath();
-//    _cacheContext.restore();
   }
 
   Circle get shell => super.shell;

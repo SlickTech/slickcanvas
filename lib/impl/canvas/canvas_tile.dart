@@ -17,6 +17,7 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
   List<CanvasGraphNode> _children = [];
 
   BBox _dirtyRagion;
+  BBox _previousDirtyRagion;
 
   CanvasTile(this._layer, Map<String, dynamic> config): super(config) {
     _element = new DOM.CanvasElement();
@@ -96,13 +97,24 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
 
     _context.save();
     _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
-    _context.clearRect(_dirtyRagion.x - this.x - 10, _dirtyRagion.y - this.y - 10, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
+
+    if (_previousDirtyRagion != null) {
+      var left = min(_previousDirtyRagion.x, _dirtyRagion.x);
+      var top = min(_previousDirtyRagion.y, _dirtyRagion.y);
+      var right = max(_previousDirtyRagion.right, _dirtyRagion.right);
+      var bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom);
+      _context.clearRect(left - this.x - 10, top - this.y - 10, right - left + 20, bottom - top + 20);
+    } else {
+      _context.clearRect(_dirtyRagion.x - this.x - 10, _dirtyRagion.y - this.y - 10, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
+    }
+
     _children.forEach((node) {
       _context.save();
       node.draw(this.x, this.y, _context);
       _context.restore();
     });
     _context.restore();
+    _previousDirtyRagion = _dirtyRagion;
     _dirtyRagion = null;
   }
 

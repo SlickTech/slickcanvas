@@ -21,7 +21,17 @@ abstract class CanvasGraphNode extends CanvasNode {
       .on('translateYChanged', _refresh)
       .on('widthChanged', _refresh)
       .on('heighChanged', _refresh)
-      .on(ATTR_CHANGED, _updateCache);
+      .on(ATTR_CHANGED, () {
+        if (_useCache) {
+          _updateCache();
+        } else {
+          _tiles.forEach((tile) {
+            tile.nodeDirty(this.shell.getBBox(true));
+          });
+          _oldBBox = shell.getBBox(true);
+        }
+
+    });
 
     new Future.delayed(new Duration(seconds:0), () {
       if (_useCache) {
@@ -56,7 +66,14 @@ abstract class CanvasGraphNode extends CanvasNode {
 
   void _refresh() {
     _updateTiles();
-    _updateCache();
+    if (_useCache) {
+      _updateCache();
+    } else {
+      _tiles.forEach((tile) {
+        tile.nodeDirty(this.shell.getBBox(true));
+      });
+      _oldBBox = shell.getBBox(true);
+    }
   }
 
   void _updateCache() {
@@ -64,7 +81,7 @@ abstract class CanvasGraphNode extends CanvasNode {
     _fillGraph();
     _strokeGraph();
     _tiles.forEach((tile) {
-      _setDirty(tile);
+      tile.nodeDirty(this.shell.getBBox(true));
     });
     _oldBBox = shell.getBBox(true);
   }
@@ -73,10 +90,6 @@ abstract class CanvasGraphNode extends CanvasNode {
     __drawGraph(context);
     _fillGraph(context);
     _strokeGraph(context);
-    _tiles.forEach((tile) {
-      _setDirty(tile);
-    });
-    _oldBBox = shell.getBBox(true);
   }
 
   void _cacheGraph();
@@ -120,12 +133,12 @@ abstract class CanvasGraphNode extends CanvasNode {
           bbox.bottom >= tile.y) {
         if (!tile.children.contains(this)) {
           tile.addChild(this);
-          _setDirty(tile);
+          tile.nodeDirty(this.shell.getBBox(true));
         }
         newTiles.add(tile);
       } else if (tile.children.contains(this)) {
         tile.children.remove(this);
-        _setDirty(tile);
+        tile.nodeDirty(this.shell.getBBox(true));
       }
       i++;
     });
@@ -147,17 +160,5 @@ abstract class CanvasGraphNode extends CanvasNode {
       _drawGraph(context);
     }
     context.restore();
-  }
-
-  void _setDirty(CanvasTile tile) {
-    BBox bbox = shell.getBBox(true);
-    num x = min(_oldBBox.x, bbox.x);
-    num y = min(_oldBBox.y, bbox.y);
-    BBox dirtyRagion = new BBox(
-        x: x,
-        y: y,
-        width: max(_oldBBox.right, bbox.right) - x,
-        height: max(_oldBBox.bottom, bbox.bottom) - y );
-    tile.nodeDirty(dirtyRagion);
   }
 }
