@@ -68,6 +68,7 @@ abstract class SvgNode extends NodeImpl {
 
   void _stopDragHandling() {
     _element.onMouseDown.listen(dragStart).cancel();
+    _dragEnd();
   }
 
   Set<String> _getElementAttributeNames() {
@@ -233,9 +234,12 @@ abstract class SvgNode extends NodeImpl {
     }
   }
 
-  void _dragEnd(e) {
-    e.preventDefault();
-    e.stopPropagation();
+  void _dragEnd([e]) {
+    if (e != null) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     _dragstarting = false;
     _dragging = false;
 
@@ -245,8 +249,13 @@ abstract class SvgNode extends NodeImpl {
     _dragStarted = false;
 
 //    if (stage != null) {
-      _dragMoveHandler.pause();
-      _dragEndHandler.pause();
+      if (_dragMoveHandler != null) {
+        _dragMoveHandler.pause();
+      }
+
+      if (_dragEndHandler != null) {
+        _dragEndHandler.pause();
+      }
 //    }
   }
 
