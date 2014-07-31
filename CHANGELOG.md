@@ -1,3 +1,7 @@
+#v0.0.28
+## Fix circle and ellipse BBox
+## Fix typo
+
 #v0.0.27
 ## Fixed stage dragging
 
