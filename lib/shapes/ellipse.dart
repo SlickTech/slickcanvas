@@ -9,7 +9,7 @@ class Ellipse extends Node {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
+    return new CanvasEllipse(this);
   }
 
   BBox getBBox(bool isAbsolute) {

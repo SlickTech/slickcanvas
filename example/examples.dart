@@ -4,8 +4,6 @@ import 'dart:async';
 
 void main() {
   Rect rect = new Rect({
-    X: 0,
-    Y: 0,
     WIDTH: 100,
     HEIGHT: 100,
     FILL: 'red',
@@ -13,11 +11,20 @@ void main() {
     OFFSET_Y: -100,
     DRAGGABLE: true
   });
+
   Circle circle = new Circle({
-    X: 0,
-    Y: 0,
     R: 50,
-    FILL: 'yellow'
+    FILL: 'yellow',
+    OFFSET_X: -100,
+    OFFSET_Y: -100,
+    DRAGGABLE: true
+  });
+
+  Ellipse ellipse = new Ellipse({
+    RX: 50,
+    RY: 100,
+    FILL: 'blue',
+    DRAGGABLE: true
   });
 
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
@@ -30,8 +37,26 @@ void main() {
 
   dom.Element addBtn = dom.document.querySelector('.btn-add');
   addBtn.onClick.listen((e) {
-    svgStage.addChild(rect.clone());
-    canvasStage.addChild(rect.clone());
+    var shapes = dom.document.querySelectorAll('input[type=checkbox]:checked');
+
+    shapes.forEach((shape) {
+      var node;
+
+      switch(shape.className) {
+        case 'rect':
+          node = rect;
+          break;
+        case 'circle':
+          node = circle;
+          break;
+        case 'ellipse':
+          node = ellipse;
+          break;
+      }
+
+      svgStage.addChild(node.clone());
+      canvasStage.addChild(node.clone());
+    });
   });
 
   //  dom.Element circleBtn = dom.document.querySelector('.circle-btn');

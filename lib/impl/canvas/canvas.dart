@@ -13,3 +13,4 @@ part 'canvas_graph_node.dart';
 
 part 'shapes/canvas_rect.dart';
 part 'shapes/canvas_circle.dart';
+part 'shapes/canvas_ellipse.dart';
