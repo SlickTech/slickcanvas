@@ -295,7 +295,7 @@ abstract class Node extends NodeBase {
   void set opacity(num value) => setAttribute(OPACITY, value);
   num get opacity => getAttribute(OPACITY, 1);
 
-  void set draggalbe(bool value) => setAttribute(DRAGGABLE, value);
+  void set draggable(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
 
   bool get listening => _listening;
