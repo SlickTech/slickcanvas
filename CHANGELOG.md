@@ -1,3 +1,10 @@
+#v0.0.29
+## Fix an issue where set draggable to false has no effect inside mousedown event handler. 
+## Make sure a def node only added to DOM once.
+## Some performance implrovements:
+### * rester DOM events only on reflectoon nodes
+### * don't add pattern and gradiant in reflecton nodes.
+
 #v0.0.28
 ## Fix circle and ellipse BBox
 ## Fix typo
