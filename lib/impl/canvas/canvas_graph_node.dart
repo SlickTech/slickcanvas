@@ -117,6 +117,7 @@ abstract class CanvasGraphNode extends CanvasNode {
     }
 
     if (stroke != null) {
+      context.lineWidth = shell.strokeWidth.toDouble();
       context.strokeStyle = shell.stroke;
       context.stroke();
     }

@@ -2,7 +2,8 @@ library smartcanvas;
 
 // external dependencies
 import 'dart:html' as DOM;
-import 'dart:async';
+import 'dart:math';
+//import 'dart:async';
 
 //
 //@MirrorsUsed(metaTargets: const [Group, SvgGroup, Circle, SvgCircle,

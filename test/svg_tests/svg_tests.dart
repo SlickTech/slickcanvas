@@ -10,6 +10,7 @@ part 'gradient_tests.dart';
 part 'layer_tests.dart';
 part 'pattern_tests.dart';
 part 'reflection_tests.dart';
+part 'basic_shape_tests.dart';
 
 class SvgTests {
   static void run() {

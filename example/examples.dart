@@ -8,23 +8,27 @@ void main() {
     HEIGHT: 100,
     FILL: 'red',
     OFFSET_X: -100,
-    OFFSET_Y: -100,
-    DRAGGABLE: true
+    OFFSET_Y: -100
   });
 
   Circle circle = new Circle({
     R: 50,
     FILL: 'yellow',
     OFFSET_X: -100,
-    OFFSET_Y: -100,
-    DRAGGABLE: true
+    OFFSET_Y: -100
   });
 
   Ellipse ellipse = new Ellipse({
-    RX: 50,
-    RY: 100,
-    FILL: 'blue',
-    DRAGGABLE: true
+    RX: 100,
+    RY: 50,
+    FILL: 'blue'
+  });
+
+  Line line = new Line({
+    X1: 50, Y1: 50,
+    X2: 150, Y2: 150,
+    STROKE_WIDTH: 20,
+    STROKE: 'red'
   });
 
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
@@ -40,7 +44,7 @@ void main() {
     var shapes = dom.document.querySelectorAll('input[type=checkbox]:checked');
 
     shapes.forEach((shape) {
-      var node;
+      var node, svgNode, canvasNode;
 
       switch(shape.className) {
         case 'rect':
@@ -52,10 +56,18 @@ void main() {
         case 'ellipse':
           node = ellipse;
           break;
+        case 'line':
+          node = line;
+          break;
       }
 
-      svgStage.addChild(node.clone());
-      canvasStage.addChild(node.clone());
+      svgNode = node.clone({DRAGGABLE: true});
+      svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
+      svgStage.addChild(svgNode);
+
+      canvasNode = node.clone({DRAGGABLE: true});
+      canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
+      canvasStage.addChild(canvasNode);
     });
   });
 
