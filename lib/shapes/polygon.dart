@@ -3,8 +3,8 @@ part of smartcanvas;
 class Polygon extends Node{
   Polygon(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl() {
-    return new SvgPolygon(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return new SvgPolygon(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

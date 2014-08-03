@@ -2,7 +2,7 @@ part of smartcanvas.svg;
 
 class SvgCircle extends SvgNode{
 
-  SvgCircle(Circle shell): super(shell) {}
+  SvgCircle(Circle shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.CircleElement();

@@ -16,8 +16,9 @@ abstract class SvgNode extends NodeImpl {
   Set<String> _registeredDOMEvents = new Set<String>();
   var _dragMoveHandler;
   var _dragEndHandler;
+  bool _isReflection;
 
-  SvgNode(Node shell) : super(shell) {
+  SvgNode(Node shell, this._isReflection) : super(shell) {
     _setClassName();
     _element = _createElement();
     _element.dataset['scNode'] = '${shell.uid}';
@@ -25,27 +26,32 @@ abstract class SvgNode extends NodeImpl {
     _setElementStyles();
     translate();
 
-    if (getAttribute(DRAGGABLE) == true) {
-      _startDragHandling();
-    }
-
     if(shell.listening) {
       this.eventListeners.forEach((k, v) {
-        _registerDOMEvent(k, v);
+        _registerEvent(k, v);
       });
     }
 
-    this.shell
-    .on('draggableChanged', (oldValue, newValue) {
-      if (newValue) {
+    // only handle dragging on a reflection node
+    if (_isReflection) {
+      if (getAttribute(DRAGGABLE) == true) {
         _startDragHandling();
-      } else {
-        _stopDragHandling();
       }
-    })
-    .on(ATTR_CHANGED, _handleAttrChange)
+
+      this.shell
+        .on('draggableChanged', (oldValue, newValue) {
+          if (newValue) {
+            _startDragHandling();
+          } else {
+            _stopDragHandling();
+          }
+        });
+    }
+
+    this.shell
     .on('translateXChanged', (oldValue, newValue) { translate(); })
-    .on('translateYChanged', (oldValue, newValue) { translate(); });
+    .on('translateYChanged', (oldValue, newValue) { translate(); })
+    .on(ATTR_CHANGED, _handleAttrChange);
   }
 
   String get type => svg;
@@ -106,7 +112,11 @@ abstract class SvgNode extends NodeImpl {
     if (value != null) {
       if (value is SCPattern ||
           value is Gradient) {
-        _element.style.setProperty(name, 'url(#${value.id})');
+        if (_isReflection) {
+          _element.style.setProperty(name, 'trasparent');
+        } else {
+          _element.style.setProperty(name, 'url(#${value.id})');
+        }
         return;
       }
       _element.style.setProperty(name, '${value}');
@@ -118,8 +128,8 @@ abstract class SvgNode extends NodeImpl {
   void remove() {
     _element.remove();
     _defs.forEach((def) {
-      if (layer != null) {
-        (layer as SvgLayer).removeDef(def);
+      if (stage != null) {
+        SvgDefLayer.impl(stage).removeDef(def);
       }
     });
     if (parent != null) {
@@ -128,49 +138,45 @@ abstract class SvgNode extends NodeImpl {
     parent = null;
   }
 
-  void _registerDOMEvent(String event, EventHandlers handler) {
-    Function eventHandler = fireEvent(handler);
-    switch (event) {
-      case MOUSEDOWN:
-        _registeredDOMEvents.add(MOUSEDOWN);
-        _element.onMouseDown.listen(eventHandler);
-        break;
-      case MOUSEUP:
-        _registeredDOMEvents.add(MOUSEUP);
-        _element.onMouseUp.listen(eventHandler);
-        break;
-      case MOUSEENTER:
-        _registeredDOMEvents.add(MOUSEENTER);
-        _element.onMouseEnter.listen(eventHandler);
-        break;
-      case MOUSELEAVE:
-        _registeredDOMEvents.add(MOUSELEAVE);
-        _element.onMouseLeave.listen(eventHandler);
-        break;
-      case MOUSEOVER:
-        _registeredDOMEvents.add(MOUSEOVER);
-        _element.onMouseOver.listen(eventHandler);
-        break;
-      case MOUSEOUT:
-        _registeredDOMEvents.add(MOUSEOUT);
-        _element.onMouseOut.listen(eventHandler);
-        break;
-      case MOUSEMOVE:
-        _registeredDOMEvents.add(MOUSEMOVE);
-        _element.onMouseMove.listen(_onMouseMove);
-        break;
-      case CLICK:
-        _registeredDOMEvents.add(CLICK);
-        _element.onClick.listen(eventHandler);
-        break;
-      case DBLCLICK:
-        _registeredDOMEvents.add(DBLCLICK);
-        _element.onDoubleClick.listen(eventHandler);
-        break;
-      default:
+  void _registerEvent(String event, EventHandlers handler) {
+    if (isDomEvent(event)) {
+      if (_isReflection && !_registeredDOMEvents.contains(event)) {
+        Function eventHandler = fireEvent(handler);
         _registeredDOMEvents.add(event);
-        _element.on[event].listen(eventHandler);
-     }
+        switch (event) {
+          case MOUSEDOWN:
+            _element.onMouseDown.listen(eventHandler);
+            break;
+          case MOUSEUP:
+            _element.onMouseUp.listen(eventHandler);
+            break;
+          case MOUSEENTER:
+            _element.onMouseEnter.listen(eventHandler);
+            break;
+          case MOUSELEAVE:
+            _element.onMouseLeave.listen(eventHandler);
+            break;
+          case MOUSEOVER:
+            _element.onMouseOver.listen(eventHandler);
+            break;
+          case MOUSEOUT:
+            _element.onMouseOut.listen(eventHandler);
+            break;
+          case MOUSEMOVE:
+            _element.onMouseMove.listen(_onMouseMove);
+            break;
+          case CLICK:
+            _element.onClick.listen(eventHandler);
+            break;
+          case DBLCLICK:
+            _element.onDoubleClick.listen(eventHandler);
+            break;
+        }
+      }
+    } else {
+      Function eventHandler = fireEvent(handler);
+      _element.on[event].listen(eventHandler);
+    }
   }
 
   Function fireEvent(EventHandlers handlers) {
@@ -268,15 +274,18 @@ abstract class SvgNode extends NodeImpl {
   NodeBase on(String event, Function handler, [String id]) {
     super.on(event, handler, id);
     if (!_registeredDOMEvents.contains(event)) {
-      _registerDOMEvent(event, eventListeners[event]);
+      _registerEvent(event, eventListeners[event]);
     }
     return this;
   }
 
   void _handleAttrChange(String attr, oldValue, newValue) {
     if (_isStyle(attr)) {
-      _updateDef(attr, oldValue, remove: true);
-      _updateDef(attr, newValue);
+      // only handle def changes on non-reflection node
+      if (stage != null && !_isReflection) {
+        _updateDef(attr, oldValue, remove: true);
+        _updateDef(attr, newValue);
+      }
       _setElementStyle(attr);
     } else if (attr == CLASS) {
       _setClassName();
@@ -292,12 +301,11 @@ abstract class SvgNode extends NodeImpl {
   void _updateDef(String attr, value, {bool remove: false}) {
     if (value is SCPattern ||
         value is Gradient) {
-      if (layer != null && remove) {
-        (layer as SvgLayer).removeDef(value);
+      if (remove) {
+        SvgDefLayer.impl(stage).removeDef(value);
         _element.style.removeProperty(attr);
       } else if (layer != null) {
-        var defImpl = value.createImpl(svg);
-        (layer as SvgLayer).addDef(value, defImpl);
+        SvgDefLayer.impl(stage).addDef(value);
       }
     }
   }
@@ -348,6 +356,12 @@ abstract class SvgNode extends NodeImpl {
 
   List get _defs {
     List defs = [];
+
+    // don't add defs on reflecton layer
+    if (_isReflection) {
+      return defs;
+    }
+
     if (fill is SCPattern ||
         fill is Gradient) {
         defs.add(fill);
@@ -358,4 +372,6 @@ abstract class SvgNode extends NodeImpl {
     }
     return defs;
   }
+
+  SvgLayer get layer => super.layer;
 }

@@ -1,7 +1,7 @@
 part of smartcanvas.svg;
 
 class SvgLine extends SvgNode {
-  SvgLine(Line shell): super(shell) {}
+  SvgLine(Line shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.LineElement();

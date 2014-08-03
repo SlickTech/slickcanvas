@@ -6,8 +6,8 @@ class Text extends Node {
 
   Text(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl() {
-    return new SvgText(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return new SvgText(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

@@ -43,13 +43,13 @@ abstract class Node extends NodeBase {
   NodeImpl createImpl(type) {
     switch (type) {
       case svg:
-        return _createSvgImpl();
+        return _createSvgImpl(this.isReflection);
       default:
         return _createCanvasImpl();
     }
   }
 
-  NodeImpl _createSvgImpl();
+  NodeImpl _createSvgImpl(bool isReflection);
   NodeImpl _createCanvasImpl();
 
   void moveTo(Container parent) {
@@ -115,7 +115,7 @@ abstract class Node extends NodeBase {
       _eventListeners[event].add(new EventHandler(id, handler));
 
       if (!_listening) {
-        _listening = _isDomEvent(event);
+        _listening = isDomEvent(event);
         if (_listening && this is! ReflectionNode && _parent != null) {
             (_parent as Group)._reflectionAdd(this);
         }
@@ -131,22 +131,6 @@ abstract class Node extends NodeBase {
     });
     // allow chaining
     return this;
-  }
-
-  bool _isDomEvent(String event) {
-    switch(event) {
-      case MOUSEDOWN:
-      case MOUSEUP:
-      case MOUSEENTER:
-      case MOUSELEAVE:
-      case MOUSEOVER:
-      case MOUSEOUT:
-      case CLICK:
-      case DBLCLICK:
-        return true;
-      default:
-        return false;
-    }
   }
 
   Node clone([Map<String, dynamic> config]) {
@@ -275,7 +259,7 @@ abstract class Node extends NodeBase {
   dynamic get stroke => getAttribute(STROKE);
 
   void set strokeWidth(num value) => setAttribute(STROKE_WIDTH, value);
-  num get strokeWidth => getAttribute(STROKE_WIDTH);
+  num get strokeWidth => getAttribute(STROKE_WIDTH, 1);
 
   void set strokeOpacity(num value) => setAttribute(STROKE_OPACITY, value);
   num get strokeOpacity => getAttribute(STROKE_OPACITY);

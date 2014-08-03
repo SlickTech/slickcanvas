@@ -2,7 +2,7 @@ part of smartcanvas.svg;
 
 abstract class SvgGradient extends SvgNode {
 
-  SvgGradient(Gradient shell): super(shell) {}
+  SvgGradient(Gradient shell): super(shell, false) {}
 
   SVG.SvgElement _createElement() {
     var el = __createElement();

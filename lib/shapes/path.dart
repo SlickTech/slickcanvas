@@ -3,8 +3,8 @@ part of smartcanvas;
 class Path extends Node {
   Path(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl() {
-    return new SvgPath(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return new SvgPath(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

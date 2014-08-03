@@ -4,7 +4,7 @@ class SvgEllipse extends SvgNode{
   double rx;
   double ry;
 
-  SvgEllipse(Ellipse shell): super(shell) {}
+  SvgEllipse(Ellipse shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.EllipseElement();

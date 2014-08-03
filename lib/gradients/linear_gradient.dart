@@ -4,7 +4,7 @@ class LinearGradient extends Gradient {
 
   LinearGradient(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl() {
+  NodeImpl _createSvgImpl(bool isReflection) {
     return new SvgLinearGradient(this);
   }
 

@@ -1,7 +1,7 @@
 part of smartcanvas.svg;
 
 class SvgPolygon extends SvgNode {
-  SvgPolygon(Polygon shell): super(shell) {}
+  SvgPolygon(Polygon shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.PolygonElement();

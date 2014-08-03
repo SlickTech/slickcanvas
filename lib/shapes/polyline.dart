@@ -3,8 +3,8 @@ part of smartcanvas;
 class Polyline extends Node {
   Polyline(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl() {
-    return new SvgPolyline(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return new SvgPolyline(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

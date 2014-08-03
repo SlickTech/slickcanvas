@@ -32,9 +32,9 @@ class ReflectionGroup extends Group implements I_Container_Reflection {
     }
   }
 
-  NodeImpl _createSvgImpl() {
+  NodeImpl _createSvgImpl(bool isReflection) {
     assert(_node._impl != null);
-    SvgGroup rt = super._createSvgImpl();
+    SvgGroup rt = super._createSvgImpl(true);
     return rt;
   }
 

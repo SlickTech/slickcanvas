@@ -2,7 +2,7 @@ part of smartcanvas.svg;
 
 class SvgPattern extends SvgGroup {
 
-  SvgPattern(SCPattern shell): super(shell) {}
+  SvgPattern(SCPattern shell): super(shell, false) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.PatternElement();

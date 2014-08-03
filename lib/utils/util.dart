@@ -17,3 +17,19 @@ bool isMobile() {
   }
   return check;
 }
+
+bool isDomEvent(String event) {
+  switch(event) {
+    case MOUSEDOWN:
+    case MOUSEUP:
+    case MOUSEENTER:
+    case MOUSELEAVE:
+    case MOUSEOVER:
+    case MOUSEOUT:
+    case CLICK:
+    case DBLCLICK:
+      return true;
+    default:
+      return false;
+  }
+}

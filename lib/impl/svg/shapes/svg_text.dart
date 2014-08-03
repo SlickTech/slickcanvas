@@ -1,7 +1,7 @@
 part of smartcanvas.svg;
 
 class SvgText extends SvgNode{
-  SvgText(Text shell): super(shell) {
+  SvgText(Text shell, bool isReflection): super(shell, isReflection) {
     shell.on('textChanged', _handleTextChange);
   }
 

@@ -10,8 +10,8 @@ class Layer extends Group {
     _impl = createImpl(_type);
   }
 
-  NodeImpl _createSvgImpl() {
-    return  new SvgLayer(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return  new SvgLayer(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

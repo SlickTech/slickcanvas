@@ -2,7 +2,7 @@ part of smartcanvas.svg;
 
 class SvgGroup extends SvgNode implements Container<SvgNode> {
   List<SvgNode> _children = new List<SvgNode>();
-  SvgGroup(Group shell): super(shell) {}
+  SvgGroup(Group shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.GElement();
@@ -13,16 +13,15 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     child.parent = this;
     this._element.append(child._element);
 
-    if (!shell.isReflection) {
+    if (stage != null && !shell.isReflection) {
       _addDefs(child);
     }
   }
 
   void _addDefs(SvgNode child) {
-    if (layer != null) {
+    if (stage != null) {
       child._defs.forEach((def) {
-        SvgNode defImpl = def.createImpl(svg);
-        (layer as SvgLayer).addDef(def, defImpl);
+        SvgDefLayer.impl(this.stage).addDef(def);
       });
     }
   }

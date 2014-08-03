@@ -15,8 +15,8 @@ class Circle extends Node {
     setAttribute(HEIGHT, width);
   }
 
-  NodeImpl _createSvgImpl() {
-    return new SvgCircle(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    return new SvgCircle(this, isReflection);
   }
 
   NodeImpl _createCanvasImpl() {

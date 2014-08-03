@@ -5,11 +5,11 @@ class Group extends Node implements Container<Node> {
 
   Group([Map<String, dynamic> config = null]): super(config) {}
 
-  NodeImpl _createSvgImpl() {
-    SvgGroup impl = new SvgGroup(this);
+  NodeImpl _createSvgImpl(bool isReflection) {
+    SvgGroup impl = new SvgGroup(this, isReflection);
     _children.forEach((node) {
       if (node.impl == null || node._impl.type != svg) {
-        node._impl = node.createImpl(svg);
+        node._impl = node._createSvgImpl(isReflection);
       }
       impl.addChild(node._impl);
     });

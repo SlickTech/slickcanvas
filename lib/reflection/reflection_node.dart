@@ -10,9 +10,9 @@ class ReflectionNode extends Node implements I_Reflection {
     _eventListeners.addAll(_node._eventListeners);
   }
 
-  NodeImpl _createSvgImpl() {
+  NodeImpl _createSvgImpl(bool isReflection) {
     assert(_node._impl != null);
-    NodeImpl reflectionImpl = _node._createSvgImpl();
+    NodeImpl reflectionImpl = _node._createSvgImpl(true);
     return reflectionImpl;
   }
 

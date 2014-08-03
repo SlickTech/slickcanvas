@@ -2,10 +2,9 @@ part of smartcanvas.svg;
 
 class SvgLayer extends SvgNode implements LayerImpl {
   List<SvgNode> _children = new List<SvgNode>();
-  Map<Node, SvgNode> _defNodes = {};
   SVG.DefsElement _defsEl;
 
-  SvgLayer(shell): super(shell) {
+  SvgLayer(Layer shell, bool isReflection): super(shell, isReflection) {
     shell
       .on('widthChanged', _onWidthChanged)
       .on('heightChanged', _onHeightChanged)
@@ -48,41 +47,19 @@ class SvgLayer extends SvgNode implements LayerImpl {
     ..padding = ZERO;
   }
 
-  void addDef(Node defNode, SvgNode defImpl) {
-    _defNodes[defNode] = defImpl;
-    if (_defNodes.length == 1 && _defsEl == null) {
-      _defsEl = new SVG.DefsElement();
-      _element.nodes.insert(0, _defsEl);
-    }
-    _defsEl.append(defImpl.element);
-  }
-
-  void removeDef(Node defNode) {
-    SvgNode defImpl = _defNodes[defNode];
-    if (defImpl != null) {
-      defImpl.element.remove();
-      _defNodes.remove(defNode);
-      if (_defsEl.nodes.isEmpty) {
-        _defsEl.remove();
-        _defsEl = null;
-      }
-    }
-  }
-
   void addChild(SvgNode child) {
     _children.add(child);
     child.parent = this;
     this._element.append(child._element);
 
-    if (!shell.isReflection) {
+    if (stage != null && !_isReflection) {
       _addDefs(child);
     }
   }
 
   void _addDefs(SvgNode child) {
     child._defs.forEach((def) {
-      SvgNode defImpl = def.createImpl(svg);
-      this.addDef(def, defImpl);
+      SvgDefLayer.impl(this.stage).addDef(def);
     });
   }
 
@@ -113,6 +90,15 @@ class SvgLayer extends SvgNode implements LayerImpl {
       .off('scaleYChanged', sUid)
       .off('translateXChanged', sUid)
       .off('translateYChanged', sUid);
+
+    if (!_isReflection) {
+      children.forEach((child) {
+        child._defs.forEach((def){
+          SvgDefLayer.impl(stage).removeDef(def);
+        });
+      });
+    }
+
     super.remove();
   }
 
@@ -129,6 +115,12 @@ class SvgLayer extends SvgNode implements LayerImpl {
       .on('scaleYChanged', _onScaleYChanged, sUid)
       .on('translateXChanged', _onTranslateXChanged, sUid)
       .on('translateYChanged', _onTranslateYChanged, sUid);
+
+    if (!_isReflection) {
+      _children.forEach((child) {
+        _addDefs(child);
+      });
+    }
   }
 
   void _onWidthChanged(oldValue, newValue) {

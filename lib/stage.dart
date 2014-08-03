@@ -4,6 +4,7 @@ class Stage extends NodeBase implements Container<Node> {
   DOM.Element _container;
   DOM.Element _element;
   Layer _defaultLayer;
+  Layer _svgDefLayer;
   _ReflectionLayer _reflectionLayer;
   String _defualtLayerType;
   List<Node> _children = new List<Node>();
@@ -246,6 +247,15 @@ class Stage extends NodeBase implements Container<Node> {
       fire(DRAGEND, e);
     }
     _dragStarted = false;
+  }
+
+  void getSvg(SvgNode defNode) {
+    if (_svgDefLayer == null) {
+      _svgDefLayer = new Layer(svg, {});
+      _svgDefLayer.stage = this;
+      _children.add(_svgDefLayer);
+      _element.nodes.add(_svgDefLayer._impl.element);
+    }
   }
 
 

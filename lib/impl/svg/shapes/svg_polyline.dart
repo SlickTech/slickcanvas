@@ -1,7 +1,7 @@
 part of smartcanvas.svg;
 
 class SvgPolyline extends SvgNode {
-  SvgPolyline(Polyline shell): super(shell) {}
+  SvgPolyline(Polyline shell, bool isReflection): super(shell, isReflection) {}
 
   SVG.SvgElement _createElement() {
     return new SVG.PolylineElement();
