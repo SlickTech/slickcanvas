@@ -31,6 +31,13 @@ void main() {
     STROKE: 'red'
   });
 
+  Text text = new Text({
+    X: 100, Y:100,
+    TEXT: 'Hello World',
+    FILL: 'orange',
+    FONT_SIZE: 20
+  });
+
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
   Stage svgStage = new Stage(svgContainer, svg, {});
 
@@ -58,6 +65,9 @@ void main() {
           break;
         case 'line':
           node = line;
+          break;
+        case 'text':
+          node = text;
           break;
       }
 

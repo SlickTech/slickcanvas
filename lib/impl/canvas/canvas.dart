@@ -15,3 +15,4 @@ part 'shapes/canvas_rect.dart';
 part 'shapes/canvas_circle.dart';
 part 'shapes/canvas_ellipse.dart';
 part 'shapes/canvas_line.dart';
+part 'shapes/canvas_text.dart';
