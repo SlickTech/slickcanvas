@@ -84,7 +84,7 @@ abstract class SvgNode extends NodeImpl {
   List<String> _getStyleNames() {
     return [STROKE, STROKE_WIDTH, STROKE_OPACITY,
             STROKE_LINECAP, STROKE_DASHARRAY,
-            FILL, OPACITY, DISPLAY];
+            FILL, FILL_OPACITY, OPACITY, DISPLAY];
   }
 
   void _setElementAttributes() {
