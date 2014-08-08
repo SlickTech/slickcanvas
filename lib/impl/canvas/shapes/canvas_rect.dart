@@ -13,13 +13,6 @@ class CanvasRect extends CanvasGraphNode {
   }
 
   void _cacheGraph() {
-    if (shell.rx == null && shell.ry == null) {
-      _cacheContext.beginPath();
-      _cacheContext.rect(0, 0, width, height);
-      _cacheContext.closePath();
-      return;
-    }
-
     if (shell.rx == null) {
       shell.rx = shell.ry;
     } else if (shell.ry == null) {
