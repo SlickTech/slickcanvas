@@ -105,9 +105,12 @@ abstract class CanvasGraphNode extends CanvasNode {
       } else if (fill is SCPattern) {
 
       } else {
-        context.fillStyle = shell.fill;
+        context.fillStyle = shell.fill == 'none' ? 'transparent' : shell.fill;
         context.fill();
       }
+    } else {
+      context.fillStyle = 'black';
+      context.fill();
     }
   }
 

@@ -3,6 +3,7 @@ library smartcanvas;
 // external dependencies
 import 'dart:html' as DOM;
 import 'dart:math';
+import 'dart:svg' as SVG;
 //import 'dart:async';
 
 //

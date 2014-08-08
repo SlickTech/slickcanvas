@@ -2,6 +2,7 @@ library smartcanvas.canvas;
 
 import 'dart:html' as DOM;
 import 'dart:math';
+import 'dart:svg' as SVG;
 import 'dart:async';
 
 import '../../smartcanvas.dart';
@@ -16,3 +17,4 @@ part 'shapes/canvas_circle.dart';
 part 'shapes/canvas_ellipse.dart';
 part 'shapes/canvas_line.dart';
 part 'shapes/canvas_text.dart';
+part 'shapes/canvas_path.dart';

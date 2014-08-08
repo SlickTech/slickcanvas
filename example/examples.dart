@@ -1,6 +1,5 @@
 import 'dart:html' as dom hide Text;
 import 'package:smartcanvas/smartcanvas.dart';
-import 'dart:async';
 
 void main() {
   Rect rect = new Rect({
@@ -38,6 +37,11 @@ void main() {
     FONT_SIZE: 20
   });
 
+  Path path = new Path({
+    D: 'M150 0 L75 200 L225 200 Z',
+    STROKE: 'purple'
+  });
+
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
   Stage svgStage = new Stage(svgContainer, svg, {});
 
@@ -68,6 +72,13 @@ void main() {
           break;
         case 'text':
           node = text;
+          break;
+        case 'path':
+          node = path;
+//          svgNode = node.clone({DRAGGABLE: true});
+//          svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
+//          svgStage.addChild(svgNode);
+//          return;
           break;
       }
 

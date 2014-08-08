@@ -14,4 +14,6 @@ class SvgPath extends SvgNode {
   }
 
   String get _nodeName => SC_PATH;
+
+  SVG.PathElement get element => super.element;
 }
