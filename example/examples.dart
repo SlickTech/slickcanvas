@@ -42,6 +42,11 @@ void main() {
     STROKE: 'purple'
   });
 
+  Polygon polygon = new Polygon({
+    'points': "220,10,300,210,170,250,123,234",
+    'fill': 'lime',
+  });
+
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
   Stage svgStage = new Stage(svgContainer, svg, {});
 
@@ -75,10 +80,9 @@ void main() {
           break;
         case 'path':
           node = path;
-//          svgNode = node.clone({DRAGGABLE: true});
-//          svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
-//          svgStage.addChild(svgNode);
-//          return;
+          break;
+        case 'polygon':
+          node = polygon;
           break;
       }
 
