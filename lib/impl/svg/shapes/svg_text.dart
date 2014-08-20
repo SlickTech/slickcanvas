@@ -20,7 +20,7 @@ class SvgText extends SvgNode{
   void _setElementStyles() {
     super._setElementStyles();
     Text txt = shell as Text;
-    _element.style.setProperty(FONT_SIZE, '${txt.fontSize}');
+    _element.style.setProperty(FONT_SIZE, '${txt.fontSize}px');
     _element.style.setProperty(FONT_FAMILY, '${txt.fontFamily}');
     _element.style.setProperty(FONT_WEIGHT, '${txt.fontWeight}');
     _element.style.setProperty(TEXT_ANCHOR, '${txt.textAnchor}');
