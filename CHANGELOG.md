@@ -1,3 +1,8 @@
+#v0.0.30
+## Fix an issue where set SvgSvgElement.viewBox.baseVal directly caused an null exception in FireFox
+## Fix text font-size in FireFox
+## Fix fill-opacity didn't apply to svg element.
+
 #v0.0.29
 ## Fix an issue where set draggable to false has no effect inside mousedown event handler. 
 ## Make sure a def node only added to DOM once.
