@@ -30,11 +30,9 @@ class SvgLayer extends SvgNode implements LayerImpl {
   }
 
   void _setViewBox() {
-    (_element as SVG.SvgSvgElement).viewBox.baseVal
-    ..x = getAttribute(X, 0)
-    ..y = getAttribute(Y, 0)
-    ..width = getAttribute(WIDTH, 0) / getAttribute(SCALE_X, 1)
-    ..height = getAttribute(HEIGHT, 0) / getAttribute(SCALE_Y, 1);
+    num w = getAttribute(WIDTH, 0) / this.getAttribute(SCALE_X, 1);
+    num h = getAttribute(HEIGHT, 0) / this.getAttribute(SCALE_Y, 1);
+    _element.setAttribute('viewBox', '0 0 $w $h');
   }
 
   void _setElementStyles() {

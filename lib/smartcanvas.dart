@@ -8,7 +8,7 @@ import 'dart:html' as DOM;
 //                                 Path, SvgPath, Polygon, SvgPolygon,
 //                                 Polyline, SvgPolyline, Rect, SvgRect,
 //                                 Text, SvgText])
-@MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'])
+@MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'], override: "*")
 import 'dart:mirrors';
 
 import 'package:dart_ext/dart_ext.dart';

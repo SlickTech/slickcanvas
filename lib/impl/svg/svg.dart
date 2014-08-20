@@ -2,7 +2,6 @@ library smartcanvas.svg;
 
 import 'dart:html' as DOM;
 import 'dart:svg' as SVG;
-import 'dart:async';
 import 'package:dart_ext/collection_ext.dart';
 
 import '../../smartcanvas.dart';
