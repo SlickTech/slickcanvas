@@ -1,19 +1,21 @@
 part of smartcanvas.canvas;
 
 class CanvasPolygon extends CanvasGraphNode {
-
   CanvasPolygon(Polygon shell):super(shell) {
     this._useCache = true;
   }
 
   void _cacheGraph() {
+    _cacheContext.clearRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
     _cacheContext.beginPath();
     List<Position> points = shell.points;
+    num x = shell.x;
+    num y = shell.y;
     for(int i = 0; i < points.length; i++) {
       if (i == 0) {
-        _cacheContext.moveTo(points[i].x, points[i].y);
+        _cacheContext.moveTo(points[i].x - x, points[i].y - y);
       } else {
-        _cacheContext.lineTo(points[i].x, points[i].y);
+        _cacheContext.lineTo(points[i].x - x, points[i].y - y);
       }
     }
     _cacheContext.closePath();
