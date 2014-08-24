@@ -36,6 +36,7 @@ const String STROKE_WIDTH = 'stroke-width';
 const String STROKE_OPACITY = 'stroke-opacity';
 const String STROKE_LINECAP = 'stroke-linecap';
 const String STROKE_DASHARRAY = 'stroke-dasharray';
+const String STROKE_LINE_JOIN = 'stroke-linejoin';
 const String OPACITY = 'opacity';
 const String CX = 'cx';
 const String CY = 'cy';

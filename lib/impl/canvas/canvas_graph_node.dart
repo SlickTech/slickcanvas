@@ -17,25 +17,24 @@ abstract class CanvasGraphNode extends CanvasNode {
     _setElementStyles();
 
     shell
-      .on('translateXChanged', _refresh)
-      .on('translateYChanged', _refresh)
-      .on('widthChanged', _refresh)
-      .on('heighChanged', _refresh)
+      .on('translateXChanged', () => _refresh())
+      .on('translateYChanged', () => _refresh())
+      .on('widthChanged', () => _refresh(true))
+      .on('heighChanged', () => _refresh(true))
       .on(ATTR_CHANGED, () {
         if (_useCache) {
-          _updateCache();
+          _updateCache(true);
         } else {
           _tiles.forEach((tile) {
             tile.nodeDirty(this.shell.getBBox(true));
           });
           _oldBBox = shell.getBBox(true);
         }
-
     });
 
     new Future.delayed(new Duration(seconds:0), () {
       if (_useCache) {
-        _updateCache();
+        _updateCache(true);
       }
     });
   }
@@ -64,10 +63,10 @@ abstract class CanvasGraphNode extends CanvasNode {
     return new Set<String>.from([WIDTH, HEIGHT]);
   }
 
-  void _refresh() {
+  void _refresh([bool dirty = false]) {
     _updateTiles();
     if (_useCache) {
-      _updateCache();
+      _updateCache(dirty);
     } else {
       _tiles.forEach((tile) {
         tile.nodeDirty(this.shell.getBBox(true));
@@ -76,10 +75,12 @@ abstract class CanvasGraphNode extends CanvasNode {
     }
   }
 
-  void _updateCache() {
-    _cacheGraph();
-    _fillGraph();
-    _strokeGraph();
+  void _updateCache(bool dirty) {
+    if (dirty) {
+      _cacheGraph();
+      _fillGraph();
+      _strokeGraph();
+    }
     _tiles.forEach((tile) {
       tile.nodeDirty(this.shell.getBBox(true));
     });
@@ -122,6 +123,7 @@ abstract class CanvasGraphNode extends CanvasNode {
     if (stroke != null) {
       context.lineWidth = shell.strokeWidth.toDouble();
       context.strokeStyle = shell.stroke;
+      context.lineJoin = shell.strokeLineJoin;
       context.stroke();
     }
   }
