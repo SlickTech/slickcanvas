@@ -5,6 +5,7 @@ class Polygon extends Node{
   List<Position> _points = null;
 
   Polygon(Map<String, dynamic> config): super(config) {
+    this.on('translateXChanged translateXChanged', () => _bbox = null);
     this.on('pointsChanged', () { _bbox = null; _points = null; });
   }
 
@@ -17,6 +18,11 @@ class Polygon extends Node{
   }
 
   BBox getBBox(bool isAbsolute) {
+    _getBBox();
+    return new BBox(x: this.x, y: this.y, width: _bbox.width, height: _bbox.height);
+  }
+
+  void _getBBox() {
     if (_bbox == null) {
       List<Position> points = this.points;
       num minX = double.MAX_FINITE;
@@ -30,34 +36,43 @@ class Polygon extends Node{
         minY = min(minY, points[i].y);
         maxY = max(maxY, points[i].y);
       }
-      _bbox = new BBox(x: minX, y: minY, width: maxX - minX, height: maxY - minY);
+      var halfStrokeWidth = strokeWidth / 2;
+      _bbox = new BBox(x: minX - halfStrokeWidth, y: minY - halfStrokeWidth,
+          width: maxX - minX + strokeWidth, height: maxY - minY + strokeWidth);
     }
-    return new BBox(x: this.x + _bbox.x, y: this.y + _bbox.y, width: _bbox.width, height: _bbox.height);
   }
 
   void set points(dynamic value) {
     if (value is String) {
       setAttribute(POINTS, value);
     } else if (value is List<num>) {
-      setAttribute(POINTS, value.join(COMMA));
+      setAttribute(POINTS, value);
     } else if (value is List<Position>) {
       List<num> ps = [];
       value.forEach((Position p) {
         ps.add(p.x);
         ps.add(p.y);
       });
-      setAttribute(POINTS, ps.join(COMMA));
+      setAttribute(POINTS, ps);
     }
   }
 
   List<Position> get points {
     if (_points == null) {
       _points = [];
-      String ps = getAttribute(POINTS);
+      var ps = getAttribute(POINTS);
       if (ps != null) {
-        List<String> pss = ps.split(COMMA);
-        for (int i = 0; i < pss.length; i += 2) {
-          _points.add(new Position(x: double.parse(pss[i]), y: double.parse(pss[i + 1])));
+        if (ps is String) {
+          List<String> pss = ps.split(COMMA);
+          for (int i = 0; i < pss.length; i += 2) {
+            _points.add(new Position(x: double.parse(pss[i]), y: double.parse(pss[i + 1])));
+          }
+        } else if (ps is List<num>) {
+          for (int i = 0; i < ps.length; i += 2) {
+            _points.add(new Position(x: ps[i], y: ps[i+2]));
+          }
+        } else {
+          _points.addAll(ps);
         }
       }
     }
@@ -66,13 +81,23 @@ class Polygon extends Node{
 
   String get pointsString => getAttribute(POINTS, '');
 
+  num get x {
+    _getBBox();
+    return super.x + _bbox.x;
+  }
+
+  num get y {
+    _getBBox();
+    return super.y + _bbox.y;
+  }
+
   num get width {
-    var bbox = getBBox(true);
-    return bbox.right;
+    _getBBox();
+    return _bbox.width;
   }
 
   num get height {
-    var bbox = getBBox(true);
-    return bbox.bottom;
+    _getBBox();
+    return _bbox.height;
   }
 }
