@@ -24,9 +24,9 @@ void main() {
   });
 
   Line line = new Line({
-    X1: 50, Y1: 50,
+    X1: -150, Y1: 50,
     X2: 150, Y2: 150,
-    STROKE_WIDTH: 20,
+    STROKE_WIDTH: 5,
     STROKE: 'red'
   });
 
@@ -39,12 +39,19 @@ void main() {
 
   Path path = new Path({
     D: 'M150 0 L75 200 L225 200 Z',
-    STROKE: 'purple'
+    STROKE: 'purple',
+    STROKE_WIDTH: 10
   });
 
   Polygon polygon = new Polygon({
-    'points': "220,10,300,210,170,250,123,234",
+    'points': "220,10,300,210,170,250,-123,234",
     'fill': 'lime',
+  });
+
+  Polyline polyline = new Polyline({
+    'points': [200, 200, -100, -100, 100, 0],
+    'stroke': 'red',
+    'stroke-width': 5
   });
 
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
@@ -83,6 +90,9 @@ void main() {
           break;
         case 'polygon':
           node = polygon;
+          break;
+        case 'polyline':
+          node = polyline;
           break;
       }
 

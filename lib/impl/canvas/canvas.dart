@@ -19,3 +19,4 @@ part 'shapes/canvas_line.dart';
 part 'shapes/canvas_text.dart';
 part 'shapes/canvas_path.dart';
 part 'shapes/canvas_polygon.dart';
+part 'shapes/canvas_polyline.dart';

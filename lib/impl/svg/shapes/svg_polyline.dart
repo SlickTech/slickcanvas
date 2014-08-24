@@ -15,28 +15,7 @@ class SvgPolyline extends SvgNode {
 
   void _setElementAttribute(String attr) {
     if (attr == POINTS) {
-      if (points.isEmpty) {
-        return;
-      }
-
-      num i = 0;
-      String attrValue = EMPTY;
-      points.forEach((point) {
-        if (i == 1) {
-          attrValue += COMMA;
-        } else if (i == 2) {
-          attrValue += SPACE;
-          i -= 2;
-        }
-        attrValue += '${point}';
-        ++i;
-      });
-
-      // append 0 if there was odd numbers in the array
-      if (i == 1) {
-        attrValue += ',${0}';
-      }
-      _element.attributes[attr] = attrValue;
+      _element.attributes[attr] = shell.pointsString;
     } else {
       super._setElementAttribute(attr);
     }
@@ -46,4 +25,6 @@ class SvgPolyline extends SvgNode {
   List<num> get points => getAttribute(POINTS, []);
 
   String get _nodeName => SC_POLYLINE;
+
+  Polyline get shell => super.shell;
 }

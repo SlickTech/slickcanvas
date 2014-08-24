@@ -107,8 +107,6 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     } else {
       tile.height = tileHeight;
     }
-
-    print('tile $tileWidth $tileHeight w:${tile.width} h:${tile.height}');
   }
 
   void _registerEvents() {
