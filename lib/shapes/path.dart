@@ -30,8 +30,9 @@ class Path extends Node {
   BBox getBBox(bool isAbsolute) {
     if (this.stage != null) {
       if (_bbox != null) {
-        return new BBox(x: this.x + _bbox.x, y: this.y + _bbox.y,
-            width: _bbox.width, height: _bbox.height);
+        var halfStrokeWidth = this.strokeWidth / 2;
+        return new BBox(x: this.x + _bbox.x - halfStrokeWidth, y: this.y + _bbox.y - halfStrokeWidth,
+            width: _bbox.width + this.strokeWidth, height: _bbox.height + this.strokeWidth);
       }
 
       var reflection = this.reflection;
