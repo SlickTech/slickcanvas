@@ -1,3 +1,6 @@
+#v0.0.31
+## Fixed an strage issue in FireFox where fill pattern/gradient is not always applied.
+
 #v0.0.30
 ## Fix an issue where set SvgSvgElement.viewBox.baseVal directly caused an null exception in FireFox
 ## Fix text font-size in FireFox
