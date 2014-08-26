@@ -2,7 +2,6 @@ part of smartcanvas.svg;
 
 class SvgLayer extends SvgNode implements LayerImpl {
   List<SvgNode> _children = new List<SvgNode>();
-  SVG.DefsElement _defsEl;
 
   SvgLayer(Layer shell, bool isReflection): super(shell, isReflection) {
     shell

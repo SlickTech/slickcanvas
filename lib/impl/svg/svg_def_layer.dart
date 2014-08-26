@@ -22,6 +22,7 @@ class SvgDefLayerImpl {
     } else {
       defImplEl.dataset['refCount'] = '${int.parse(defImplEl.dataset['refCount']) + 1}';
     }
+    defNode.fire(DEF_ADDED);
   }
 
   void removeDef(Node defNode) {

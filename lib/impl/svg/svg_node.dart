@@ -116,6 +116,18 @@ abstract class SvgNode extends NodeImpl {
           _element.style.setProperty(name, 'trasparent');
         } else {
           _element.style.setProperty(name, 'url(#${value.id})');
+
+          // On FireFox there is some strageness, the fill parrtern or gradient
+          // is not always take effect. This is hack to force FireFox repaint the
+          // the block so that pattern and gradient can show up.
+          if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
+            value.on(DEF_ADDED, () {
+              _element.style.setProperty(name, 'transparent');
+              new Future.delayed(new Duration(seconds: 0), (){
+                _element.style.setProperty(name, 'url(#${value.id})');
+              });
+            });
+          }
         }
         return;
       }
