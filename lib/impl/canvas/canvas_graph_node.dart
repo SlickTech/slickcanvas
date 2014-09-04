@@ -19,8 +19,8 @@ abstract class CanvasGraphNode extends CanvasNode {
     shell
       .on('translateXChanged', () => _refresh())
       .on('translateYChanged', () => _refresh())
-      .on('widthChanged', () => _refresh(true))
-      .on('heighChanged', () => _refresh(true))
+      .on('widthChanged', _onWidthChanged)
+      .on('heighChanged', _onHeightChanged)
       .on(ATTR_CHANGED, () {
         if (_useCache) {
           _updateCache(true);
@@ -37,6 +37,8 @@ abstract class CanvasGraphNode extends CanvasNode {
         _updateCache(true);
       }
     });
+
+    _cacheContext.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
   }
 
   void _setElementAttributes() {
@@ -48,9 +50,24 @@ abstract class CanvasGraphNode extends CanvasNode {
     var value = getAttribute(attr);
     if (value != null) {
       if (value is! String || !value.isEmpty) {
+        if ((attr == WIDTH || attr == HEIGHT)) {
+          value = value * DOM.window.devicePixelRatio;
+        }
         _cacheCanvas.attributes[attr] = '$value';
       }
     }
+  }
+
+  void _onWidthChanged(oldValue, newValue) {
+    _cacheCanvas.style.width = '${newValue}px';
+    _cacheCanvas.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
+    _refresh(true);
+  }
+
+  void _onHeightChanged(oldValue, newValue) {
+    _cacheCanvas.style.height = '${newValue}px';
+    _cacheCanvas.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
+    _refresh(true);
   }
 
   void _setElementStyles() {
@@ -161,7 +178,8 @@ abstract class CanvasGraphNode extends CanvasNode {
     }
 
     if (_useCache) {
-      context.drawImage(_cacheCanvas, 0, 0);
+      context.drawImageScaled(_cacheCanvas, 0, 0, _cacheCanvas.width / DOM.window.devicePixelRatio,
+          _cacheCanvas.height / DOM.window.devicePixelRatio);
     } else {
       _drawGraph(context);
     }
