@@ -268,7 +268,7 @@ abstract class Node extends NodeBase {
   String get strokeLinecap => getAttribute(STROKE_LINECAP);
 
   void set strokeLineJoin(String value) => setAttribute(STROKE_LINE_JOIN, value);
-  String get strokeLineJoin => getAttribute(STROKE_LINE_JOIN, 'bevel');
+  String get strokeLineJoin => getAttribute(STROKE_LINE_JOIN);
 
   void set strokeDashArray(String value) => setAttribute(STROKE_DASHARRAY, value, true);
   String get strokeDashArray => getAttribute(STROKE_DASHARRAY);
