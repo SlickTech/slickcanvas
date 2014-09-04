@@ -63,7 +63,8 @@ class SvgGradientTests {
 
     // make sure gradient and rect are removed
     defs = stage.element.querySelector('defs');
-    expect(defs, isNull);
+    expect(defs, isNotNull);
+    expect(defs.nodes.length, equals(0));
     rectEl = stage.element.querySelector('.__sc_rect');
     expect(rectEl, isNull);
   }
@@ -121,7 +122,8 @@ class SvgGradientTests {
 
     // make sure gradient and rect are removed
     defs = stage.element.querySelector('defs');
-    expect(defs, isNull);
+    expect(defs, isNotNull);
+    expect(defs.nodes.length, equals(0));
     rectEl = stage.element.querySelector('.__sc_rect');
     expect(rectEl, isNull);
   }
@@ -183,7 +185,8 @@ class SvgGradientTests {
     g.remove();
 
     defs = stage.element.querySelector('defs');
-    expect(defs, isNull);
+    expect(defs, isNotNull);
+    expect(defs.nodes.length, equals(0));
 
     gEl = stage.element.querySelector('g');
     expect(gEl, isNull);
@@ -244,7 +247,9 @@ class SvgGradientTests {
     rect.remove();
 
     defs = stage.element.querySelector('defs');
-    expect(defs, isNull);
+    expect(defs, isNotNull);
+    expect(defs.nodes.length, equals(0));
+
     rectEl = stage.element.querySelector('.__sc_rect');
     expect(rectEl, isNull);
   }
@@ -307,7 +312,9 @@ class SvgGradientTests {
     g.remove();
 
     defs = stage.element.querySelector('defs');
-    expect(defs, isNull);
+    expect(defs, isNotNull);
+    expect(defs.nodes.length, equals(0));
+
     gEl = stage.element.querySelector('g');
     expect (gEl, isNull);
     rectEl = stage.element.querySelector('.__sc_rect');
