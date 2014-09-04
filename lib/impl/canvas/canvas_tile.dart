@@ -98,20 +98,33 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     _context.save();
     _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
 
+    var left, top, right, bottom;
+
     if (_previousDirtyRagion != null) {
-      var left = min(_previousDirtyRagion.x, _dirtyRagion.x);
-      var top = min(_previousDirtyRagion.y, _dirtyRagion.y);
-      var right = max(_previousDirtyRagion.right, _dirtyRagion.right);
-      var bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom);
+      left = min(_previousDirtyRagion.x, _dirtyRagion.x);
+      top = min(_previousDirtyRagion.y, _dirtyRagion.y);
+      right = max(_previousDirtyRagion.right, _dirtyRagion.right);
+      bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom);
       _context.clearRect(left - this.x - 10, top - this.y - 10, right - left + 20, bottom - top + 20);
     } else {
+      left = _dirtyRagion.x;
+      top = _dirtyRagion.top;
+      right = _dirtyRagion.right;
+      bottom = _dirtyRagion.bottom;
       _context.clearRect(_dirtyRagion.x - this.x - 10, _dirtyRagion.y - this.y - 10, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
     }
 
     _children.forEach((node) {
-      _context.save();
-      node.draw(this.x, this.y, _context);
-      _context.restore();
+      // only redraw node inside dirty ragion
+      var bbox = node.shell.getBBox(true);
+      if (bbox.left <= right &&
+          bbox.right >= left &&
+          bbox.top <= bottom &&
+          bbox.bottom >= top) {
+        _context.save();
+        node.draw(this.x, this.y, _context);
+        _context.restore();
+      }
     });
     _context.restore();
     _previousDirtyRagion = _dirtyRagion;
