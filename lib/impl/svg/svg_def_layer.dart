@@ -33,11 +33,6 @@ class SvgDefLayerImpl {
         defImplEl.dataset['refCount'] = refCount.toString();
       } else {
         defImplEl.remove();
-
-        if (_defsEl.nodes.length == 0) {
-          _defsEl.remove();
-          _defsEl = null;
-        }
       }
     }
   }
