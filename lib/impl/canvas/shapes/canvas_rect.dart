@@ -4,7 +4,7 @@ class CanvasRect extends CanvasGraphNode {
   CanvasRect(Rect shell): super(shell) {
     _useCache = !(shell.rx == null && shell.ry == null);
 
-    shell.on('rxChanged, ryChanged', (oldValue, newValue) {
+    shell.on('rxChanged, ryChanged', (newValue) {
       if (newValue != null) {
         _useCache = true;
         _cacheGraph();

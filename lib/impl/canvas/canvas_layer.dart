@@ -117,17 +117,17 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
       .on('stageSet', _onStageSet);
   }
 
-  void _onWidthChanged(oldValue, newValue) {
+  void _onWidthChanged(newValue) {
     _element.style.width = '${newValue}px';
     _updateTiles();
   }
 
-  void _onHeightChanged(oldValue, newValue) {
+  void _onHeightChanged(newValue) {
     _element.style.height = '${newValue}px';
     _updateTiles();
   }
 
-  void _onOpacityChanged(num oldValue, num newValue) {
+  void _onOpacityChanged(num newValue) {
     _element.style.opacity = '$newValue';
   }
 

@@ -76,12 +76,12 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
   }
 
-  void _onWidthChanged(oldValue, newValue) {
+  void _onWidthChanged(newValue) {
     _element.style.width = '${newValue}px';
     _element.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
   }
 
-  void _onHeightChanged(oldValue, newValue) {
+  void _onHeightChanged(newValue) {
     _element.style.height = '${newValue}px';
     _element.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
   }

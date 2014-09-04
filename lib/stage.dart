@@ -45,7 +45,7 @@ class Stage extends NodeBase implements Container<Node> {
     _element.onMouseEnter.listen(_setPointerPosition);
     _element.onMouseLeave.listen(_setPointerPosition);
 
-    this.on('draggableChanged', (oldValue, newValue) {
+    this.on('draggableChanged', (newValue) {
       if (!newValue) {
         _dragEnd();
       }
@@ -279,14 +279,14 @@ class Stage extends NodeBase implements Container<Node> {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
     if (oldValue != x) {
-      fire('scaleXChanged', oldValue, x);
+      fire('scaleXChanged', x, oldValue);
     }
   }
   void set scaleY(num y) {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
     if (oldValue != y) {
-      fire('scaleYChanged', oldValue, y);
+      fire('scaleYChanged', y, oldValue);
     }
   }
   void set scale(scale) {
@@ -317,7 +317,7 @@ class Stage extends NodeBase implements Container<Node> {
     var oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
     if (oldValue != tx) {
-      fire('translateXChanged', oldValue, tx);
+      fire('translateXChanged', tx, oldValue);
     }
   }
   num get translateX => _transformMatrix.translateX;
@@ -326,7 +326,7 @@ class Stage extends NodeBase implements Container<Node> {
     var oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
     if (oldValue != ty) {
-      fire('translateYChanged', oldValue, ty);
+      fire('translateYChanged', ty, oldValue);
     }
   }
   num get translateY => _transformMatrix.translateY;

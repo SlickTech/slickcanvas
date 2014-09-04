@@ -58,13 +58,13 @@ abstract class CanvasGraphNode extends CanvasNode {
     }
   }
 
-  void _onWidthChanged(oldValue, newValue) {
+  void _onWidthChanged(newValue) {
     _cacheCanvas.style.width = '${newValue}px';
     _cacheCanvas.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
     _refresh(true);
   }
 
-  void _onHeightChanged(oldValue, newValue) {
+  void _onHeightChanged(newValue) {
     _cacheCanvas.style.height = '${newValue}px';
     _cacheCanvas.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
     _refresh(true);

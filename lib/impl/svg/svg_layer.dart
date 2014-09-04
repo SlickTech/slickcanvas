@@ -120,27 +120,27 @@ class SvgLayer extends SvgNode implements LayerImpl {
     }
   }
 
-  void _onWidthChanged(oldValue, newValue) {
+  void _onWidthChanged(newValue) {
     _element.setAttribute(WIDTH, '$newValue');
     (_element as SVG.SvgSvgElement).viewBox.baseVal
     ..width = newValue / (getAttribute(SCALE_X, 1) * shell.stage.scaleX);
   }
 
-  void _onHeightChanged(oldValue, newValue) {
+  void _onHeightChanged(newValue) {
     _element.setAttribute(HEIGHT, '$newValue');
     (_element as SVG.SvgSvgElement).viewBox.baseVal
     ..height = newValue / (getAttribute(SCALE_Y, 1) * shell.stage.scaleY);
   }
 
-  void _onOpacityChanged(num oldValue, num newValue) {
+  void _onOpacityChanged(num newValue) {
     _element.style.opacity = '$newValue';
   }
 
-  void _onScaleXChanged(num oldValue, num newValue) {
+  void _onScaleXChanged(num newValue) {
     _scaleViewBoxWidth(newValue);
   }
 
-  void _onScaleYChanged(num oldValue, num newValue) {
+  void _onScaleYChanged(num newValue) {
     _scaleViewBoxHeight(newValue);
   }
 
@@ -158,11 +158,11 @@ class SvgLayer extends SvgNode implements LayerImpl {
     (_element as SVG.SvgSvgElement).viewBox.baseVal.height = getAttribute(HEIGHT, 0) / scaleY;
   }
 
-  void _onTranslateXChanged(oldValue, newValue) {
+  void _onTranslateXChanged(newValue) {
     _translateViewBoxX(newValue);
   }
 
-  void _onTranslateYChanged(oldValue, newValue) {
+  void _onTranslateYChanged(newValue) {
     _translateViewBoxY(newValue);
   }
 

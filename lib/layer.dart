@@ -73,8 +73,8 @@ class Layer extends Group {
 
     String sUid = uid.toString();
     _parent
-    .on('widthChanged', (oldValue, newValue) { width = newValue; }, sUid)
-    .on('heightChanged', (oldValue, newValue) { height = newValue; }, sUid)
+    .on('widthChanged', (newValue) { width = newValue; }, sUid)
+    .on('heightChanged', (newValue) { height = newValue; }, sUid)
     ;
     fire('stageSet');
   }

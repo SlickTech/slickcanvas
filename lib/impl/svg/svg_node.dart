@@ -39,7 +39,7 @@ abstract class SvgNode extends NodeImpl {
       }
 
       this.shell
-        .on('draggableChanged', (oldValue, newValue) {
+        .on('draggableChanged', (newValue) {
           if (newValue) {
             _startDragHandling();
           } else {
@@ -49,8 +49,8 @@ abstract class SvgNode extends NodeImpl {
     }
 
     this.shell
-    .on('translateXChanged', (oldValue, newValue) { translate(); })
-    .on('translateYChanged', (oldValue, newValue) { translate(); })
+    .on('translateXChanged', () => translate())
+    .on('translateYChanged', () => translate())
     .on(ATTR_CHANGED, _handleAttrChange);
   }
 
@@ -291,7 +291,7 @@ abstract class SvgNode extends NodeImpl {
     return this;
   }
 
-  void _handleAttrChange(String attr, oldValue, newValue) {
+  void _handleAttrChange(String attr, newValue, oldValue) {
     if (_isStyle(attr)) {
       // only handle def changes on non-reflection node
       if (stage != null && !_isReflection) {

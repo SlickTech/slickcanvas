@@ -35,9 +35,9 @@ class NodeBase extends EventBus {
     if (oldValue != value) {
       var event = attr + CHANGED;
       if (hasListener(event)) {
-        fire(event, oldValue, value);
+        fire(event, value, oldValue);
       } else{
-        fire(ATTR_CHANGED, attr, oldValue, value);
+        fire(ATTR_CHANGED, attr, value, oldValue);
       }
     }
   }
@@ -52,9 +52,9 @@ class NodeBase extends EventBus {
     _attrs.remove(attr);
     var event = attr + CHANGED;
     if (hasListener(event)) {
-      fire(event, oldValue, null);
+      fire(event, null, oldValue);
     } else{
-      fire(ATTR_CHANGED, attr, oldValue, null);
+      fire(ATTR_CHANGED, attr, null, oldValue);
     }
   }
 

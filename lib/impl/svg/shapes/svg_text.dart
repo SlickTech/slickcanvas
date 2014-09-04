@@ -36,7 +36,7 @@ class SvgText extends SvgNode{
     return super._isStyle(attr);
   }
 
-  void _handleTextChange(oldValue, newValue) {
+  void _handleTextChange(newValue) {
     _element.text = newValue;
   }
 

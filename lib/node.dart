@@ -234,7 +234,7 @@ abstract class Node extends NodeBase {
     if (oldValue != value) {
       _attrs[OFFSET_X] = value;
       _transformMatrix.translateX += value - oldValue;
-      fire('offsetXChanged', oldValue, value);
+      fire('offsetXChanged', value, oldValue);
     }
   }
   num get offsetX => getAttribute(OFFSET_X, 0);
@@ -244,7 +244,7 @@ abstract class Node extends NodeBase {
     if (oldValue != value) {
       _attrs[OFFSET_Y] = value;
       _transformMatrix.translateY += value - oldValue;
-      fire('offsetYChanged', oldValue, value);
+      fire('offsetYChanged', value, oldValue);
     }
   }
   num get offsetY => getAttribute(OFFSET_Y, 0);
@@ -307,7 +307,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
     if (oldValue != x) {
-      fire('scaledXChanged', oldValue, x);
+      fire('scaledXChanged', x, oldValue);
     }
   }
   num get scaleX => _transformMatrix.scaleX;
@@ -316,7 +316,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
     if (oldValue != y) {
-      fire('scaledYChanged', oldValue, y);
+      fire('scaledYChanged', y, oldValue);
     }
   }
   num get scaleY => _transformMatrix.scaleY;
@@ -325,7 +325,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
     if (oldValue != tx) {
-      fire('translateXChanged', oldValue, tx);
+      fire('translateXChanged', tx, oldValue);
     }
   }
   num get translateX => _transformMatrix.translateX;
@@ -334,7 +334,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
     if (oldValue != ty) {
-      fire('translateYChanged', oldValue, ty);
+      fire('translateYChanged', ty, oldValue);
     }
   }
   num get translateY => _transformMatrix.translateY;
@@ -343,7 +343,7 @@ abstract class Node extends NodeBase {
     num oldValue = _rotation;
     _rotation = r;
     if (oldValue != r) {
-      fire('rotationChanged', oldValue, r);
+      fire('rotationChanged', r, oldValue);
     }
   }
   num get rotation => _rotation;
