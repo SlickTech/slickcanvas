@@ -11,7 +11,7 @@ class Text extends Node {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
+    return new CanvasText(this);
   }
 
   static num measureText(String font, String text) {
@@ -69,4 +69,9 @@ class Text extends Node {
   String get textAnchor => getAttribute(TEXT_ANCHOR);
 
   num get height => fontSize;
+
+  BBox getBBox(bool isAbsolute) {
+    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    return new BBox(x: pos.x, y: pos.y - height, width: this.width, height: this.height);
+  }
 }

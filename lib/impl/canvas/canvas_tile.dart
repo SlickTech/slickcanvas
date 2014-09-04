@@ -1,47 +1,45 @@
 part of smartcanvas.canvas;
 
-num _getPixelRatio() {
-  DOM.CanvasElement canvas = new DOM.CanvasElement();
-  return DOM.window.devicePixelRatio / canvas.context2D.backingStorePixelRatio;
-}
-
-class CanvasTile extends NodeBase {
+class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
 
   static num MAX_WIDTH = 800;
   static num MAX_HEIGHT = 600;
-  static num _defaultPixelRatio = _getPixelRatio();
 
   TransformMatrix _transformMatrix;
 
   DOM.CanvasElement _element;
   DOM.CanvasRenderingContext2D _context;
   CanvasLayer _layer;
-  num _pixelRatio = _defaultPixelRatio;
 
   bool _dirty = false;
   bool _suspended =false;
 
+  List<CanvasGraphNode> _children = [];
+
+  BBox _dirtyRagion;
+  BBox _previousDirtyRagion;
+
   CanvasTile(this._layer, Map<String, dynamic> config): super(config) {
     _element = new DOM.CanvasElement();
     _element.dataset['scNode'] = '${uid}';
-    _context = _element.context2D;
+
     _setElementAttributes();
     _setElementStyles();
 
+    _context = _element.context2D;
+    _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+
     this
-      .on('pixelRatioChanged', _onPixelRatioChanged)
       .on('widthChanged', _onWidthChanged)
       .on('heightChanged', _onHeightChanged);
   }
 
   void _scaleCanvas() {
-    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
-      _element.setAttribute(WIDTH, '${this.width * _pixelRatio}');
-      _element.setAttribute(HEIGHT, '${this.height * _pixelRatio}');
+      _element.setAttribute(WIDTH, '${this.width * DOM.window.devicePixelRatio}');
+      _element.setAttribute(HEIGHT, '${this.height * DOM.window.devicePixelRatio}');
       _element.style.width = '${this.width}px';
       _element.style.height = '${this.height}px';
-      _context.scale(_pixelRatio, _pixelRatio);
-    }
+      _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
   }
 
   void _setElementAttributes() {
@@ -53,9 +51,8 @@ class CanvasTile extends NodeBase {
     var value = getAttribute(attr);
     if (value != null) {
       if (value is! String || !value.isEmpty) {
-        if ((attr == WIDTH || attr == HEIGHT) &&
-            DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
-          value = value * _pixelRatio;
+        if ((attr == WIDTH || attr == HEIGHT)) {
+          value = value * DOM.window.devicePixelRatio;
         }
         _element.attributes[attr] = '$value';
       }
@@ -69,7 +66,7 @@ class CanvasTile extends NodeBase {
     ..left = '${x}px'
     ..margin = ZERO
     ..padding = ZERO
-    ..border = ZERO
+    ..borderWidth = ZERO
     ..background = 'transparent'
     ..width = '${width}px'
     ..height = '${height}px';
@@ -79,41 +76,14 @@ class CanvasTile extends NodeBase {
     return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
   }
 
-  dynamic getAttribute(String attr, [dynamic defaultValue]) {
-    switch (attr) {
-      case WIDTH:
-        return CanvasTile.MAX_WIDTH * _pixelRatio;
-      case HEIGHT:
-        return CanvasTile.MAX_HEIGHT * _pixelRatio;
-      default:
-        return super.getAttribute(attr, defaultValue);
-    }
-  }
-
-  void _onPixelRatioChanged(oldValue, newValue) {
-    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
-      _context.scale(newValue, newValue);
-      _element.setAttribute(WIDTH, '${this.width * newValue}');
-      _element.setAttribute(HEIGHT, '${this.height * newValue}');
-    }
-  }
-
   void _onWidthChanged(oldValue, newValue) {
     _element.style.width = '${newValue}px';
-    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
-      _element.setAttribute(WIDTH, '${this.width * newValue}');
-    } else {
-      _element.setAttribute(WIDTH, '$newValue');
-    }
+    _element.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
   }
 
   void _onHeightChanged(oldValue, newValue) {
     _element.style.height = '${newValue}px';
-    if (DOM.window.devicePixelRatio != _context.backingStorePixelRatio) {
-      _element.setAttribute(HEIGHT, '${this.width * newValue}');
-    } else {
-      _element.setAttribute(HEIGHT, '$newValue');
-    }
+    _element.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
   }
 
   void remove() {
@@ -121,9 +91,44 @@ class CanvasTile extends NodeBase {
   }
 
   void draw() {
-    if (_suspended || !_dirty) {
+    if (_suspended || _dirtyRagion == null) {
       return;
     }
+
+    _context.save();
+    _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+
+    var left, top, right, bottom;
+
+    if (_previousDirtyRagion != null) {
+      left = min(_previousDirtyRagion.x, _dirtyRagion.x);
+      top = min(_previousDirtyRagion.y, _dirtyRagion.y);
+      right = max(_previousDirtyRagion.right, _dirtyRagion.right);
+      bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom);
+      _context.clearRect(left - this.x - 10, top - this.y - 10, right - left + 20, bottom - top + 20);
+    } else {
+      left = _dirtyRagion.x;
+      top = _dirtyRagion.top;
+      right = _dirtyRagion.right;
+      bottom = _dirtyRagion.bottom;
+      _context.clearRect(_dirtyRagion.x - this.x - 10, _dirtyRagion.y - this.y - 10, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
+    }
+
+    _children.forEach((node) {
+      // only redraw node inside dirty ragion
+      var bbox = node.shell.getBBox(true);
+      if (bbox.left <= right &&
+          bbox.right >= left &&
+          bbox.top <= bottom &&
+          bbox.bottom >= top) {
+        _context.save();
+        node.draw(this.x, this.y, _context);
+        _context.restore();
+      }
+    });
+    _context.restore();
+    _previousDirtyRagion = _dirtyRagion;
+    _dirtyRagion = null;
   }
 
   void suspend() {
@@ -147,20 +152,37 @@ class CanvasTile extends NodeBase {
   void set height(num value) => setAttribute(HEIGHT, value);
   num get height => getAttribute(HEIGHT, MAX_HEIGHT);
 
-  void set pixelRatio(num value) {
-    num oldValue = _pixelRatio;
-    _pixelRatio = value;
-    if (oldValue != value) {
-      fire('pixelRatioChanged', oldValue, value);
-    }
+  void addChild(CanvasGraphNode node) {
+    _children.add(node);
   }
-  num get pixelRatio => _pixelRatio;
 
-  void set dirty(bool value) {
-    _dirty = value;
-    if (value) {
-      draw();
+  void removeChild(CanvasGraphNode node) {
+    _children.remove(node);
+  }
+
+  void clearChildren() {
+    while(_children.isNotEmpty) {
+      _children.first.remove();
     }
   }
+
+  void insertChild(num index, CanvasGraphNode node) {
+    _children.insert(index, node);
+  }
+
+  void nodeDirty(BBox dirtyRagion) {
+    if (_dirtyRagion == null) {
+      _dirtyRagion = dirtyRagion;
+    } else {
+      num x = min(_dirtyRagion.x, dirtyRagion.x);
+      num y = min(_dirtyRagion.y, dirtyRagion.y);
+      _dirtyRagion = new BBox(
+          x: x, y: y,
+          width: max(_dirtyRagion.right, dirtyRagion.right) - x,
+          height: max(_dirtyRagion.bottom, dirtyRagion.bottom) - y);
+    }
+  }
+
+  List<CanvasGraphNode> get children => _children;
   bool get dirty => _dirty;
 }

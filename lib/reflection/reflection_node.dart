@@ -11,7 +11,6 @@ class ReflectionNode extends Node implements I_Reflection {
   }
 
   NodeImpl _createSvgImpl(bool isReflection) {
-    assert(_node._impl != null);
     NodeImpl reflectionImpl = _node._createSvgImpl(true);
     return reflectionImpl;
   }

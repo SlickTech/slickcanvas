@@ -2,28 +2,151 @@ import 'dart:html' as dom hide Text;
 import 'package:smartcanvas/smartcanvas.dart';
 
 void main() {
-  dom.Element container = dom.document.querySelector('#smartCanvas');
-
-
-  Stage stage = new Stage(container, svg, {
-      WIDTH: container.clientWidth,
-      HEIGHT: 900,
-      DRAGGABLE: true
-    });
-
-  Layer layer = new Layer(canvas, {});
-
   Rect rect = new Rect({
-    X: 50,
-    Y: 50,
     WIDTH: 100,
     HEIGHT: 100,
     FILL: 'red',
-    DRAGGABLE: true
+    OFFSET_X: -100,
+    OFFSET_Y: -100
   });
 
-  layer.addChild(rect);
-  stage.addChild(layer);
+  Circle circle = new Circle({
+    R: 50,
+    FILL: 'yellow',
+    OFFSET_X: -100,
+    OFFSET_Y: -100
+  });
+
+  Ellipse ellipse = new Ellipse({
+    RX: 100,
+    RY: 50,
+    FILL: 'blue'
+  });
+
+  Line line = new Line({
+    X1: -150, Y1: 50,
+    X2: 150, Y2: 150,
+    STROKE_WIDTH: 5,
+    STROKE: 'red'
+  });
+
+  Text text = new Text({
+    X: 100, Y:100,
+    TEXT: 'Hello World',
+    FILL: 'orange',
+    FONT_SIZE: 20
+  });
+
+  Path path = new Path({
+    D: //'M150 0 L75 200 L225 200 Z',
+    //'M100,200 C100,100 250,100 250,200 S400,300 400,200',
+//    'M200,300 Q400,50 600,300 t1000,300',
+//      'M300,200 h-150 a150,150 0 1,0 150,-150 z' +
+//      ' M275,175 v-150 a150,150 0 0,0 -150,150 z',
+      'M10,350 l 50,-25 ' +
+           'a25,25 -30 0,1 50,-25 l 50,-25 ' +
+           'a25,50 -30 0,1 50,-25 l 50,-25 ' +
+           'a25,75 -30 0,1 50,-25 l 50,-25 ' +
+           'a25,100 -30 0,1 50,-25 l 50,-25',
+    STROKE: 'purple',
+    STROKE_WIDTH: 10,
+    FILL: 'none'
+  });
+
+  Polygon polygon = new Polygon({
+    'points': "220,10,300,210,170,250,-123,234",
+    'fill': 'lime',
+  });
+
+  Polyline polyline = new Polyline({
+    'points': [200, 200, -100, -100, 100, 0],
+    'stroke': 'red',
+    'stroke-width': 5
+  });
+
+  dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
+  Stage svgStage = new Stage(svgContainer, svg, {});
+
+  dom.Element canvasContainer = dom.document.querySelector('.canvas-canvas');
+  Stage canvasStage = new Stage(canvasContainer, canvas, {});
+
+  dom.Element nodes = dom.document.querySelector('.node-list');
+
+  dom.Element addBtn = dom.document.querySelector('.btn-add');
+  addBtn.onClick.listen((e) {
+    var shapes = dom.document.querySelectorAll('input[type=checkbox]:checked');
+
+    shapes.forEach((shape) {
+      var node, svgNode, canvasNode;
+
+      switch(shape.className) {
+        case 'rect':
+          node = rect;
+          break;
+        case 'circle':
+          node = circle;
+          break;
+        case 'ellipse':
+          node = ellipse;
+          break;
+        case 'line':
+          node = line;
+          break;
+        case 'text':
+          node = text;
+          break;
+        case 'path':
+          node = path;
+          break;
+        case 'polygon':
+          node = polygon;
+          break;
+        case 'polyline':
+          node = polyline;
+          break;
+      }
+
+      svgNode = node.clone({DRAGGABLE: true});
+      svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
+      svgStage.addChild(svgNode);
+
+      canvasNode = node.clone({DRAGGABLE: true});
+      canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
+      canvasStage.addChild(canvasNode);
+    });
+  });
+
+  //  dom.Element circleBtn = dom.document.querySelector('.circle-btn');
+//  circleBtn.onClick.listen((e) {
+//    svgStage.addChild(circle.clone());
+//    canvasStage.addChild(circle.clone());
+//  });
+
+//  Stage stage = new Stage(container, svg, {
+//      WIDTH: container.clientWidth,
+//      HEIGHT: 900,
+////      DRAGGABLE: true
+//    });
+//
+//  Layer layer = new Layer(canvas, {});
+//
+//  Rect rect = new Rect({
+//    X: 100,
+//    Y: 0,
+//    WIDTH: 100,
+//    HEIGHT: 100,
+//    FILL: 'red',
+//    DRAGGABLE: true
+//  });
+//
+//  layer.addChild(rect);
+//  stage.addChild(layer);
+
+//  new Timer(new Duration(seconds: 5), (){
+//    rect
+//    ..x = 100
+//    ..y = 100;
+//  });
 
 //    Circle circle = new Circle({
 //      X: 50,
@@ -31,7 +154,6 @@ void main() {
 //      R: 40,
 //      STROKE: 'green',
 //      FILL: 'yellow',
-//      LISTENING: true
 //    });
 //
 //    Rect rect = new Rect({
@@ -41,7 +163,7 @@ void main() {
 //      'height': 40,
 //      'stroke': 'red',
 //      'strokeWidth': 2,
-////      'draggable': true,
+////      'draggable': true
 //    });
 //
 //    Ellipse ellipse = new Ellipse({
@@ -70,11 +192,10 @@ void main() {
 //
 //    Group g = new Group({
 //      'draggable': true,
-//      'listening': true,
 //      'name': 'group'
 //    });
-//    g.add(circle);
-//    g.add(rect);
+//    g.addChild(circle);
+//    g.addChild(rect);
 //
 //    print('pos g - ${g.position.x}, ${g.position.y}');
 //    print('pos rect - ${rect.position.x}, ${rect.position.y}');
@@ -82,7 +203,7 @@ void main() {
 //    print('abs pos rect - ${rect.absolutePosition.x}, ${rect.absolutePosition.y}');
 //    print('rect: ${rect.x}, ${rect.y}');
 //
-//    stage.add(g);
+//    stage.addChild(g);
 //
 //    g.x = 100;
 //    g.y = 100;

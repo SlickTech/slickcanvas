@@ -20,7 +20,7 @@ class Circle extends Node {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
+    return new CanvasCircle(this);
   }
 
   BBox getBBox(bool isAbsolute) {

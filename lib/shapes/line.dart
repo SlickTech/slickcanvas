@@ -8,7 +8,7 @@ class Line extends Node {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
+    return new CanvasLine(this);
   }
 
   void set points(List<num> points) {
@@ -32,4 +32,10 @@ class Line extends Node {
 
   void set y2(num value) => setAttribute(Y2, value);
   num get y2 => getAttribute(Y2, 0);
+
+  BBox getBBox(bool isAbsolute) {
+    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    return new BBox(x: pos.x + min(x1, x2), y: pos.y + min(y1, y2),
+        width: (x1 - x2).abs(), height: (y1 - y2).abs());
+  }
 }

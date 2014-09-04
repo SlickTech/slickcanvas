@@ -1,0 +1,47 @@
+
+body {
+  background-color: #F8F8F8;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.2em;
+  margin: 0;
+  padding: 0
+}
+
+h1, p {
+  color: #333;
+  margin: 15px;
+}
+
+input[type="checkbox"] {
+  margin-right: 2px;
+  margin-left: 5px;
+}
+
+.row {
+  margin-top: 10px;
+}
+
+.col-rect, .col-polygon, .col-polyline {
+  width: 10%;
+}
+
+.svg-canvas {
+  margin: 0;
+  margin-left: 20px;
+  padding: 0;
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+  float: left;
+}
+
+.canvas-canvas {
+  margin: 0;
+  margin-left: 540px;
+  padding: 0;
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+}
