@@ -1,3 +1,8 @@
+#0.1.0
+## Implemente basic canvas shapes
+## Fixed an issue where svg defs layer throw null exception when changing fill to gradient.
+## Breaking Change - changed 'XXchanged' event handler signature from (oldValue, newValue) to (newValue, oldValue).
+
 #v0.0.31
 ## Fixed an strage issue in FireFox where fill pattern/gradient is not always applied.
 
