@@ -6,7 +6,7 @@ class Polyline extends Node {
 
   Polyline(Map<String, dynamic> config): super(config) {
     setAttribute(FILL, 'none');
-    this.on('translateXChanged translateXChanged', () => _bbox = null);
+    this.on('translateXChanged translateYChanged', () => _bbox = null);
     this.on('pointsChanged', () { _bbox = null; _points = null; });
   }
 

@@ -7,7 +7,7 @@ class Path extends Node {
 
   Path(Map<String, dynamic> config): super(config) {
     _svgImpl = _createSvgImpl(false);
-    this.on('DChnaged', () => _bbox = null);
+    this.on('dChanged', () => _bbox = null);
   }
 
   NodeImpl _createSvgImpl(bool isReflection) {

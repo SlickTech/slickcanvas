@@ -5,7 +5,7 @@ class Polygon extends Node{
   List<Position> _points = null;
 
   Polygon(Map<String, dynamic> config): super(config) {
-    this.on('translateXChanged translateXChanged', () => _bbox = null);
+    this.on('translateXChanged translateYChanged', () => _bbox = null);
     this.on('pointsChanged', () { _bbox = null; _points = null; });
   }
 
