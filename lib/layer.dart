@@ -82,4 +82,7 @@ class Layer extends Group {
 
   num get width => getAttribute(WIDTH);
   num get height => getAttribute(HEIGHT);
+
+  void set background(String value) => setAttribute(BACKGROUND, value);
+  String get background => getAttribute(BACKGROUND);
 }

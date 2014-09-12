@@ -19,6 +19,10 @@ class SvgLayer extends SvgNode implements LayerImpl {
     return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT, VIEWBOX]);
   }
 
+  List<String> _getStyleNames() {
+    return [BACKGROUND, OPACITY, DISPLAY];
+  }
+
   void _setElementAttribute(String attr) {
     if (attr == 'viewBox') {
       _setViewBox();

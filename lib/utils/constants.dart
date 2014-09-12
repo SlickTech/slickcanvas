@@ -91,6 +91,7 @@ const String OFFSET = 'offset';
 const String COLOR = 'color';
 const String SPREAD_METHOD = 'spreadMethod';
 const String DEF_ADDED = 'defAdded';
+const String BACKGROUND = 'background';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
