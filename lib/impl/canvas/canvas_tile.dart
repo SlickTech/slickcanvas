@@ -101,17 +101,17 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     var left, top, right, bottom;
 
     if (_previousDirtyRagion != null) {
-      left = min(_previousDirtyRagion.x, _dirtyRagion.x);
-      top = min(_previousDirtyRagion.y, _dirtyRagion.y);
-      right = max(_previousDirtyRagion.right, _dirtyRagion.right);
-      bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom);
-      _context.clearRect(left - this.x - 10, top - this.y - 10, right - left + 20, bottom - top + 20);
+      left = min(_previousDirtyRagion.x, _dirtyRagion.x) - 10;
+      top = min(_previousDirtyRagion.y, _dirtyRagion.y) - 10;
+      right = max(_previousDirtyRagion.right, _dirtyRagion.right) + 10;
+      bottom = max(_previousDirtyRagion.bottom, _dirtyRagion.bottom) + 10;
+      _context.clearRect(left - this.x, top - this.y, right - left, bottom - top);
     } else {
-      left = _dirtyRagion.x;
-      top = _dirtyRagion.top;
-      right = _dirtyRagion.right;
-      bottom = _dirtyRagion.bottom;
-      _context.clearRect(_dirtyRagion.x - this.x - 10, _dirtyRagion.y - this.y - 10, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
+      left = _dirtyRagion.x - 10;
+      top = _dirtyRagion.top - 10;
+      right = _dirtyRagion.right + 10;
+      bottom = _dirtyRagion.bottom + 10;
+      _context.clearRect(left - this.x, top - this.y, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
     }
 
     _children.forEach((node) {
