@@ -137,6 +137,18 @@ class Stage extends NodeBase implements Container<Node> {
 //    }));
   }
 
+  void _updatePointerPoistionX(num newScaleX, num oldScaleX) {
+    if (_pointerPosition != null) {
+      _pointerPosition.x = _pointerPosition.x * oldScaleX / newScaleX;
+    }
+  }
+
+  void _updatePointerPoistionY(num newScaleY, num oldScaleY) {
+    if (_pointerPosition != null) {
+      _pointerPosition.y = _pointerPosition.y * oldScaleY / newScaleY;
+    }
+  }
+
   Position get pointerPosition => _pointerPosition;
 
   void addChild(Node node) {
@@ -278,6 +290,9 @@ class Stage extends NodeBase implements Container<Node> {
   void set scaleX(num x) {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
+
+//    _updatePointerPoistionX(x, oldValue);
+
     if (oldValue != x) {
       fire('scaleXChanged', x, oldValue);
     }
@@ -285,6 +300,9 @@ class Stage extends NodeBase implements Container<Node> {
   void set scaleY(num y) {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
+
+//    _updatePointerPoistionY(y, oldValue);
+
     if (oldValue != y) {
       fire('scaleYChanged', y, oldValue);
     }
