@@ -1,3 +1,6 @@
+#0.1.2
+## Fixed pointer position update on stage scale
+
 #0.1.1
 ## Fixed typo
 ## Add background to layer.
