@@ -291,7 +291,7 @@ class Stage extends NodeBase implements Container<Node> {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
 
-//    _updatePointerPoistionX(x, oldValue);
+    _updatePointerPoistionX(x, oldValue);
 
     if (oldValue != x) {
       fire('scaleXChanged', x, oldValue);
@@ -301,7 +301,7 @@ class Stage extends NodeBase implements Container<Node> {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
 
-//    _updatePointerPoistionY(y, oldValue);
+    _updatePointerPoistionY(y, oldValue);
 
     if (oldValue != y) {
       fire('scaleYChanged', y, oldValue);
