@@ -1,7 +1,9 @@
 part of smartcanvas.svg;
 
 class SvgPath extends SvgNode {
-  SvgPath(Path shell, bool isReflection): super(shell, isReflection) {}
+  SvgPath(Path shell, bool isReflection): super(shell, isReflection) {
+    this.shell.on('dChanged', () => _setElementAttribute(D));
+  }
 
   SVG.SvgElement _createElement() {
     return new SVG.PathElement();
