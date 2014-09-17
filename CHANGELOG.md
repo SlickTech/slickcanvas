@@ -1,3 +1,11 @@
+#0.1.1
+## Fixed typo
+## Add background to layer.
+## [Canvas] Fixed an issue where when dragging a shape, other shapes around the dirty ragin were cut off. [#8]
+(https://github.com/kzhdev/dart-smart-canvas/issues/8)
+## [SVG] Fixed an issue where when d changed, path didn't update.
+## Update pointer poistion when stage scale changed.
+
 #0.1.0
 ## Implemente basic canvas shapes
 ## Fixed an issue where svg defs layer throw null exception when changing fill to gradient.
