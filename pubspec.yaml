@@ -1,5 +1,5 @@
 name: smartcanvas
-version: 0.1.2
+version: 0.1.3
 author: Kun Zhao <kzhdev@gmail.com>
 description: A SVG/Canvas framework for Dart.
 homepage: http://www.smartcanvas.org

@@ -1,3 +1,6 @@
+#0.1.3
+## If path isn't in a stage yet, use its config to calculate BBox.
+
 #0.1.2
 ## Fixed pointer position update on stage scale
 
