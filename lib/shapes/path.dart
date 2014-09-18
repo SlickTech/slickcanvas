@@ -49,7 +49,7 @@ class Path extends Node {
       }
       return rt;
     }
-    return new BBox();
+    return new BBox(x: this.x, y: this.y, width: getAttribute(WIDTH, 0), height: getAttribute(HEIGHT, 0));
   }
 
   void set d(String value) => setAttribute(D, value);
