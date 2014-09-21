@@ -163,7 +163,7 @@ class Stage extends NodeBase implements Container<Node> {
 
       int index = _element.nodes.indexOf(_reflectionLayer._impl.element);
       _element.nodes.insert(index, node._impl.element);
-      _children.add(node);
+      _children.insert(index, node);
 
       node.children.forEach((child) {
         _reflectionLayer.reflectNode(child);
