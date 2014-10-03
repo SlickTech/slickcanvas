@@ -81,8 +81,26 @@ class SvgLayer extends SvgNode implements LayerImpl {
     _addDefs(node);
   }
 
-  void resume() {}
-  void suspend() {}
+  void resume() {
+    var idx = this.shell.parent.children.indexOf(this.shell);
+    this.shell.stage.element.nodes[idx].replaceWith(this._element);
+
+    this._defs.forEach((def) {
+      SvgDefLayer.impl(stage).resumeDef(def);
+    });
+  }
+
+  void suspend() {
+    if (this._element.parent != null) {
+      var dummy = this._element.clone(true);
+      dummy.classes.add('dummy');
+      this._element.replaceWith(dummy);
+
+      this._defs.forEach((def) {
+        SvgDefLayer.impl(stage).suspendDef(def);
+      });
+    }
+  }
 
   void remove() {
     String sUid = uid.toString();
@@ -176,6 +194,23 @@ class SvgLayer extends SvgNode implements LayerImpl {
 
   void _translateViewBoxY(num translateY) {
     (_element as SVG.SvgSvgElement).viewBox.baseVal.y = -translateY;
+  }
+
+  List get _defs {
+    List defs = [];
+    if (fill is SCPattern ||
+        fill is Gradient) {
+        defs.add(fill);
+    }
+
+    if (stroke is SCPattern) {
+      defs.add(stroke);
+    }
+
+    _children.forEach((child) {
+      defs.addAll(child._defs);
+    });
+    return defs;
   }
 
   List<SvgNode> get children => _children;

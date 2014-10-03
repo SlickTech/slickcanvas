@@ -125,8 +125,8 @@ class Stage extends NodeBase implements Container<Node> {
 
   void _setPointerPosition(e) {
     var elementClientRect = _element.getBoundingClientRect();
-    num x = (e.client.x - elementClientRect.left) ~/ _transformMatrix.scaleX;
-    num y = (e.client.y - elementClientRect.top) ~/ _transformMatrix.scaleY;
+    num x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX - _transformMatrix.translateX;
+    num y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY - _transformMatrix.translateY;
 //    print('cx: ${e.client.x}, ${e.client.y} - offset:${_element.offsetLeft}, ${_element.offsetTop} - t: ${_transformMatrix.tx}, ${_transformMatrix.ty} - pp: $x, $y');
     this._pointerPosition = new Position(x: x, y: y);
 //    add(new Circle({
@@ -137,15 +137,29 @@ class Stage extends NodeBase implements Container<Node> {
 //    }));
   }
 
-  void _updatePointerPoistionX(num newScaleX, num oldScaleX) {
+  void _updatePointerPoistionXFromScaleXChange(num newScaleX, num oldScaleX) {
     if (_pointerPosition != null) {
-      _pointerPosition.x = _pointerPosition.x * oldScaleX / newScaleX;
+      num factor = oldScaleX / newScaleX;
+      _pointerPosition.x = _pointerPosition.x * factor + _transformMatrix.translateX * (factor - 1);
     }
   }
 
-  void _updatePointerPoistionY(num newScaleY, num oldScaleY) {
+  void _updatePointerPoistionYFromScaleYChange(num newScaleY, num oldScaleY) {
     if (_pointerPosition != null) {
-      _pointerPosition.y = _pointerPosition.y * oldScaleY / newScaleY;
+      num factor = oldScaleY / newScaleY;
+      _pointerPosition.y = _pointerPosition.y * factor + _transformMatrix.translateY * (factor - 1);
+    }
+  }
+
+  void _updatePointerPoistionXFromTranslateXChange(num newTransX, num oldTransX) {
+    if (_pointerPosition != null) {
+      _pointerPosition.x += oldTransX - newTransX;
+    }
+  }
+
+  void _updatePointerPoistionYFromTranslateYChange(num newTransY, num oldTransY) {
+    if (_pointerPosition != null) {
+      _pointerPosition.y += oldTransY - newTransY;
     }
   }
 
@@ -291,9 +305,8 @@ class Stage extends NodeBase implements Container<Node> {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
 
-    _updatePointerPoistionX(x, oldValue);
-
     if (oldValue != x) {
+      _updatePointerPoistionXFromScaleXChange(x, oldValue);
       fire('scaleXChanged', x, oldValue);
     }
   }
@@ -301,9 +314,8 @@ class Stage extends NodeBase implements Container<Node> {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
 
-    _updatePointerPoistionY(y, oldValue);
-
     if (oldValue != y) {
+      _updatePointerPoistionYFromScaleYChange(y, oldValue);
       fire('scaleYChanged', y, oldValue);
     }
   }
@@ -334,7 +346,9 @@ class Stage extends NodeBase implements Container<Node> {
   void set translateX(num tx) {
     var oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
+
     if (oldValue != tx) {
+      _updatePointerPoistionXFromTranslateXChange(tx, oldValue);
       fire('translateXChanged', tx, oldValue);
     }
   }
@@ -343,7 +357,9 @@ class Stage extends NodeBase implements Container<Node> {
   void set translateY(num ty) {
     var oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
+
     if (oldValue != ty) {
+      _updatePointerPoistionYFromTranslateYChange(ty, oldValue);
       fire('translateYChanged', ty, oldValue);
     }
   }

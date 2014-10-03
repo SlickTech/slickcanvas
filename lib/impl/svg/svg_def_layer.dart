@@ -5,6 +5,7 @@ class SvgDefLayerImpl {
   SvgLayer _impl;
   SVG.SvgElement _element;
   SVG.DefsElement _defsEl = new SVG.DefsElement();
+  Map _suspendedDefs = {};
 
   SvgDefLayerImpl() {
     _impl = _layer.impl;
@@ -36,6 +37,30 @@ class SvgDefLayerImpl {
       }
     }
   }
+
+  void suspendDef(Node defNode) {
+    String id = '${defNode.id}';
+    if (!_suspendedDefs.containsKey(id)) {
+      SVG.SvgElement defImplEl = _element.querySelector('#$id');
+      if (defImplEl != null) {
+        var dummy = defImplEl.clone(true);
+        dummy.classes.add("dummy");
+        _suspendedDefs[id] = defImplEl;
+        defImplEl.replaceWith(dummy);
+      }
+    }
+  }
+
+  void resumeDef(Node defNode) {
+    String id = '${defNode.id}';
+    if (_suspendedDefs.containsKey(id)) {
+      SVG.SvgElement dummy = _element.querySelector('#$id');
+      if (dummy != null) {
+        dummy.replaceWith(_suspendedDefs[id]);
+        _suspendedDefs.remove(id);
+      }
+    }
+  }
 }
 
 class SvgDefLayer {
@@ -45,7 +70,7 @@ class SvgDefLayer {
     SvgDefLayerImpl impl = _impls[stage];
     if (impl == null) {
       impl = _impls[stage] = new SvgDefLayerImpl();
-      stage.addChild(impl._layer);
+      stage.insertChild(0, impl._layer);
     }
     return impl;
   }

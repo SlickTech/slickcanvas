@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SmartCanvas Demo</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="examples.css">
+  </head>
+  <body>
+    <h1>Basic Shapes</h1>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-1 col-rect">
+          <input type="checkbox" class="rect">Rectangle
+        </div>
+        <div class="col-md-1">
+          <input type="checkbox" class="circle">Circle
+        </div>
+        <div class="col-md-1">
+          <input type="checkbox" class="ellipse">Ellipse
+        </div>
+        <div class="col-md-1">
+          <input type="checkbox" class="line">Line
+        </div>
+        <div class="col-md-1">
+          <input type="checkbox" class="path">Path
+        </div>
+        <div class="col-md-1 col-polygon">
+          <input type="checkbox" class="polygon">Polygon
+        </div>
+        <div class="col-md-1 col-polyline">
+          <input type="checkbox" class="polyline">Polyline
+        </div>
+        <div class="col-md-1">
+          <input type="checkbox" class="text">Text
+        </div>
+        <div class="col-md-1">
+          <button class="btn-add">Add</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="svg-canvas"></div>
+        <div class="canvas-canvas"></div>
+      </div>
+    </div>
+
+    <script type="application/dart" src="basic_shapes.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
