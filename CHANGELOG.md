@@ -1,3 +1,8 @@
+#0.1.5
+## When calculate absolutePositon, do not count layer's position
+## Fixed drage move flickering issue; 
+## Fixed typo;
+
 #0.1.4
 ## Fix missmatch between stage.children and stage.element.nodes
 ## Implement svg layer suspend/resume
