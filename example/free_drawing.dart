@@ -110,8 +110,10 @@ void main() {
   Position _lastPosition;
   bool _panning = false;
 
-  stage.addChild(new GridLayer({}));
+  Layer _gridLayer = new GridLayer({});
   Layer _drawingLayer = new Layer(svg, {});
+
+  stage.addChild(_gridLayer);
   stage.addChild(_drawingLayer);
 
   stage.on('stageMouseDown', (e) {
@@ -169,27 +171,27 @@ void main() {
         return;
     }
 
-    if (newScale > 1) {
+    if (newScale > 2) {
         newScale = 1;
     } else if (newScale < 0.15) {
         newScale = 0.15;
     }
 
+    // cache current pointer position
     var x = stage.pointerPosition.x;
     var y = stage.pointerPosition.y;
-    print("${stage.translateX}, ${stage.translateY} : ${stage.pointerPosition.x}, ${stage.pointerPosition.y}");
-    stage.scale = newScale;
-    print("** ${stage.translateX}, ${stage.translateY} : ${stage.pointerPosition.x}, ${stage.pointerPosition.y}");
 
+    _gridLayer.suspend();
+    _drawingLayer.suspend();
+
+    stage.scale = newScale;
+
+    // scale at pointer position;
     stage.translateX += stage.pointerPosition.x - x;
     stage.translateY += stage.pointerPosition.y - y;
 
-    print("*** ${stage.translateX}, ${stage.translateY} : ${stage.pointerPosition.x}, ${stage.pointerPosition.y}");
-    //    stage.translateX = stage.pointerPosition.x - stage.pointerPosition.x * newScale;
-//    stage.translateY = stage.pointerPosition.y - stage.pointerPosition.y * newScale;
-
-//    stage.translateX = stage.translateX * (2 - newScale) / (2 - oldScale);
-//    stage.translateY = stage.translateY * (2 - newScale) / (2 - oldScale);
+    _gridLayer.resume();
+    _drawingLayer.resume();
   };
 
   dom.document.onMouseWheel.listen((e) {
