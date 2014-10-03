@@ -1,6 +1,8 @@
 #0.1.4
 ## Fix missmatch between stage.children and stage.element.nodes
 ## Implement svg layer suspend/resume
+## Stage pointer position take translate into account
+## Add free drawing example
 
 #0.1.3
 ## If path isn't in a stage yet, use its config to calculate BBox.
