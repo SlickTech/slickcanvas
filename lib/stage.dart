@@ -127,37 +127,30 @@ class Stage extends NodeBase implements Container<Node> {
     var elementClientRect = _element.getBoundingClientRect();
     num x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX - _transformMatrix.translateX;
     num y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY - _transformMatrix.translateY;
-//    print('cx: ${e.client.x}, ${e.client.y} - offset:${_element.offsetLeft}, ${_element.offsetTop} - t: ${_transformMatrix.tx}, ${_transformMatrix.ty} - pp: $x, $y');
     this._pointerPosition = new Position(x: x, y: y);
-//    add(new Circle({
-//      X: x * _transformMatrix.sx,
-//      Y: y * _transformMatrix.sy,
-//      R: 2,
-//      FILL: 'red'
-//    }));
   }
 
-  void _updatePointerPoistionXFromScaleXChange(num newScaleX, num oldScaleX) {
+  void _updatePointerPositionXFromScaleXChange(num newScaleX, num oldScaleX) {
     if (_pointerPosition != null) {
       num factor = oldScaleX / newScaleX;
       _pointerPosition.x = _pointerPosition.x * factor + _transformMatrix.translateX * (factor - 1);
     }
   }
 
-  void _updatePointerPoistionYFromScaleYChange(num newScaleY, num oldScaleY) {
+  void _updatePointerPositionYFromScaleYChange(num newScaleY, num oldScaleY) {
     if (_pointerPosition != null) {
       num factor = oldScaleY / newScaleY;
       _pointerPosition.y = _pointerPosition.y * factor + _transformMatrix.translateY * (factor - 1);
     }
   }
 
-  void _updatePointerPoistionXFromTranslateXChange(num newTransX, num oldTransX) {
+  void _updatePointerPositionXFromTranslateXChange(num newTransX, num oldTransX) {
     if (_pointerPosition != null) {
       _pointerPosition.x += oldTransX - newTransX;
     }
   }
 
-  void _updatePointerPoistionYFromTranslateYChange(num newTransY, num oldTransY) {
+  void _updatePointerPositionYFromTranslateYChange(num newTransY, num oldTransY) {
     if (_pointerPosition != null) {
       _pointerPosition.y += oldTransY - newTransY;
     }
@@ -245,8 +238,8 @@ class Stage extends NodeBase implements Container<Node> {
 
     this._dragstarting = true;
 
-    this._dragOffsetX = _pointerPosition.x - _transformMatrix.translateX;
-    this._dragOffsetY = _pointerPosition.y - _transformMatrix.translateY;
+    this._dragOffsetX = _pointerPosition.x;
+    this._dragOffsetY = _pointerPosition.y;
   }
 
   void _dragMove(DOM.MouseEvent e) {
@@ -257,8 +250,8 @@ class Stage extends NodeBase implements Container<Node> {
       fire(DRAGSTART, e);
       _dragStarted = true;
     }
-    translateX = _pointerPosition.x - _dragOffsetX;
-    translateY = _pointerPosition.y - _dragOffsetY;
+    translateX += _pointerPosition.x - _dragOffsetX;
+    translateY += _pointerPosition.y - _dragOffsetY;
     fire(DRAGMOVE, e);
   }
 
@@ -306,7 +299,7 @@ class Stage extends NodeBase implements Container<Node> {
     _transformMatrix.scaleX = x;
 
     if (oldValue != x) {
-      _updatePointerPoistionXFromScaleXChange(x, oldValue);
+      _updatePointerPositionXFromScaleXChange(x, oldValue);
       fire('scaleXChanged', x, oldValue);
     }
   }
@@ -315,7 +308,7 @@ class Stage extends NodeBase implements Container<Node> {
     _transformMatrix.scaleY = y;
 
     if (oldValue != y) {
-      _updatePointerPoistionYFromScaleYChange(y, oldValue);
+      _updatePointerPositionYFromScaleYChange(y, oldValue);
       fire('scaleYChanged', y, oldValue);
     }
   }
@@ -348,7 +341,9 @@ class Stage extends NodeBase implements Container<Node> {
     _transformMatrix.translateX = tx;
 
     if (oldValue != tx) {
-      _updatePointerPoistionXFromTranslateXChange(tx, oldValue);
+//      if (this._dragging == false) {
+        _updatePointerPositionXFromTranslateXChange(tx, oldValue);
+//      }
       fire('translateXChanged', tx, oldValue);
     }
   }
@@ -359,7 +354,9 @@ class Stage extends NodeBase implements Container<Node> {
     _transformMatrix.translateY = ty;
 
     if (oldValue != ty) {
-      _updatePointerPoistionYFromTranslateYChange(ty, oldValue);
+//      if (!this._dragging == false) {
+        _updatePointerPositionYFromTranslateYChange(ty, oldValue);
+//      }
       fire('translateYChanged', ty, oldValue);
     }
   }

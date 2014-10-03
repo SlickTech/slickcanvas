@@ -358,7 +358,7 @@ abstract class Node extends NodeBase {
     Position position = new Position();
     Position posParent;
     var parent = _parent;
-    while (parent != null && parent is! Stage) {
+    while (parent != null && parent is! Layer) {
       posParent = (parent as Node).position;
       position.x += posParent.x;
       position.y += posParent.y;
@@ -372,7 +372,7 @@ abstract class Node extends NodeBase {
     Position pos = position;
     Position posParent;
     var parent = _parent;
-    while (parent != null && parent is! Stage) {
+    while (parent != null && parent is! Layer) {
       posParent = (parent as Node).position;
       pos += posParent;
       parent = parent.parent;
