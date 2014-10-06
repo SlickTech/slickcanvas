@@ -25,6 +25,7 @@ abstract class SvgNode extends NodeImpl {
     _setElementAttributes();
     _setElementStyles();
     translate();
+    scale();
 
     if(shell.listening) {
       this.eventListeners.forEach((k, v) {
@@ -51,6 +52,8 @@ abstract class SvgNode extends NodeImpl {
     this.shell
     .on('translateXChanged', () => translate())
     .on('translateYChanged', () => translate())
+    .on('scaleXChanged', scale)
+    .on('scaleYChanged', scale)
     .on(ATTR_CHANGED, _handleAttrChange);
   }
 
@@ -210,8 +213,8 @@ abstract class SvgNode extends NodeImpl {
     var pointerPosition = this.stage.pointerPosition;
     var m = (_element as SVG.GraphicsElement).getCtm();
 
-    this._dragOffsetX = pointerPosition.x - m.e / m.a + stage.translateX; //* stage.scaleX;
-    this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.translateY; // * stage.scaleY;
+    this._dragOffsetX = pointerPosition.x - m.e / m.a + stage.translateX;
+    this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.translateY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -355,9 +358,6 @@ abstract class SvgNode extends NodeImpl {
         } else {
           el.transform.baseVal.replaceItem(tr, 0);
         }
-//      print('translate: ${_elMatrix.e}, ${_elMatrix.f}');
-//      print('shell: ${shell.x}, ${shell.y}');
-//      print('shell abs: ${shell.absolutePosition.x}, ${shell.absolutePosition.y}');
       }
     } catch(e) {}
   }

@@ -146,6 +146,7 @@ abstract class Node extends NodeBase {
     if (_impl != null) {
       clone._impl = clone.createImpl(_impl.type);
     }
+    clone._transformMatrix = this._transformMatrix.clone();
     return clone;
   }
 
@@ -307,7 +308,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
     if (oldValue != x) {
-      fire('scaledXChanged', x, oldValue);
+      fire('scaleXChanged', x, oldValue);
     }
   }
   num get scaleX => _transformMatrix.scaleX;
@@ -316,7 +317,7 @@ abstract class Node extends NodeBase {
     num oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
     if (oldValue != y) {
-      fire('scaledYChanged', y, oldValue);
+      fire('scaleYChanged', y, oldValue);
     }
   }
   num get scaleY => _transformMatrix.scaleY;

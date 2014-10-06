@@ -11,6 +11,17 @@ class TransformMatrix {
     matrix[5] = translate_y;
   }
 
+  TransformMatrix clone() {
+    return new TransformMatrix(
+      scale_x: matrix[0],
+      scale_y: matrix[3],
+      skew_x: matrix[1],
+      skew_y: matrix[2],
+      translate_x: matrix[4],
+      translate_y: matrix[5]
+    );
+  }
+
   void set scaleX(num value) { matrix[0] = value; }
   num get scaleX => matrix[0];
 
