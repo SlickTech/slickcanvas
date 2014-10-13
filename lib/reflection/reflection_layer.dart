@@ -5,7 +5,6 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
     Node _node;
     _ReflectionLayer _layer;
     SvgLayer _impl;
-    Map<Layer, num> _layerReflectionMap = {};
 
     _ReflectionLayer(Map<String, dynamic> config)
             : super(svg, merge(config, {
@@ -24,7 +23,6 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
         if (!(node is I_Reflection)) {
             throw 'Reflection Layer can only add reflection node';
         }
-
         super.insertChild(index, node);
     }
 
@@ -55,31 +53,25 @@ class _ReflectionLayer extends Layer implements I_Container_Reflection {
         var reflection = _createReflection(node);
 
         var node_layer = node.layer;
-        var layerIndex = _parent._children.indexOf(node_layer);
+        var layerIndex = stage.children.indexOf(node_layer);
+        bool reflectionAdded = false;
 
-        if (_layerReflectionMap.containsKey(node_layer)) {
-            ++_layerReflectionMap[node_layer];
-            insertChild(_layerReflectionMap[node_layer], reflection as Node);
-        } else {
-            bool nodeAdded = false;
-            for (num i = _parent.children.length - 1; i >= 0; i--) {
-                var layer = _parent.children[i];
-                if (_layerReflectionMap.containsKey(layer)) {
-                    if (i > layerIndex) {
-                        ++_layerReflectionMap[layer];
-                    } else {
-                        num pos = _layerReflectionMap[layer] + 1;
-                        insertChild(pos, reflection as Node);
-                        _layerReflectionMap[node_layer] = pos;
-                        break;
-                    }
+        for (int i = layerIndex + 1, len = _parent.children.length;
+                i < len; i++) {
+            var layer = _parent.children[i];
+            var firstRefNode = layer.firstReflectableNode(excludeChild: true);
+            if (firstRefNode != null) {
+                var index = this.children.indexOf(firstRefNode);
+                if (index != -1) {
+                    insertChild(index, reflection as Node);
+                    reflectionAdded = true;
+                    break;
                 }
             }
+        }
 
-            if (_layerReflectionMap.containsKey(node_layer) == false) {
-                insertChild(0, reflection as Node);
-                _layerReflectionMap[node_layer] = 0;
-            }
+        if (reflectionAdded == false) {
+            addChild(reflection as Node);
         }
     }
 }
