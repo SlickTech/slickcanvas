@@ -1,54 +1,65 @@
+#0.1.6
+* updated dart-ext lib to 0.0.8
+* updated examples
+## Bug fix:
+* Fixed an issue where cloning a node didn't clone its transform matrix.
+* Fixed node scale didn't work.
+* Fixed reflection didn't maintain correct layering.
+* Fixed LineJoin and LineCap for Path
+## New figure:
+* Added font-style support to Text
+* Implemented static stage
+
 #0.1.5
-## When calculate absolutePositon, do not count layer's position
-## Fixed drage move flickering issue; 
-## Fixed typo;
+*When calculate absolutePositon, do not count layer's position
+*Fixed drage move flickering issue; 
+*Fixed typo;
 
 #0.1.4
-## Fix missmatch between stage.children and stage.element.nodes
-## Implement svg layer suspend/resume
-## Stage pointer position take translate into account
-## Add free drawing example
+* Fix missmatch between stage.children and stage.element.nodes
+* Implement svg layer suspend/resume
+* Stage pointer position take translate into account
+* Add free drawing example
 
 #0.1.3
-## If path isn't in a stage yet, use its config to calculate BBox.
+* If path isn't in a stage yet, use its config to calculate BBox.
 
 #0.1.2
-## Fixed pointer position update on stage scale
+* Fixed pointer position update on stage scale
 
 #0.1.1
-## Fixed typo
-## Add background to layer.
-## [Canvas] Fixed an issue where when dragging a shape, other shapes around the dirty ragin were cut off. [#8]
-(https://github.com/kzhdev/dart-smart-canvas/issues/8)
-## [SVG] Fixed an issue where when d changed, path didn't update.
-## Update pointer poistion when stage scale changed.
+* Fixed typo
+* Add background to layer.
+* [Canvas] Fixed an issue where when dragging a shape, other shapes around the dirty ragin were cut off. [#8](https://github.com/kzhdev/dart-smart-canvas/issues/8)
+* [SVG] Fixed an issue where when d changed, path didn't update.
+* Update pointer poistion when stage scale changed.
 
 #0.1.0
-## Implemente basic canvas shapes
-## Fixed an issue where svg defs layer throw null exception when changing fill to gradient.
-## Breaking Change - changed 'XXchanged' event handler signature from (oldValue, newValue) to (newValue, oldValue).
+* Implemente basic canvas shapes
+* Fixed an issue where svg defs layer throw null exception when changing fill to gradient.
+* Breaking Change - changed 'XXchanged' event handler signature from (oldValue, newValue) to (newValue, oldValue).
 
 #v0.0.31
-## Fixed an strage issue in FireFox where fill pattern/gradient is not always applied.
+* Fixed an strage issue in FireFox where fill pattern/gradient is not always applied.
 
 #v0.0.30
-## Fix an issue where set SvgSvgElement.viewBox.baseVal directly caused an null exception in FireFox
-## Fix text font-size in FireFox
-## Fix fill-opacity didn't apply to svg node. (Thanks zolzounet)
+* Fix an issue where set SvgSvgElement.viewBox.baseVal directly caused an null exception in FireFox
+* Fix text font-size in FireFox
+* Fix fill-opacity didn't apply to svg node. (Thanks zolzounet)
 
 #v0.0.29
-## Fix an issue where set draggable to false has no effect inside mousedown event handler. 
-## Make sure a def node only added to DOM once.
+* Fix an issue where set draggable to false has no effect inside mousedown event handler. 
+* Make sure a def node only added to DOM once.
 ## Some performance implrovements:
-### * rester DOM events only on reflectoon nodes
-### * don't add pattern and gradiant in reflecton nodes.
+* rester DOM events only on reflectoon nodes
+* don't add pattern and gradiant in reflecton nodes.
 
 #v0.0.28
-## Fix circle and ellipse BBox
-## Fix typo
+* Fix circle and ellipse BBox
+* Fix typo
 
 #v0.0.27
-## Fixed stage dragging
+* Fixed stage dragging
 
 #v0.0.26
 * Removed transformMatrix from NodeImpl.
