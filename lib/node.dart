@@ -23,6 +23,9 @@ abstract class Node extends NodeBase {
         if (hasAttribute(OFFSET_Y)) {
             _transformMatrix.translateY -= getAttribute(OFFSET_Y);
         }
+
+        _transformMatrix.scaleX = getAttribute(SCALE_X, 1);
+        _transformMatrix.scaleY = getAttribute(SCALE_Y, 1);
     }
 
     void remove() {
@@ -392,4 +395,19 @@ abstract class Node extends NodeBase {
     bool get isReflection => this is I_Reflection;
 
     I_Reflection get reflection => _reflection;
+
+    String get svgString {
+        if (_impl != null && _impl.type == svg) {
+            return (_impl as SvgNode).element.toString();
+        }
+
+        Layer dummyLayer = new Layer(svg, {});
+        Node copy = this.clone();
+        dummyLayer.addChild(copy);
+        return (copy.impl as SvgNode).element.toString();
+    }
+
+    String get dataUrl {
+        throw 'not implemented';
+    }
 }
