@@ -36,8 +36,8 @@ class Text extends Node {
 //  /**
 //   *  set/get font style. Can be 'normal', 'italic' or 'bold'. 'normal' is default.
 //   */
-//  void set fontStyle(String value) => setAttribute('font-style', value);
-//  String get fontStyle => getAttribute('font-style', 'normal');
+  void set fontStyle(String value) => setAttribute('font-style', value);
+  String get fontStyle => getAttribute('font-style', 'normal');
 
   /**
    * set/get font size. 12 is default.

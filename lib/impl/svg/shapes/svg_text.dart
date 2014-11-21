@@ -23,6 +23,7 @@ class SvgText extends SvgNode{
     _element.style.setProperty(FONT_SIZE, '${txt.fontSize}px');
     _element.style.setProperty(FONT_FAMILY, '${txt.fontFamily}');
     _element.style.setProperty(FONT_WEIGHT, '${txt.fontWeight}');
+    _element.style.setProperty(FONT_STYLE, '${txt.fontStyle}');
     _element.style.setProperty(TEXT_ANCHOR, '${txt.textAnchor}');
   }
 
