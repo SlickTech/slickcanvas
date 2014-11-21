@@ -48,6 +48,7 @@ const String R = 'r';
 const String FONT_SIZE = 'font-size';
 const String FONT_FAMILY = 'font-family';
 const String FONT_WEIGHT = 'font-weight';
+const String FONT_STYLE = 'font-style';
 const String NORMAL = 'normal';
 const String BOLD = 'bold';
 const String BOLDER = 'bolder';
@@ -92,6 +93,7 @@ const String COLOR = 'color';
 const String SPREAD_METHOD = 'spreadMethod';
 const String DEF_ADDED = 'defAdded';
 const String BACKGROUND = 'background';
+const String IS_STATIC = 'isStatic';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
