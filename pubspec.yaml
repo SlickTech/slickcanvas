@@ -4,7 +4,7 @@ author: Kun Zhao <kzhdev@gmail.com>
 description: A SVG/Canvas framework for Dart.
 homepage: http://www.smartcanvas.org
 dependencies:
-  dart_ext: ">=0.0.7 <0.0.8"
+  dart_ext: ">=0.0.8 <0.0.9"
 dev_dependencies:
   browser: '>=0.9.1 <0.9.2'
   benchmark_harness: ">=1.0.0"
