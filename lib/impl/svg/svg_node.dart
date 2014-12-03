@@ -353,13 +353,15 @@ abstract class SvgNode extends NodeImpl {
       if (_element is SVG.GraphicsElement) {
         SVG.GraphicsElement el = _element as SVG.GraphicsElement;
         SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(_elMatrix);
-        if (el.transform.baseVal.length == 0) {
+        if (el.transform.baseVal.numberOfItems == 0) {
           el.transform.baseVal.appendItem(tr);
         } else {
           el.transform.baseVal.replaceItem(tr, 0);
         }
       }
-    } catch(e) {}
+    } catch(e) {
+        print('failed to set transform ${e}');
+    }
   }
 
   String get _nodeName;
