@@ -25,7 +25,7 @@ class Stage extends NodeBase implements Container<Node> {
             throw "container doesn't exit";
         }
 
-        if (!getValue(config, DISABLE_SHADOW_ROOT, false)) {
+        if (getValue(config, CREATE_SHADOW_ROOT, false)) {
             _container.createShadowRoot().append(this._element);
         } else {
             _container.nodes.add(this._element);
