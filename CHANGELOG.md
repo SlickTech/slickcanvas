@@ -1,12 +1,16 @@
+#0.1.7
+* Renamed stage's DISALBE_SHADOW_ROOT to CREATE_SHADOW_ROOT and set the default to false becasuse createShadowRoot only works on chrome.
+* Fixed an issue where _setTransform caused an exeption in Safari.
+
 #0.1.6
 * updated dart-ext lib to 0.0.8
 * updated examples
-## Bug fix:
+### Bug fix:
 * Fixed an issue where cloning a node didn't clone its transform matrix.
 * Fixed node scale didn't work.
 * Fixed reflection didn't maintain correct layering.
 * Fixed LineJoin and LineCap for Path
-## New figure:
+### New figure:
 * Added font-style support to Text
 * Implemented static stage
 
