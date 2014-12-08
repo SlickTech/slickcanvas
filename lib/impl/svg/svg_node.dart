@@ -17,6 +17,8 @@ abstract class SvgNode extends NodeImpl {
   var _dragMoveHandler;
   var _dragEndHandler;
   bool _isReflection;
+  Timer _locationCheckTimer;
+  String _oldLocation;
 
   SvgNode(Node shell, this._isReflection) : super(shell) {
     _setClassName();
@@ -118,18 +120,59 @@ abstract class SvgNode extends NodeImpl {
         if (_isReflection) {
           _element.style.setProperty(name, 'trasparent');
         } else {
-          _element.style.setProperty(name, 'url(#${value.id})');
+          var baseTag = DOM.document.querySelector('base');
+          if (baseTag == null) {
+            _element.style.setProperty(name, 'url(#${value.id})');
 
-          // On FireFox there is some strageness, the fill parrtern or gradient
-          // is not always take effect. This is hack to force FireFox repaint the
-          // the block so that pattern and gradient can show up.
-          if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
-            value.on(DEF_ADDED, () {
-              _element.style.setProperty(name, 'transparent');
-              new Future.delayed(new Duration(seconds: 0), (){
-                _element.style.setProperty(name, 'url(#${value.id})');
+            // On FireFox there is some strageness, the fill parrtern or gradient
+            // is not always take effect. This is hack to force FireFox repaint the
+            // the block so that pattern and gradient can show up.
+            if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
+              value.on(DEF_ADDED, () {
+                _element.style.setProperty(name, 'transparent');
+                new Future.delayed(new Duration(seconds: 0), (){
+                  _element.style.setProperty(name, 'url(#${value.id})');
+                });
               });
-            });
+            }
+
+            if (_locationCheckTimer != null) {
+              _locationCheckTimer.cancel();
+              _locationCheckTimer = null;
+            }
+          } else {
+            void _setFillUrl(Timer t) {
+              String newLocation = DOM.window.location.toString();
+              if (newLocation == _oldLocation) {
+                return;
+              }
+
+              _oldLocation = newLocation;
+
+              if (newLocation.contains('#')) {
+                newLocation = newLocation.substring(0, newLocation.indexOf('#'));
+              }
+
+              _element.style.setProperty(name, 'url(${newLocation}#${value.id})');
+
+              // On FireFox there is some strageness, the fill parrtern or gradient
+              // is not always take effect. This is hack to force FireFox repaint the
+              // the block so that pattern and gradient can show up.
+              if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
+                value.on(DEF_ADDED, () {
+                  _element.style.setProperty(name, 'transparent');
+                  new Future.delayed(new Duration(seconds: 0), (){
+                    _element.style.setProperty(name, 'url(${newLocation}#${value.id})');
+                  });
+                });
+              }
+            };
+
+            _setFillUrl(null);
+
+            if (_locationCheckTimer == null) {
+              _locationCheckTimer = new Timer.periodic(new Duration(milliseconds: 100), _setFillUrl);
+            }
           }
         }
         return;
@@ -141,6 +184,10 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void remove() {
+    if (_locationCheckTimer != null) {
+      _locationCheckTimer.cancel();
+    }
+
     _element.remove();
     _defs.forEach((def) {
       if (stage != null) {
