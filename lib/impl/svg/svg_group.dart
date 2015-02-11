@@ -60,7 +60,7 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     }
 
     if (b) {
-      translate();
+      transform();
     }
   }
 

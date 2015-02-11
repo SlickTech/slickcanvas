@@ -4,7 +4,6 @@ bool _isMobile = isMobile();
 
 abstract class SvgNode extends NodeImpl {
   SVG.SvgElement _element;
-  SVG.Matrix _elMatrix = new SVG.SvgSvgElement().createSvgMatrix();
 
   bool _dragstarting = false;
   bool _dragging = false;
@@ -26,8 +25,7 @@ abstract class SvgNode extends NodeImpl {
     _element.dataset['scNode'] = '${shell.uid}';
     _setElementAttributes();
     _setElementStyles();
-    translate();
-    scale();
+    transform();
 
     if(shell.listening) {
       this.eventListeners.forEach((k, v) {
@@ -52,10 +50,11 @@ abstract class SvgNode extends NodeImpl {
     }
 
     this.shell
-    .on('translateXChanged', () => translate())
-    .on('translateYChanged', () => translate())
-    .on('scaleXChanged', scale)
-    .on('scaleYChanged', scale)
+    .on('translateXChanged', transform)
+    .on('translateYChanged', transform)
+    .on('scaleXChanged', transform)
+    .on('scaleYChanged', transform)
+    .on('rotationChanged', transform)
     .on(ATTR_CHANGED, _handleAttrChange);
   }
 
@@ -101,7 +100,7 @@ abstract class SvgNode extends NodeImpl {
     var value = getAttribute(attr);
     if (value != null) {
       if (!(value is String) || !value.isEmpty) {
-        _element.attributes[attr] = '$value';
+        element.attributes[attr] = '$value';
       }
     }
   }
@@ -258,10 +257,8 @@ abstract class SvgNode extends NodeImpl {
     this._dragstarting = true;
 
     var pointerPosition = this.stage.pointerPosition;
-    var m = (_element as SVG.GraphicsElement).getCtm();
-
-    this._dragOffsetX = pointerPosition.x - m.e / m.a + stage.translateX;
-    this._dragOffsetY = pointerPosition.y - m.f / m.d + stage.translateY;
+    this._dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX + stage.translateX;
+    this._dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY + stage.translateY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -293,8 +290,6 @@ abstract class SvgNode extends NodeImpl {
         _dragStarted = true;
       }
       var pointerPosition = this.stage.pointerPosition;
-      var m = (_element as SVG.GraphicsElement).getCtm();
-
       shell.translateX = (pointerPosition.x - this._dragOffsetX);
       shell.translateY = (pointerPosition.y - this._dragOffsetY);
 
@@ -383,23 +378,34 @@ abstract class SvgNode extends NodeImpl {
     return null;
   }
 
-  void scale() {
-    _elMatrix.a = shell.scaleX;
-    _elMatrix.d = shell.scaleY;
-    _setTransform();
+  void transform()
+  {
+    num r = shell.rotate;
+    SVG.Matrix matrix = new SVG.SvgSvgElement().createSvgMatrix();
+
+    if (r != null) {
+      var pos = shell.absolutePosition;
+      num rx = shell.x + shell.getAttribute(ROTATE_X, 0);
+      num ry = shell.y + shell.getAttribute(ROTATE_Y, 0);
+      if (rx != 0 || ry != 0) {
+        matrix = matrix.translate(rx, ry);
+        matrix = matrix.rotate(r);
+        matrix = matrix.translate(-rx, -ry);
+      } else {
+        matrix = matrix.rotate(r);
+      }
+    }
+
+    matrix = matrix.translate(shell.translateX, shell.translateY);
+    matrix = matrix.scaleNonUniform(shell.scaleX, shell.scaleY);
+    _setTransform(matrix);
   }
 
-  void translate() {
-    _elMatrix.e = shell.translateX;
-    _elMatrix.f = shell.translateY;
-    _setTransform();
-  }
-
-  void _setTransform() {
+  void _setTransform(SVG.Matrix matrix) {
     try {
       if (_element is SVG.GraphicsElement) {
         SVG.GraphicsElement el = _element as SVG.GraphicsElement;
-        SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(_elMatrix);
+        SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(matrix);
         if (el.transform.baseVal.numberOfItems == 0) {
           el.transform.baseVal.appendItem(tr);
         } else {

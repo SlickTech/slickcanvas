@@ -6,7 +6,7 @@ abstract class Node extends NodeBase {
     Container<Node> _parent;
     I_Reflection _reflection;
     TransformMatrix _transformMatrix = new TransformMatrix();
-    num _x0, _y0, _rotation;
+    num _x0, _y0;
     bool _listening = false;
 
     Node([Map<String, dynamic> config = const {}]) : super(config) {
@@ -351,14 +351,32 @@ abstract class Node extends NodeBase {
     }
     num get translateY => _transformMatrix.translateY;
 
-    void set rotation(num r) {
-        num oldValue = _rotation;
-        _rotation = r;
+    void set rotate(num r) {
+        num oldValue = getAttribute(ROTATE, null);
+        setAttribute(ROTATE, r);
         if (oldValue != r) {
             fire('rotationChanged', r, oldValue);
         }
     }
-    num get rotation => _rotation;
+    num get rotate => getAttribute(ROTATE, null);
+
+    void set rotateX(num r) {
+        num oldValue = getAttribute(ROTATE_X, null);
+        setAttribute(ROTATE_X, r);
+        if (oldValue != r) {
+            fire('rotationChanged', r, oldValue);
+        }
+    }
+    num get rotateX => getAttribute(ROTATE_X, null);
+
+    void set rotateY(num r) {
+        num oldValue = getAttribute(ROTATE_Y, null);
+        setAttribute(ROTATE_Y, r);
+        if (oldValue != r) {
+            fire('rotationChanged', r, oldValue);
+        }
+    }
+    num get rotateY => getAttribute(ROTATE_Y, null);
 
     TransformMatrix get transformMatrix => _transformMatrix;
 

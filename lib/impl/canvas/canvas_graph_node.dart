@@ -172,10 +172,19 @@ abstract class CanvasGraphNode extends CanvasNode {
   void draw(num offsetX, num offsetY, DOM.CanvasRenderingContext2D context) {
     var matrix = shell.transformMatrix;
     context.save();
-    context.transform(matrix.m11, matrix.m12, matrix.m21, matrix.m22, shell.x - offsetX, shell.y - offsetY);
-    if (shell.rotation != null) {
-      context.rotate(shell.rotation);
+
+    if (shell.rotate != null) {
+      num rx = shell.x + shell.getAttribute(ROTATE_X, 0);
+      num ry = shell.y + shell.getAttribute(ROTATE_Y, 0);
+      if (rx != 0 || ry != 0) {
+        context.translate(rx, ry);
+        context.rotate(shell.rotate * PI / 180);
+        context.translate(-rx, -ry);
+      } else {
+        context.rotate(shell.rotate * PI / 180);
+      }
     }
+    context.transform(matrix.m11, matrix.m12, matrix.m21, matrix.m22, shell.x - offsetX, shell.y - offsetY);
 
     if (_useCache) {
       context.drawImageScaled(_cacheCanvas, 0, 0, _cacheCanvas.width / DOM.window.devicePixelRatio,

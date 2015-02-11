@@ -94,6 +94,11 @@ const String SPREAD_METHOD = 'spreadMethod';
 const String DEF_ADDED = 'defAdded';
 const String BACKGROUND = 'background';
 const String IS_STATIC = 'isStatic';
+const String XLINK_HREF = 'xlink:href';
+const String NS_XLINK = 'xmlns:xlink';
+const String ROTATE = 'rotate';
+const String ROTATE_X = 'rotate_x';
+const String ROTATE_Y = 'rotate_y';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
@@ -110,6 +115,7 @@ const String SC_PATTERN = '__sc_pattern';
 const String SC_LINEAR_GRADIENT = '__sc_linear_gradient';
 const String SC_RADIAL_GRADIENT = '__sc_radial_gradient';
 const String SC_CANVAS = '__sc_canvas';
+const String SC_IMAGE = '__sc_image';
 
 // exception
 const String ExpNotImplemented = 'Not Implemented';

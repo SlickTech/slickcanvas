@@ -16,4 +16,8 @@ class Position {
   Position operator-(Position p) {
     return new Position(x: x - p.x, y: y - p.y);
   }
+
+  String toString() {
+    return '${x}, ${y}';
+  }
 }
