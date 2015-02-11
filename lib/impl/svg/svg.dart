@@ -3,6 +3,7 @@ library smartcanvas.svg;
 import 'dart:html' as DOM;
 import 'dart:svg' as SVG;
 import 'dart:async';
+import 'dart:math';
 import 'package:dart_ext/collection_ext.dart';
 
 import '../../smartcanvas.dart';
@@ -21,6 +22,7 @@ part 'shapes/svg_text.dart';
 part 'shapes/svg_polygon.dart';
 part 'shapes/svg_path.dart';
 part 'shapes/svg_polyline.dart';
+part 'shapes/svg_image.dart';
 
 part 'gradients/svg_gradient.dart';
 part 'gradients/svg_linear_gradient.dart';

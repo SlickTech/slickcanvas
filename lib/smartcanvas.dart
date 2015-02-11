@@ -6,13 +6,7 @@ import 'dart:math';
 import 'dart:svg' as SVG;
 //import 'dart:async';
 
-//
-//@MirrorsUsed(metaTargets: const [Group, SvgGroup, Circle, SvgCircle,
-//                                 Ellipse, SvgEllipse, Line, SvgLine,
-//                                 Path, SvgPath, Polygon, SvgPolygon,
-//                                 Polyline, SvgPolyline, Rect, SvgRect,
-//                                 Text, SvgText])
-@MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'], override: "*")
+//@MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'], override: "*")
 import 'dart:mirrors';
 
 import 'package:dart_ext/dart_ext.dart';
@@ -53,6 +47,7 @@ part 'shapes/text.dart';
 part 'shapes/polygon.dart';
 part 'shapes/path.dart';
 part 'shapes/polyline.dart';
+part 'shapes/image.dart';
 
 part 'gradients/gradient.dart';
 part 'gradients/linear_gradient.dart';
