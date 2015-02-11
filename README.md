@@ -18,8 +18,9 @@ the ability to create SVG/HTML5 Canvas hybrid applications. SmartCanvas pushs pe
 in high priority, through a innovative method, SmartCanvas can create HTML5 canvas application
 for big screen.
 
-#[Installing](https://pub.dartlang.org/packages/smartcanvas)
+#[Installing](https://pub.dartlang.org/packages/smartcanvas#install)
 
+#Tutorial
 
 #References
 * [KineticJS](http://kineticjs.com/)
