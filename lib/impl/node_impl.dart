@@ -1,12 +1,10 @@
 part of smartcanvas;
 
-abstract class NodeImpl extends NodeBase {
+abstract class NodeImpl {
   NodeImpl parent;
   Node _shell;
 
   NodeImpl(this._shell): super() {
-    this._attrs = _shell._attrs;
-    this._eventListeners.addAll(_shell._eventListeners);
   }
 
   String get type;
@@ -15,7 +13,7 @@ abstract class NodeImpl extends NodeBase {
 
   NodeImpl clone() {
     ClassMirror cm = reflectClass(this.runtimeType);
-    NodeImpl clone = cm.newInstance(const Symbol(EMPTY), [_attrs]).reflectee;
+    NodeImpl clone = cm.newInstance(const Symbol(EMPTY), []).reflectee;
     return clone;
   }
 
@@ -35,6 +33,16 @@ abstract class NodeImpl extends NodeBase {
       return (layer.shell as Layer)._parent;
     }
     return null;
+  }
+
+  void on(String events, Function handler, [String id]);
+
+  void setAttribute(String attr, dynamic value, [bool removeIfNull = false]) {
+    shell.setAttribute(attr, value, removeIfNull);
+  }
+
+  dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
+    return shell.getAttribute(attr, defaultValue);
   }
 
   void set id(String value) => setAttribute(ID, value);

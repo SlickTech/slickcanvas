@@ -20,7 +20,7 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void _setClassName() {
     _classNames.add(SC_CANVAS);
-    if (hasAttribute(CLASS)) {
+    if (shell.hasAttribute(CLASS)) {
       _classNames.addAll(getAttribute(CLASS).split(SPACE));
     }
     setAttribute(CLASS, _classNames.join(SPACE));
@@ -133,13 +133,13 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void _onStageSet() {
     if (_children.isNotEmpty) {
-      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+      AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
   }
 
   void addChild(CanvasGraphNode node) {
     if (_children.isEmpty && stage != null) {
-      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+      AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
 
     _children.add(node);
@@ -149,7 +149,7 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void insertChild(int index, CanvasGraphNode node) {
     if (_children.isEmpty) {
-      AnimationLoop.instance.subscribe(this.uid.toString(), _draw);
+      AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
 
     _children.insert(index, node);
@@ -168,7 +168,7 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     _children.remove(node);
 
     if (_children.isEmpty) {
-      AnimationLoop.instance.unsubscribe(this.uid.toString());
+      AnimationLoop.instance.unsubscribe(shell.uid.toString());
     }
   }
 

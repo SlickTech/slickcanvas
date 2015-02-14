@@ -10,7 +10,7 @@ class Path extends Node {
     this.on('dChanged', () => _bbox = null);
   }
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     if (isReflection) {
       return new SvgPath(this, isReflection);
     } else if (_svgImpl == null) {
@@ -37,15 +37,15 @@ class Path extends Node {
 
       var reflection = this.reflection;
       if (reflection == null) {
-        reflection = _createReflection(this);
-        this.stage._reflectionLayer.addChild(reflection as Node);
+        reflection = this._createReflection();
+        (this.stage._reflectionLayer.impl as Container).addChild(reflection);
       }
-      _bbox = ((reflection as Node).impl as SvgPath).element.getBBox();
+      _bbox = (reflection as SvgPath).element.getBBox();
       var rt = new BBox(x: this.x + _bbox.x, y: this.y + _bbox.y,
           width: _bbox.width, height: _bbox.height);
 
       if (this.reflection == null) {
-        this.stage._reflectionLayer.removeChild(reflection);
+        reflection.remove();
       }
       return rt;
     }

@@ -1,77 +1,71 @@
 part of smartcanvas;
 
-class _ReflectionLayer extends Layer implements I_Container_Reflection {
+class _ReflectionLayer extends Layer {
 
-    Node _node;
-    _ReflectionLayer _layer;
-    SvgLayer _impl;
+  _ReflectionLayer(Map<String, dynamic> config)
+      : super(svg, merge(config, {
+        ID: '__reflection_layer',
+        OPACITY: 0
+      }));
 
-    _ReflectionLayer(Map<String, dynamic> config)
-            : super(svg, merge(config, {
-                ID: '__reflection_layer',
-                OPACITY: 0
-            }));
-    void addChild(Node child) {
-        if (!(child is I_Reflection)) {
-            throw 'Reflection Layer can only add reflection node';
-        }
-
-        super.addChild(child);
+  void addChild(Node node) {
+    if (node._reflection == null) {
+      node._reflection = node._createReflection();
     }
 
-    void insertChild(int index, Node node) {
-        if (!(node is I_Reflection)) {
-            throw 'Reflection Layer can only add reflection node';
-        }
-        super.insertChild(index, node);
+    _impl.addChild(node._reflection);
+  }
+
+  void insertChild(int index, Node node) {
+    if (node._reflection == null) {
+      node._reflection = node._createReflection();
+    }
+    _impl.insertChild(index, node._reflection);
+  }
+
+  void insertNode(Node node) {
+    // find next reflectable node in the same layer
+    Node nextReflectableNode = node.layer.firstReflectableNode(startIndex: node.layer._children.indexOf(node) + 1);
+    if (nextReflectableNode != null && nextReflectableNode._reflection != null) {
+      insertChild(_impl._children.indexOf(nextReflectableNode._reflection), node);
+    } else {
+      reflectNode(node);
+    }
+  }
+
+  void reflectionAdd(Node child) {
+    reflectNode(child);
+  }
+
+  void reflectNode(Node node) {
+    if (node.layer == null) {
+      return;
     }
 
-    void insertNode(I_Reflection node) {
-        // find next reflectable node in the same layer
-        Node realNode = node._node;
-        Node nextReflectableNode = realNode.layer.firstReflectableNode(startIndex: realNode.layer._children.indexOf(realNode) + 1);
-        if (nextReflectableNode != null) {
-            insertChild(_children.indexOf(nextReflectableNode._reflection as Node), node as Node);
-        } else {
-            reflectNode(realNode);
-        }
+    if (!node.reflectable) {
+      return;
     }
 
-    void reflectionAdd(Node child) {
-        reflectNode(child);
+    var node_layer = node.layer;
+    var layerIndex = stage.children.indexOf(node_layer);
+    bool reflectionAdded = false;
+
+    for (int i = layerIndex + 1,
+        len = _parent.children.length; i < len; i++) {
+      var layer = _parent.children[i];
+      var firstRefNode = layer.firstReflectableNode(excludeChild: true);
+      if (firstRefNode != null && firstRefNode._reflection != null) {
+        var index = this._impl.children.indexOf(firstRefNode._reflection);
+        if (index != -1) {
+          insertChild(index, node);
+          reflectionAdded = true;
+          break;
+        }
+      }
     }
 
-    void reflectNode(Node node) {
-        if (node.layer == null) {
-            return;
-        }
-
-        if (!node.reflectable) {
-            return;
-        }
-
-        var reflection = _createReflection(node);
-
-        var node_layer = node.layer;
-        var layerIndex = stage.children.indexOf(node_layer);
-        bool reflectionAdded = false;
-
-        for (int i = layerIndex + 1, len = _parent.children.length;
-                i < len; i++) {
-            var layer = _parent.children[i];
-            var firstRefNode = layer.firstReflectableNode(excludeChild: true);
-            if (firstRefNode != null) {
-                var index = this.children.indexOf(firstRefNode);
-                if (index != -1) {
-                    insertChild(index, reflection as Node);
-                    reflectionAdded = true;
-                    break;
-                }
-            }
-        }
-
-        if (reflectionAdded == false) {
-            addChild(reflection as Node);
-        }
+    if (reflectionAdded == false) {
+      addChild(node);
     }
+  }
 }

@@ -15,7 +15,7 @@ class Circle extends Node {
     setAttribute(HEIGHT, width);
   }
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return new SvgCircle(this, isReflection);
   }
 

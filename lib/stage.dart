@@ -163,7 +163,7 @@ class Stage extends NodeBase implements Container<Node> {
     void addChild(Node node) {
         if (node is Layer) {
             node.stage = this;
-            node._reflection = _reflectionLayer;
+            node._reflection = _reflectionLayer.impl;
 
             if (node.width == null) {
                 node.width = this.width;
@@ -223,7 +223,7 @@ class Stage extends NodeBase implements Container<Node> {
             _element.nodes.insert(index, node._impl.element);
 
             if (_reflectionLayer != null) {
-                node._reflection = _reflectionLayer;
+                node._reflection = _reflectionLayer.impl;
                 node.children.forEach((child) {
                     _reflectionLayer.reflectNode(child);
                 });

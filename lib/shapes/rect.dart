@@ -3,7 +3,7 @@ part of smartcanvas;
 class Rect extends Node {
   Rect(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return new SvgRect(this, isReflection);
   }
 

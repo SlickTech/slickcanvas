@@ -6,6 +6,8 @@ abstract class CanvasNode extends NodeImpl {
 
   CanvasNode(Node shell): super(shell) {}
 
+  void on(String event, Function handler, [String id]) {}
+
   void remove() {
     if (parent != null) {
       if (parent is CanvasLayer) {

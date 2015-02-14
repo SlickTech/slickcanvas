@@ -4,7 +4,7 @@ class Ellipse extends Node {
 
   Ellipse(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return new SvgEllipse(this, isReflection);
   }
 

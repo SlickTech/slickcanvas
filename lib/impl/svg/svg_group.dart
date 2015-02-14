@@ -13,7 +13,7 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
     child.parent = this;
     this._element.append(child._element);
 
-    if (stage != null && !shell.isReflection) {
+    if (stage != null) {
       _addDefs(child);
     }
   }
@@ -46,8 +46,8 @@ class SvgGroup extends SvgNode implements Container<SvgNode> {
 
   void _setElementAttribute(String attr) {
     super._setElementAttribute(attr);
-    num x = attrs[X];
-    num y = attrs[Y];
+    num x = shell.attrs[X];
+    num y = shell.attrs[Y];
     bool b = false;
     if (x != null) {
       shell.translateX = x;

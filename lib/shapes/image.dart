@@ -3,7 +3,7 @@ part of smartcanvas;
 class Image extends Node {
   Image(Map<String, dynamic> config): super(config) {}
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
       return new SvgImage(this, isReflection);
     }
 

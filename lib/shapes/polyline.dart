@@ -10,7 +10,7 @@ class Polyline extends Node {
     this.on('pointsChanged', () { _bbox = null; _points = null; });
   }
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return new SvgPolyline(this, isReflection);
   }
 

@@ -107,7 +107,7 @@ class SvgLayer extends SvgNode implements LayerImpl {
     }
 
     void remove() {
-        String sUid = uid.toString();
+        String sUid = shell.uid.toString();
         shell.stage.off('scaleXChanged', sUid).off('scaleYChanged', sUid).off('translateXChanged', sUid).off('translateYChanged', sUid);
 
         if (!_isReflection) {
@@ -128,7 +128,7 @@ class SvgLayer extends SvgNode implements LayerImpl {
         _scaleViewBoxWidth(shell.stage.scaleX);
         _scaleViewBoxHeight(shell.stage.scaleY);
 
-        String sUid = uid.toString();
+        String sUid = shell.uid.toString();
         shell.stage.on('scaleXChanged', _onScaleXChanged, sUid).on('scaleYChanged', _onScaleYChanged, sUid).on('translateXChanged', _onTranslateXChanged, sUid).on('translateYChanged', _onTranslateYChanged, sUid);
 
         if (!_isReflection) {

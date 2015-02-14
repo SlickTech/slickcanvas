@@ -26,10 +26,7 @@ part 'animation_loop.dart';
 part 'event/event_handler.dart';
 part 'event/event_bus.dart';
 
-part 'reflection/reflection_node.dart';
 part 'reflection/reflection_layer.dart';
-part 'reflection/reflection_group.dart';
-part 'reflection/reflection_if.dart';
 
 part 'utils/position.dart';
 part 'utils/constants.dart';

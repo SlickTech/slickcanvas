@@ -9,7 +9,7 @@ class Polygon extends Node{
     this.on('pointsChanged', () { _bbox = null; _points = null; });
   }
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return new SvgPolygon(this, isReflection);
   }
 

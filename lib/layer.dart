@@ -10,7 +10,7 @@ class Layer extends Group {
     _impl = createImpl(_type);
   }
 
-  NodeImpl _createSvgImpl(bool isReflection) {
+  NodeImpl _createSvgImpl([bool isReflection = false]) {
     return  new SvgLayer(this, isReflection);
   }
 
@@ -49,7 +49,7 @@ class Layer extends Group {
       if (_reflection != null) {
         _children.forEach((child) {
           if (child._reflection != null) {
-            (child._reflection as Node).remove();
+            child._reflection.remove();
           }
         });
       }

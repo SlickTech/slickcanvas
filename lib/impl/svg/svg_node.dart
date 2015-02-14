@@ -20,15 +20,17 @@ abstract class SvgNode extends NodeImpl {
   String _oldLocation;
 
   SvgNode(Node shell, this._isReflection) : super(shell) {
+
     _setClassName();
     _element = _createElement();
     _element.dataset['scNode'] = '${shell.uid}';
     _setElementAttributes();
     _setElementStyles();
+
     transform();
 
     if(shell.listening) {
-      this.eventListeners.forEach((k, v) {
+      shell.eventListeners.forEach((k, v) {
         _registerEvent(k, v);
       });
     }
@@ -66,7 +68,7 @@ abstract class SvgNode extends NodeImpl {
 
   void _setClassName() {
     _classNames.add(_nodeName);
-    if (hasAttribute(CLASS)) {
+    if (shell.hasAttribute(CLASS)) {
       _classNames.addAll(getAttribute(CLASS).split(SPACE));
     }
     setAttribute(CLASS, _classNames.join(SPACE));
@@ -286,14 +288,14 @@ abstract class SvgNode extends NodeImpl {
 
       if (!_dragStarted) {
         this._dragging = true;
-        fire('dragstart', e);
+        shell.fire('dragstart', e);
         _dragStarted = true;
       }
       var pointerPosition = this.stage.pointerPosition;
       shell.translateX = (pointerPosition.x - this._dragOffsetX);
       shell.translateY = (pointerPosition.y - this._dragOffsetY);
 
-      fire(DRAGMOVE, e);
+      shell.fire(DRAGMOVE, e);
     }
   }
 
@@ -307,7 +309,7 @@ abstract class SvgNode extends NodeImpl {
     _dragging = false;
 
     if (_dragStarted) {
-      fire(DRAGEND, e);
+      shell.fire(DRAGEND, e);
     }
     _dragStarted = false;
 
@@ -324,16 +326,14 @@ abstract class SvgNode extends NodeImpl {
 
   void _onMouseMove(DOM.MouseEvent e) {
     if (!_dragging) {
-      fire(MOUSEMOVE, e);
+      shell.fire(MOUSEMOVE, e);
     }
   }
 
-  NodeBase on(String event, Function handler, [String id]) {
-    super.on(event, handler, id);
+  void on(String event, Function handler, [String id]) {
     if (!_registeredDOMEvents.contains(event)) {
-      _registerEvent(event, eventListeners[event]);
+      _registerEvent(event, shell.eventListeners[event]);
     }
-    return this;
   }
 
   void _handleAttrChange(String attr, newValue, oldValue) {
