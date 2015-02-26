@@ -8,8 +8,7 @@ class Image extends Node {
   }
 
   NodeImpl _createCanvasImpl() {
-    throw 'NotImplemented';
-//      return new CanvasImage(this);
+    return new CanvasImage(this);
   }
 
   void set href(String value) => setAttribute(HREF, value);
