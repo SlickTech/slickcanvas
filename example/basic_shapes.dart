@@ -3,11 +3,13 @@ import 'package:smartcanvas/smartcanvas.dart';
 
 void main() {
   Rect rect = new Rect({
+    X: 200,
+    Y: 100,
     WIDTH: 100,
     HEIGHT: 100,
     FILL: 'red',
-    OFFSET_X: -100,
-    OFFSET_Y: -100
+//    OFFSET_X: -100,
+//    OFFSET_Y: -100
   });
 
   Circle circle = new Circle({
@@ -64,6 +66,12 @@ void main() {
     'stroke-width': 5
   });
 
+  Image image = new Image({
+    WIDTH: 100,
+    HEIGHT: 100,
+    HREF: 'logo.png'
+  });
+
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
   Stage svgStage = new Stage(svgContainer, svg, {});
 
@@ -104,15 +112,26 @@ void main() {
         case 'polyline':
           node = polyline;
           break;
+        case 'image':
+          node = image;
+          break;
       }
 
       svgNode = node.clone({DRAGGABLE: true});
       svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
       svgStage.addChild(svgNode);
 
+//      svgNode = node.clone({DRAGGABLE: true, ROTATE: 45, ROTATE_X: 50, ROTATE_Y: 50});
+//      svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
+//      svgStage.addChild(svgNode);
+
       canvasNode = node.clone({DRAGGABLE: true});
       canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
       canvasStage.addChild(canvasNode);
+
+//      canvasNode = node.clone({DRAGGABLE: true, ROTATE: 45, ROTATE_X: 50, ROTATE_Y: 50});
+//      canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
+//      canvasStage.addChild(canvasNode);
     });
   });
 

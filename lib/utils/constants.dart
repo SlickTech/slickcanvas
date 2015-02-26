@@ -94,11 +94,12 @@ const String SPREAD_METHOD = 'spreadMethod';
 const String DEF_ADDED = 'defAdded';
 const String BACKGROUND = 'background';
 const String IS_STATIC = 'isStatic';
-const String XLINK_HREF = 'xlink:href';
-const String NS_XLINK = 'xmlns:xlink';
+const String HREF = 'href';
+const String NS_XLINK = 'http://www.w3.org/1999/xlink';
 const String ROTATE = 'rotate';
 const String ROTATE_X = 'rotate_x';
 const String ROTATE_Y = 'rotate_y';
+const String NO_WRAP = 'nowrap';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
