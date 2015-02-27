@@ -7,8 +7,27 @@ class SvgText extends SvgNode{
 
   SVG.SvgElement _createElement() {
     SVG.SvgElement text = new SVG.TextElement();
-    text.text = getAttribute(TEXT, EMPTY);
+
+    _updateTextContent(text);
     return text;
+  }
+
+  void _updateTextContent(SVG.TextElement text) {
+    text.nodes.clear();
+
+    var parts = shell.partsOfWrappedText();
+
+    for (num i = 0; i < parts.length; ++i) {
+      if (i == 0) {
+        text.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSpliter));
+      } else {
+        SVG.TSpanElement tspan = new SVG.TSpanElement();
+        tspan.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSpliter));
+        tspan.setAttribute('dx', '-${Text.measureText(shell.font, parts[i - 1] + shell.wordSpliter)}');
+        tspan.setAttribute('dy', '${shell.fontSize}');
+        text.append(tspan);
+      }
+    }
   }
 
   Set<String> _getElementAttributeNames() {
@@ -19,12 +38,11 @@ class SvgText extends SvgNode{
 
   void _setElementStyles() {
     super._setElementStyles();
-    Text txt = shell as Text;
-    _element.style.setProperty(FONT_SIZE, '${txt.fontSize}px');
-    _element.style.setProperty(FONT_FAMILY, '${txt.fontFamily}');
-    _element.style.setProperty(FONT_WEIGHT, '${txt.fontWeight}');
-    _element.style.setProperty(FONT_STYLE, '${txt.fontStyle}');
-    _element.style.setProperty(TEXT_ANCHOR, '${txt.textAnchor}');
+    _element.style.setProperty(FONT_SIZE, '${shell.fontSize}px');
+    _element.style.setProperty(FONT_FAMILY, '${shell.fontFamily}');
+    _element.style.setProperty(FONT_WEIGHT, '${shell.fontWeight}');
+    _element.style.setProperty(FONT_STYLE, '${shell.fontStyle}');
+    _element.style.setProperty(TEXT_ANCHOR, '${shell.textAnchor}');
   }
 
   bool _isStyle(String attr) {
@@ -37,8 +55,8 @@ class SvgText extends SvgNode{
     return super._isStyle(attr);
   }
 
-  void _handleTextChange(newValue) {
-    _element.text = newValue;
+  void _handleTextChange() {
+    _updateTextContent(_element);
   }
 
   num get width {
@@ -46,4 +64,6 @@ class SvgText extends SvgNode{
   }
 
   String get _nodeName => SC_TEXT;
+
+  Text get shell => super.shell;
 }

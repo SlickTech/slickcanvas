@@ -1,9 +1,13 @@
 part of smartcanvas.canvas;
 
 class CanvasText extends CanvasGraphNode {
-  CanvasText(Text shell): super(shell) {}
+
+  CanvasText(Text shell): super(shell) {
+    shell.on('textChanged', _refresh);
+  }
 
   void _cacheGraph() {}
+
   void __drawGraph(DOM.CanvasRenderingContext2D context) {
     context
         ..beginPath()
@@ -18,6 +22,8 @@ class CanvasText extends CanvasGraphNode {
       context = _cacheContext;
     }
 
+    List<String> parts = shell.partsOfWrappedText();
+
     if (fill != null) {
       if (fill is Gradient) {
 
@@ -25,7 +31,9 @@ class CanvasText extends CanvasGraphNode {
 
       } else {
         context.fillStyle = shell.fill;
-        context.fillText(shell.text, 0, 0);
+        for (num i = 0; i < parts.length; ++i) {
+          context.fillText(parts[i], 0, shell.fontSize * i);
+        }
       }
     }
   }
@@ -35,11 +43,16 @@ class CanvasText extends CanvasGraphNode {
       context = _cacheContext;
     }
 
+    List<String> parts = shell.partsOfWrappedText();
+
     if (stroke != null) {
       context.lineWidth = shell.strokeWidth.toDouble();
       context.strokeStyle = shell.stroke;
-      context.strokeText(shell.text, 0, 0);
+      for (num i = 0; i < parts.length; ++i) {
+        context.strokeText(parts[i], 0, shell.fontSize * i);
+      }
     }
   }
+
   Text get shell => super.shell;
 }

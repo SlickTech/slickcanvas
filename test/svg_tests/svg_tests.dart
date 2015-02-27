@@ -10,6 +10,7 @@ part 'gradient_tests.dart';
 part 'layer_tests.dart';
 part 'pattern_tests.dart';
 part 'reflection_tests.dart';
+part 'text_tests.dart';
 
 class SvgTests {
   static void run() {
@@ -17,5 +18,6 @@ class SvgTests {
     group('svg reflection tests -', SvgReflectionTests.run);
     group('svg gradient tests -', SvgGradientTests.run);
     group('svg pattern tests -', SvgPatternTests.run);
+    group('svg text tests -', SvgTextTests.run);
   }
 }

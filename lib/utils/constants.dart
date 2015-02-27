@@ -100,6 +100,7 @@ const String ROTATE = 'rotate';
 const String ROTATE_X = 'rotate_x';
 const String ROTATE_Y = 'rotate_y';
 const String NO_WRAP = 'nowrap';
+const String WORD_SPLITER = 'wordSpliter';
 
 // svg node names
 const String SC_LAYER = '__sc_layer';
