@@ -1,3 +1,10 @@
+#0.1.8
+* Fixed an issue where FuncIRI for fill does not work if html file has a base tag.
+* Implement rotate.
+* Implement svg/canvas image.
+* Implement text warpping.
+* Simplified reflection logic.
+
 #0.1.7
 * Renamed stage's DISALBE_SHADOW_ROOT to CREATE_SHADOW_ROOT and set the default to false becasuse createShadowRoot only works on chrome.
 * Fixed an issue where _setTransform caused an exeption in Safari.
