@@ -4,7 +4,6 @@ abstract class Node extends NodeBase {
   Layer _layer;
   NodeImpl _impl;
   Container<Node> _parent;
-//    I_Reflection _reflection;
   SvgNode _reflection;
   TransformMatrix _transformMatrix = new TransformMatrix();
   num _x0, _y0;

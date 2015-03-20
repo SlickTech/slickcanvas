@@ -2,10 +2,9 @@ part of smartcanvas;
 
 abstract class NodeImpl {
   NodeImpl parent;
-  Node _shell;
+  final Node shell;
 
-  NodeImpl(this._shell): super() {
-  }
+  NodeImpl(this.shell) : super();
 
   String get type;
 
@@ -17,11 +16,9 @@ abstract class NodeImpl {
     return clone;
   }
 
-  Node get shell => _shell;
-
   LayerImpl get layer {
     NodeImpl parent = this.parent;
-    while(parent != null && parent is! LayerImpl) {
+    while (parent != null && parent is! LayerImpl) {
       parent = parent.parent;
     }
     return parent;
@@ -37,26 +34,31 @@ abstract class NodeImpl {
 
   void on(String events, Function handler, [String id]);
 
-  void setAttribute(String attr, dynamic value, [bool removeIfNull = false]) {
+  void setAttribute(String attr, value, [bool removeIfNull = false]) {
     shell.setAttribute(attr, value, removeIfNull);
   }
 
-  dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
+  getAttribute(String attr, [defaultValue = null]) {
     return shell.getAttribute(attr, defaultValue);
   }
 
-  void set id(String value) => setAttribute(ID, value);
-  String get id => getAttribute(ID, '');
+  String get id => shell.id;
 
-  num get width => getAttribute(WIDTH);
-  num get height => getAttribute(HEIGHT);
+  num get width => shell.width;
+  num get height => shell.height;
 
-  void set fill(dynamic value) => setAttribute(FILL, value);
-  dynamic get fill => getAttribute(FILL);
+  void set fill(value) {
+    shell.fill = value;
+  }
+  get fill => shell.fill;
 
-  void set stroke(dynamic value) => setAttribute(STROKE, value);
-  dynamic get stroke => getAttribute(STROKE);
+  void set stroke(value) {
+    shell.stroke = value;
+  }
+  get stroke => shell.stroke;
 
-  void set strokeWidth(dynamic value) => setAttribute(STROKE_WIDTH, value);
-  dynamic get strokeWidth => getAttribute(STROKE_WIDTH);
+  void set strokeWidth(num value) {
+    shell.strokeWidth = value;
+  }
+  num get strokeWidth => shell.strokeWidth;
 }
