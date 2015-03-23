@@ -3,7 +3,7 @@ part of smartcanvas;
 class EventBus {
   Map<String, EventHandlers> _eventListeners = {};
 
-  EventBus on(String events, Function handler, [String id]) {
+  void on(String events, Function handler, [String id]) {
     List<String> ss = events.split(' ');
     ss.forEach((event) {
       if (_eventListeners[event] == null) {
@@ -13,7 +13,7 @@ class EventBus {
     });
   }
 
-  EventBus off(String event, [String id]) {
+  void off(String event, [String id]) {
     EventHandlers listeners = _eventListeners[event];
     if (listeners != null) {
       var i = 0;

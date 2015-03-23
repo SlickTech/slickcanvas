@@ -57,8 +57,8 @@ class Layer extends Group {
       _parent.children.remove(this);
       String sUid = uid.toString();
       _parent
-        .off('widthChanged', sUid)
-        .off('heightChanged', sUid);
+        ..off('widthChanged', sUid)
+        ..off('heightChanged', sUid);
       _parent = null;
     }
   }

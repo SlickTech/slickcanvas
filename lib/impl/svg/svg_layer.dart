@@ -113,10 +113,10 @@ class SvgLayer extends SvgNode implements LayerImpl {
   void remove() {
     String sUid = shell.uid.toString();
     shell.stage
-        .off('scaleXChanged', sUid)
-        .off('scaleYChanged', sUid)
-        .off('translateXChanged', sUid)
-        .off('translateYChanged', sUid);
+      ..off('scaleXChanged', sUid)
+      ..off('scaleYChanged', sUid)
+      ..off('translateXChanged', sUid)
+      ..off('translateYChanged', sUid);
 
     if (!_isReflection) {
       children.forEach((child) {
