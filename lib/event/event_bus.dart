@@ -11,8 +11,6 @@ class EventBus {
       }
       _eventListeners[event].add(new EventHandler(id, handler));
     });
-    // allow chaining
-    return this;
   }
 
   EventBus off(String event, [String id]) {
@@ -32,8 +30,6 @@ class EventBus {
         _eventListeners.remove(event);
       }
     }
-    // allow chaining
-    return this;
   }
 
   void fire(String event, [dynamic arg0, arg1, arg2, arg3, arg4, arg5]) {

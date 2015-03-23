@@ -10,8 +10,9 @@ class Text extends Node {
   Text(Map<String, dynamic> config): super(config) {
     _updateParts();
 
-    this.on('textChanged', _updateParts)
-      .on('widthChange', _updateParts);
+    this
+      ..on('textChanged', _updateParts)
+      ..on('widthChange', _updateParts);
   }
 
   NodeImpl _createSvgImpl([bool isReflection = false]) {

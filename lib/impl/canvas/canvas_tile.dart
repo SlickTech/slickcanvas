@@ -30,8 +30,8 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
 
     this
-      .on('widthChanged', _onWidthChanged)
-      .on('heightChanged', _onHeightChanged);
+      ..on('widthChanged', _onWidthChanged)
+      ..on('heightChanged', _onHeightChanged);
   }
 
   void _scaleCanvas() {

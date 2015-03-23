@@ -111,10 +111,10 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void _registerEvents() {
     shell
-      .on('widthChanged', _onWidthChanged)
-      .on('heightChanged', _onHeightChanged)
-      .on('opacityChanged', _onOpacityChanged)
-      .on('stageSet', _onStageSet);
+      ..on('widthChanged', _onWidthChanged)
+      ..on('heightChanged', _onHeightChanged)
+      ..on('opacityChanged', _onOpacityChanged)
+      ..on('stageSet', _onStageSet);
   }
 
   void _onWidthChanged(newValue) {

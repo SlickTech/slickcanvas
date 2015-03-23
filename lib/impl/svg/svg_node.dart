@@ -52,12 +52,12 @@ abstract class SvgNode extends NodeImpl {
     }
 
     this.shell
-    .on('translateXChanged', transform)
-    .on('translateYChanged', transform)
-    .on('scaleXChanged', transform)
-    .on('scaleYChanged', transform)
-    .on('rotationChanged', transform)
-    .on(ATTR_CHANGED, _handleAttrChange);
+        ..on('translateXChanged', transform)
+        ..on('translateYChanged', transform)
+        ..on('scaleXChanged', transform)
+        ..on('scaleYChanged', transform)
+        ..on('rotationChanged', transform)
+        ..on(ATTR_CHANGED, _handleAttrChange);
   }
 
   String get type => svg;
@@ -259,8 +259,8 @@ abstract class SvgNode extends NodeImpl {
     this._dragstarting = true;
 
     var pointerPosition = this.stage.pointerPosition;
-    this._dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX + stage.translateX;
-    this._dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY + stage.translateY;
+    this._dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX;
+    this._dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -313,15 +313,15 @@ abstract class SvgNode extends NodeImpl {
     }
     _dragStarted = false;
 
-//    if (stage != null) {
-      if (_dragMoveHandler != null) {
-        _dragMoveHandler.pause();
-      }
+    if (_dragMoveHandler != null) {
+      _dragMoveHandler.cancel();
+      _dragMoveHandler = null;
+    }
 
-      if (_dragEndHandler != null) {
-        _dragEndHandler.pause();
-      }
-//    }
+    if (_dragEndHandler != null) {
+      _dragEndHandler.cancel();
+      _dragEndHandler = null;
+    }
   }
 
   void _onMouseMove(DOM.MouseEvent e) {

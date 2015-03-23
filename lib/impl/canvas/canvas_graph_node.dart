@@ -17,11 +17,11 @@ abstract class CanvasGraphNode extends CanvasNode {
     _setElementStyles();
 
     shell
-      .on('translateXChanged', () => _refresh())
-      .on('translateYChanged', () => _refresh())
-      .on('widthChanged', _onWidthChanged)
-      .on('heighChanged', _onHeightChanged)
-      .on(ATTR_CHANGED, () {
+      ..on('translateXChanged', () => _refresh())
+      ..on('translateYChanged', () => _refresh())
+      ..on('widthChanged', _onWidthChanged)
+      ..on('heighChanged', _onHeightChanged)
+      ..on(ATTR_CHANGED, () {
         if (_useCache) {
           _updateCache(true);
         } else {
