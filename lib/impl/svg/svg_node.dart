@@ -20,7 +20,6 @@ abstract class SvgNode extends NodeImpl {
   String _oldLocation;
 
   SvgNode(Node shell, this._isReflection) : super(shell) {
-
     _setClassName();
     _element = _createElement();
     _element.dataset['scNode'] = '${shell.uid}';
@@ -29,7 +28,7 @@ abstract class SvgNode extends NodeImpl {
 
     transform();
 
-    if(shell.listening) {
+    if (shell.listening) {
       shell.eventListeners.forEach((k, v) {
         _registerEvent(k, v);
       });
@@ -41,23 +40,22 @@ abstract class SvgNode extends NodeImpl {
         _startDragHandling();
       }
 
-      this.shell
-        .on('draggableChanged', (newValue) {
-          if (newValue) {
-            _startDragHandling();
-          } else {
-            _stopDragHandling();
-          }
-        });
+      this.shell.on('draggableChanged', (newValue) {
+        if (newValue) {
+          _startDragHandling();
+        } else {
+          _stopDragHandling();
+        }
+      });
     }
 
     this.shell
-        ..on('translateXChanged', transform)
-        ..on('translateYChanged', transform)
-        ..on('scaleXChanged', transform)
-        ..on('scaleYChanged', transform)
-        ..on('rotationChanged', transform)
-        ..on(ATTR_CHANGED, _handleAttrChange);
+      ..on('translateXChanged', transform)
+      ..on('translateYChanged', transform)
+      ..on('scaleXChanged', transform)
+      ..on('scaleYChanged', transform)
+      ..on('rotationChanged', transform)
+      ..on(ATTR_CHANGED, _handleAttrChange);
   }
 
   String get type => svg;
@@ -88,9 +86,17 @@ abstract class SvgNode extends NodeImpl {
   }
 
   List<String> _getStyleNames() {
-    return [STROKE, STROKE_WIDTH, STROKE_OPACITY,
-            STROKE_LINECAP, STROKE_DASHARRAY,
-            FILL, FILL_OPACITY, OPACITY, DISPLAY];
+    return [
+      STROKE,
+      STROKE_WIDTH,
+      STROKE_OPACITY,
+      STROKE_LINECAP,
+      STROKE_DASHARRAY,
+      FILL,
+      FILL_OPACITY,
+      OPACITY,
+      DISPLAY
+    ];
   }
 
   void _setElementAttributes() {
@@ -116,8 +122,7 @@ abstract class SvgNode extends NodeImpl {
   void _setElementStyle(String name) {
     var value = getAttribute(name);
     if (value != null) {
-      if (value is SCPattern ||
-          value is Gradient) {
+      if (value is SCPattern || value is Gradient) {
         if (_isReflection) {
           _element.style.setProperty(name, 'trasparent');
         } else {
@@ -128,10 +133,12 @@ abstract class SvgNode extends NodeImpl {
             // On FireFox there is some strageness, the fill parrtern or gradient
             // is not always take effect. This is hack to force FireFox repaint the
             // the block so that pattern and gradient can show up.
-            if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
+            if (DOM.window.navigator.userAgent
+                .toLowerCase()
+                .contains('firefox')) {
               value.on(DEF_ADDED, () {
                 _element.style.setProperty(name, 'transparent');
-                new Future.delayed(new Duration(seconds: 0), (){
+                new Future.delayed(new Duration(seconds: 0), () {
                   _element.style.setProperty(name, 'url(#${value.id})');
                 });
               });
@@ -151,28 +158,35 @@ abstract class SvgNode extends NodeImpl {
               _oldLocation = newLocation;
 
               if (newLocation.contains('#')) {
-                newLocation = newLocation.substring(0, newLocation.indexOf('#'));
+                newLocation =
+                    newLocation.substring(0, newLocation.indexOf('#'));
               }
 
-              _element.style.setProperty(name, 'url(${newLocation}#${value.id})');
+              _element.style.setProperty(
+                  name, 'url(${newLocation}#${value.id})');
 
               // On FireFox there is some strageness, the fill parrtern or gradient
               // is not always take effect. This is hack to force FireFox repaint the
               // the block so that pattern and gradient can show up.
-              if (DOM.window.navigator.userAgent.toLowerCase().contains('firefox')) {
+              if (DOM.window.navigator.userAgent
+                  .toLowerCase()
+                  .contains('firefox')) {
                 value.on(DEF_ADDED, () {
                   _element.style.setProperty(name, 'transparent');
-                  new Future.delayed(new Duration(seconds: 0), (){
-                    _element.style.setProperty(name, 'url(${newLocation}#${value.id})');
+                  new Future.delayed(new Duration(seconds: 0), () {
+                    _element.style.setProperty(
+                        name, 'url(${newLocation}#${value.id})');
                   });
                 });
               }
-            };
+            }
+            ;
 
             _setFillUrl(null);
 
             if (_locationCheckTimer == null) {
-              _locationCheckTimer = new Timer.periodic(new Duration(milliseconds: 100), _setFillUrl);
+              _locationCheckTimer = new Timer.periodic(
+                  new Duration(milliseconds: 100), _setFillUrl);
             }
           }
         }
@@ -248,9 +262,9 @@ abstract class SvgNode extends NodeImpl {
 
   void dragStart(DOM.MouseEvent e) {
     if (e.button != 0 ||
-        (DOM.window.navigator.userAgent.contains('Mac OS') && e.ctrlKey) || // simulated right click on Mac
-        stage.dragging ||
-        _dragstarting) {
+        (DOM.window.navigator.userAgent.contains('Mac OS') &&
+            e.ctrlKey) || // simulated right click on Mac
+        stage.dragging || _dragstarting) {
       return;
     }
 
@@ -356,8 +370,7 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void _updateDef(String attr, value, {bool remove: false}) {
-    if (value is SCPattern ||
-        value is Gradient) {
+    if (value is SCPattern || value is Gradient) {
       if (remove) {
         SvgDefLayer.impl(stage).removeDef(value);
         _element.style.removeProperty(attr);
@@ -378,8 +391,7 @@ abstract class SvgNode extends NodeImpl {
     return null;
   }
 
-  void transform()
-  {
+  void transform() {
     num r = shell.rotate;
     SVG.Matrix matrix = new SVG.SvgSvgElement().createSvgMatrix();
 
@@ -405,15 +417,16 @@ abstract class SvgNode extends NodeImpl {
     try {
       if (_element is SVG.GraphicsElement) {
         SVG.GraphicsElement el = _element as SVG.GraphicsElement;
-        SVG.Transform tr = el.transform.baseVal.createSvgTransformFromMatrix(matrix);
+        SVG.Transform tr =
+            el.transform.baseVal.createSvgTransformFromMatrix(matrix);
         if (el.transform.baseVal.numberOfItems == 0) {
           el.transform.baseVal.appendItem(tr);
         } else {
           el.transform.baseVal.replaceItem(tr, 0);
         }
       }
-    } catch(e) {
-        print('failed to set transform ${e}');
+    } catch (e) {
+      print('failed to set transform ${e}');
     }
   }
 
@@ -429,9 +442,8 @@ abstract class SvgNode extends NodeImpl {
       return defs;
     }
 
-    if (fill is SCPattern ||
-        fill is Gradient) {
-        defs.add(fill);
+    if (fill is SCPattern || fill is Gradient) {
+      defs.add(fill);
     }
 
     if (stroke is SCPattern) {
