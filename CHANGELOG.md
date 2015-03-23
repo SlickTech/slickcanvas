@@ -1,3 +1,8 @@
+#0.1.9
+* Fixed an issue where node jump to different location during drag move if stage panned or zoomed.
+* Fixed an issue where node dragging stopped working after panning stage.
+* Breaking change - [according to dart style duide](https://www.dartlang.org/articles/style-guide/#avoid-returning-this-from-methods-just-to-enable-a-fluent-interface), event bus .on and .off nolonger return this.
+
 #0.1.8
 * Fixed an issue where FuncIRI for fill does not work if html file has a base tag.
 * Implement rotate.
@@ -22,9 +27,9 @@
 * Implemented static stage
 
 #0.1.5
-*When calculate absolutePositon, do not count layer's position
-*Fixed drage move flickering issue; 
-*Fixed typo;
+* When calculate absolutePositon, do not count layer's position
+* Fixed drage move flickering issue; 
+* Fixed typo;
 
 #0.1.4
 * Fix missmatch between stage.children and stage.element.nodes
