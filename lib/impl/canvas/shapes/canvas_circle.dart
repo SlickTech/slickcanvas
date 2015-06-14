@@ -6,17 +6,23 @@ class CanvasCircle extends CanvasGraphNode {
     _useCache = false;
   }
 
-  void _cacheGraph() {}
+  @override
+  void _cacheGraph(){}
 
-  void __drawGraph(DOM.CanvasRenderingContext2D context) {
+  @override
+  void __drawGraph(dom.CanvasRenderingContext2D context) {
     var r = getAttribute(R, 0);
     context.beginPath();
     context.arc(0, 0, r, 0, PI * 2, false);
     context.closePath();
   }
 
+  @override
   Circle get shell => super.shell;
 
+  @override
   num get width => (getAttribute(R, 0) + getAttribute(STROKE_WIDTH, 0)) * 2;
+
+  @override
   num get height => (getAttribute(R, 0) + getAttribute(STROKE_WIDTH, 0)) * 2;
 }

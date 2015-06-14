@@ -1,25 +1,25 @@
 part of smartcanvas;
 
-class Stage extends NodeBase implements Container<Node> {
-  DOM.Element _container;
-  DOM.Element _element;
+class Stage extends NodeBase with Container<Node> {
+  dom.Element _container;
+  dom.Element _element;
   Layer _defaultLayer;
-  Layer _svgDefLayer;
-  _ReflectionLayer _reflectionLayer;
-  String _defualtLayerType;
-  List<Node> _children = new List<Node>();
-  Position _pointerPosition;
 
-  bool _dragstarting = false;
+  _ReflectionLayer _reflectionLayer;
+  final CanvasType _defaultLayerType;
+
+  Position _pointerPosition;
+  bool _dragStarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
   num _dragOffsetX = 0;
   num _dragOffsetY = 0;
-  TransformMatrix _transformMatrix = new TransformMatrix();
+  final TransformMatrix _transformMatrix = new TransformMatrix();
 
-  Stage(this._container, String this._defualtLayerType,
-      Map<String, dynamic> config)
-      : super() {
+  Stage(this._container, {Map<String, dynamic> config: const {}, defaultLayerType: CanvasType.svg})
+  : _defaultLayerType = defaultLayerType
+  , super(config) {
+
     _populateConfig(config);
     _createElement();
 
@@ -34,11 +34,10 @@ class Stage extends NodeBase implements Container<Node> {
     }
 
     if (isStatic == false) {
-      _reflectionLayer =
-          new _ReflectionLayer({WIDTH: this.width, HEIGHT: this.height});
+      _reflectionLayer = new _ReflectionLayer({WIDTH: this.width, HEIGHT: this.height});
       _reflectionLayer.stage = this;
-      _children.add(_reflectionLayer);
-      _element.nodes.add(_reflectionLayer._impl.element);
+      children.add(_reflectionLayer);
+      _element.nodes.add(_reflectionLayer.impl.element);
     }
 
     _element.onMouseDown.listen(_onMouseDown);
@@ -46,6 +45,8 @@ class Stage extends NodeBase implements Container<Node> {
     _element.onMouseUp.listen(_onMouseUp);
     _element.onMouseEnter.listen(_setPointerPosition);
     _element.onMouseLeave.listen(_setPointerPosition);
+    _element.onMouseOver.listen(_setPointerPosition);
+    _element.onMouseOut.listen(_setPointerPosition);
 
     this.on('draggableChanged', (newValue) {
       if (!newValue) {
@@ -59,14 +60,14 @@ class Stage extends NodeBase implements Container<Node> {
   }
 
   void _createElement() {
-    String c = getAttribute(CLASS);
-    _element = new DOM.DivElement();
+    var c = getAttribute(CLASS);
+    _element = new dom.DivElement();
     if (id != null && !id.isEmpty) {
       _element.id = id;
     }
     _element.classes.add('smartcanvas-stage');
     if (c != null) {
-      _element.classes.addAll(c.split(SPACE));
+      _element.classes.addAll(c.split(space));
     }
     _element.setAttribute('role', 'presentation');
     _element.style
@@ -79,7 +80,6 @@ class Stage extends NodeBase implements Container<Node> {
   }
 
   void _populateConfig(Map<String, dynamic> config) {
-    _attrs.addAll(config);
     if (getAttribute(WIDTH) == null) {
       setAttribute(WIDTH, _container.clientWidth);
     }
@@ -88,27 +88,27 @@ class Stage extends NodeBase implements Container<Node> {
       setAttribute(HEIGHT, _container.clientHeight);
     }
 
-    num scale = getAttribute(SCALE_X);
-    if (scale != null) {
-      scaleX = scale;
-    }
-
-    scale = getAttribute(SCALE_Y);
-    if (scale != null) {
-      scaleY = scale;
-    }
-
-    scale = getAttribute(SCALE);
+    var scale = getAttribute(SCALE);
     if (scale != null) {
       scaleX = scale;
       scaleY = scale;
+    } else {
+      scale = getAttribute(SCALE_X);
+      if (scale != null) {
+        scaleX = scale;
+      }
+
+      scale = getAttribute(SCALE_Y);
+      if (scale != null) {
+        scaleY = scale;
+      }
     }
   }
 
   void _onMouseDown(e) {
     _setPointerPosition(e);
     fire('stageMouseDown', e);
-    if (draggable) {
+    if (isDraggable) {
       _dragStart(e);
     }
   }
@@ -116,7 +116,7 @@ class Stage extends NodeBase implements Container<Node> {
   void _onMouseMove(e) {
     _setPointerPosition(e);
     fire('stageMouseMove', e);
-    if (_dragstarting) {
+    if (_dragStarting) {
       _dragMove(e);
     }
   }
@@ -131,38 +131,36 @@ class Stage extends NodeBase implements Container<Node> {
 
   void _setPointerPosition(e) {
     var elementClientRect = _element.getBoundingClientRect();
-    num x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX -
-        _transformMatrix.translateX;
-    num y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY -
-        _transformMatrix.translateY;
+    var x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX -
+    _transformMatrix.translateX;
+    var y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY -
+    _transformMatrix.translateY;
     this._pointerPosition = new Position(x: x, y: y);
   }
 
   void _updatePointerPositionXFromScaleXChange(num newScaleX, num oldScaleX) {
     if (_pointerPosition != null) {
-      num factor = oldScaleX / newScaleX;
+      var factor = oldScaleX / newScaleX;
       _pointerPosition.x = _pointerPosition.x * factor +
-          _transformMatrix.translateX * (factor - 1);
+      _transformMatrix.translateX * (factor - 1);
     }
   }
 
   void _updatePointerPositionYFromScaleYChange(num newScaleY, num oldScaleY) {
     if (_pointerPosition != null) {
-      num factor = oldScaleY / newScaleY;
+      var factor = oldScaleY / newScaleY;
       _pointerPosition.y = _pointerPosition.y * factor +
-          _transformMatrix.translateY * (factor - 1);
+      _transformMatrix.translateY * (factor - 1);
     }
   }
 
-  void _updatePointerPositionXFromTranslateXChange(
-      num newTransX, num oldTransX) {
+  void _updatePointerPositionXFromTranslateXChange(num newTransX, num oldTransX) {
     if (_pointerPosition != null) {
       _pointerPosition.x += oldTransX - newTransX;
     }
   }
 
-  void _updatePointerPositionYFromTranslateYChange(
-      num newTransY, num oldTransY) {
+  void _updatePointerPositionYFromTranslateYChange(num newTransY, num oldTransY) {
     if (_pointerPosition != null) {
       _pointerPosition.y += oldTransY - newTransY;
     }
@@ -170,10 +168,11 @@ class Stage extends NodeBase implements Container<Node> {
 
   Position get pointerPosition => _pointerPosition;
 
+  @override
   void addChild(Node node) {
     if (node is Layer) {
       node.stage = this;
-      node._reflection = _reflectionLayer.impl;
+      node._reflection = _reflectionLayer.impl as SvgLayer;
 
       if (node.width == null) {
         node.width = this.width;
@@ -181,20 +180,20 @@ class Stage extends NodeBase implements Container<Node> {
       }
 
       if (_reflectionLayer != null) {
-        int index = _element.nodes.indexOf(_reflectionLayer._impl.element);
-        _element.nodes.insert(index, node._impl.element);
-        _children.insert(index, node);
+        int index = _element.nodes.indexOf(_reflectionLayer.impl.element);
+        _element.nodes.insert(index, node.impl.element);
+        children.insert(index, node);
 
         node.children.forEach((child) {
           _reflectionLayer.reflectNode(child);
         });
       } else {
-        _element.nodes.add(node._impl.element);
-        _children.add(node);
+        _element.nodes.add(node.impl.element);
+        children.add(node);
       }
     } else {
       if (_defaultLayer == null) {
-        _defaultLayer = new Layer(this._defualtLayerType, {
+        _defaultLayer = new Layer(this._defaultLayerType, {
           ID: '__default_layer',
           WIDTH: width,
           HEIGHT: height
@@ -205,34 +204,37 @@ class Stage extends NodeBase implements Container<Node> {
     }
   }
 
+  @override
   void removeChild(Node node) {
     if (node is Layer) {
-      _children.remove(node);
-      node._parent = null;
+      children.remove(node);
+      node._stage = null;
     } else {
       _defaultLayer.removeChild(node);
     }
   }
 
+  @override
   void clearChildren() {
-    while (_children.isNotEmpty) {
-      this.removeChild(_children.first);
+    while (children.isNotEmpty) {
+      this.removeChild(children.first);
     }
   }
 
+  @override
   void insertChild(int index, Node node) {
     if (node is Layer) {
       node.stage = this;
 
-      _children.insert(index, node);
+      children.insert(index, node);
       if (node.width == null) {
         node.width = this.width;
         node.height = this.height;
       }
-      _element.nodes.insert(index, node._impl.element);
+      _element.nodes.insert(index, node.impl.element);
 
       if (_reflectionLayer != null) {
-        node._reflection = _reflectionLayer.impl;
+        node._reflection = _reflectionLayer.impl as SvgLayer;
         node.children.forEach((child) {
           _reflectionLayer.reflectNode(child);
         });
@@ -242,73 +244,75 @@ class Stage extends NodeBase implements Container<Node> {
     }
   }
 
-  void _dragStart(DOM.MouseEvent e) {
-    if (this._dragstarting) {
+  void _dragStart(dom.MouseEvent e) {
+    if (this._dragStarting) {
       return;
     }
 
     e.preventDefault();
     e.stopPropagation();
 
-    this._dragstarting = true;
+    this._dragStarting = true;
 
     this._dragOffsetX = _pointerPosition.x;
     this._dragOffsetY = _pointerPosition.y;
   }
 
-  void _dragMove(DOM.MouseEvent e) {
+  void _dragMove(dom.MouseEvent e) {
     e.preventDefault();
     e.stopPropagation();
     if (!_dragStarted) {
       this._dragging = true;
-      fire(DRAGSTART, e);
+      fire(dragStart, e);
       _dragStarted = true;
     }
     translateX += _pointerPosition.x - _dragOffsetX;
     translateY += _pointerPosition.y - _dragOffsetY;
-    fire(DRAGMOVE, e);
+    fire(dragMove, e);
   }
 
-  void _dragEnd([DOM.MouseEvent e]) {
+  void _dragEnd([dom.MouseEvent e]) {
     if (e != null) {
       e.preventDefault();
       e.stopPropagation();
     }
-    _dragstarting = false;
+    _dragStarting = false;
     _dragging = false;
     if (_dragStarted) {
-      fire(DRAGEND, e);
+      fire(dragEnd, e);
     }
     _dragStarted = false;
   }
 
-  void getSvg(SvgNode defNode) {
-    if (_svgDefLayer == null) {
-      _svgDefLayer = new Layer(svg, {});
-      _svgDefLayer.stage = this;
-      _children.add(_svgDefLayer);
-      _element.nodes.add(_svgDefLayer._impl.element);
-    }
-  }
+//  void getSvg(SvgNode defNode) {
+//    if (_svgDefLayer == null) {
+//      _svgDefLayer = new Layer(svg, {});
+//      _svgDefLayer.stage = this;
+//      _children.add(_svgDefLayer);
+//      _element.nodes.add(_svgDefLayer._impl.element);
+//    }
+//  }
 
-  List<Node> get children => _children;
-
-  DOM.Element get element => _element;
+  dom.Element get element => _element;
 
   void set id(String value) => setAttribute(ID, value);
+
   String get id => getAttribute(ID);
 
   num get x => getAttribute(X, 0);
+
   num get y => getAttribute(Y, 0);
 
   void set width(num value) => setAttribute(WIDTH, value);
+
   num get width => getAttribute(WIDTH);
 
   void set height(num value) => setAttribute(HEIGHT, value);
+
   num get height => getAttribute(HEIGHT);
 
   void set scaleX(num x) {
-    num oldValue = _transformMatrix.scaleX;
+    var oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
 
     if (oldValue != x) {
@@ -316,8 +320,9 @@ class Stage extends NodeBase implements Container<Node> {
       fire('scaleXChanged', x, oldValue);
     }
   }
+
   void set scaleY(num y) {
-    num oldValue = _transformMatrix.scaleY;
+    var oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
 
     if (oldValue != y) {
@@ -325,6 +330,7 @@ class Stage extends NodeBase implements Container<Node> {
       fire('scaleYChanged', y, oldValue);
     }
   }
+
   void set scale(scale) {
     num x, y;
     if (scale is num) {
@@ -347,6 +353,7 @@ class Stage extends NodeBase implements Container<Node> {
   }
 
   num get scaleX => _transformMatrix.scaleX;
+
   num get scaleY => _transformMatrix.scaleY;
 
   void set translateX(num tx) {
@@ -360,6 +367,7 @@ class Stage extends NodeBase implements Container<Node> {
       fire('translateXChanged', tx, oldValue);
     }
   }
+
   num get translateX => _transformMatrix.translateX;
 
   void set translateY(num ty) {
@@ -373,13 +381,16 @@ class Stage extends NodeBase implements Container<Node> {
       fire('translateYChanged', ty, oldValue);
     }
   }
+
   num get translateY => _transformMatrix.translateY;
 
-  DOM.Element get container => _container;
+  dom.Element get container => _container;
 
-  void set draggable(bool value) => setAttribute(DRAGGABLE, value);
-  bool get draggable => getAttribute(DRAGGABLE, false);
+  void set isDraggable(bool value) => setAttribute(DRAGGABLE, value);
 
-  bool get dragging => _dragging;
+  bool get isDraggable => getAttribute(DRAGGABLE, false);
+
+  bool get isDragging => _dragging;
+
   bool get isStatic => getAttribute(IS_STATIC, false);
 }

@@ -5,12 +5,40 @@
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>test</title>
+
+    <style>
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      body svg {
+        display: none;
+      }
+
+      iframe {
+        display: block !important;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
   </head>
- 
-  <body>   
+
+  <body onload="start()">
     <div id="canvas"></div>
-    <script type="application/dart" src="./test.dart"></script>
-    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
-    <script src="packages/browser/dart.js"></script>
+    <!--<script>-->
+      <!--function start() {-->
+        <!--var svg = document.body.querySelector('svg');-->
+        <!--if (svg) {-->
+          <!--svg.style.display = 'none';-->
+        <!--}-->
+      <!--}-->
+    <!--</script>-->
+
+    <!--<link rel="x-dart-test" href="test.dart">-->
+    <script type="application/dart" src="test.dart"></script>
+    <script src="packages/test/dart.js"></script>
   </body>
 </html>

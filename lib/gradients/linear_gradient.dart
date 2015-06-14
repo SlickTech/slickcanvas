@@ -2,14 +2,14 @@ part of smartcanvas;
 
 class LinearGradient extends Gradient {
 
-  LinearGradient(Map<String, dynamic> config): super(config) {}
+  LinearGradient([Map<String, dynamic> config = const {}]) : super(config);
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgLinearGradient(this);
-  }
+  @override
+  Node _clone(Map<String, dynamic> config) => new LinearGradient(config);
 
-  NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) => new SvgLinearGradient(this);
 
+  @override
+  NodeImpl _createCanvasImpl() => throw ExpNotImplemented;
 }

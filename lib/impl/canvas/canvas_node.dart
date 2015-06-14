@@ -4,10 +4,12 @@ abstract class CanvasNode extends NodeImpl {
 
   List<CanvasTile> _tiles = [];
 
-  CanvasNode(Node shell): super(shell) {}
+  CanvasNode(Node shell): super(shell);
 
+  @override
   void on(String event, Function handler, [String id]) {}
 
+  @override
   void remove() {
     if (parent != null) {
       if (parent is CanvasLayer) {
@@ -23,7 +25,9 @@ abstract class CanvasNode extends NodeImpl {
     this._tiles.clear();
   }
 
-  String get type => canvas;
+  @override
+  CanvasType get type => CanvasType.canvas;
 
+  @override
   CanvasLayer get layer => super.layer;
 }

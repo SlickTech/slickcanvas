@@ -21,7 +21,7 @@ class GridLayer extends Layer {
     STROKE_WIDTH: 0.5
   });
 
-  GridLayer(Map<String, dynamic> config): super(svg, config) {
+  GridLayer(Map<String, dynamic> config): super(CanvasType.svg, config) {
     _gridPattern.addChild(_gridPatternLine);
 
     _grid = new Rect({
@@ -66,12 +66,12 @@ class GridLayer extends Layer {
     this.addChild(_axisY);
 
     this.stage
-      .on('widthChanged', (newValue){ _axisX.x2 = newValue; })
-      .on('heightChanged', (newValue) { _axisY.y2 = newValue; })
-      .on('translateXChanged', _onStageTranslateXChanged)
-      .on('translateYChanged', _onStageTranslateYChanged)
-      .on('scaleXChanged', _onStageScaleXChanged)
-      .on('scaleYChanged', _onStageScaleYChanged);
+      ..on('widthChanged', (newValue){ _axisX.x2 = newValue; })
+      ..on('heightChanged', (newValue) { _axisY.y2 = newValue; })
+      ..on('translateXChanged', _onStageTranslateXChanged)
+      ..on('translateYChanged', _onStageTranslateYChanged)
+      ..on('scaleXChanged', _onStageScaleXChanged)
+      ..on('scaleYChanged', _onStageScaleYChanged);
   }
 
   void _onStageTranslateXChanged(newValue) {
@@ -105,13 +105,13 @@ class GridLayer extends Layer {
 
 void main() {
   dom.Element container = dom.document.querySelector("#smart_canvas");
-  Stage stage = new Stage(container, svg, {});
+  Stage stage = new Stage(container);
   bool _drawing = false;
   Position _lastPosition;
   bool _panning = false;
 
   Layer _gridLayer = new GridLayer({});
-  Layer _drawingLayer = new Layer(svg, {});
+  Layer _drawingLayer = new Layer(CanvasType.svg, {});
 
   stage.addChild(_gridLayer);
   stage.addChild(_drawingLayer);
@@ -150,14 +150,14 @@ void main() {
   dom.document.onKeyDown.listen((e) {
     if (e.keyCode == 32 && _drawing == false) {
       _panning = true;
-      stage.draggable = true;
+      stage.isDraggable = true;
     }
   });
 
   dom.document.onKeyUp.listen((e) {
     if(e.keyCode == 32) {
       _panning = false;
-      stage.draggable = false;
+      stage.isDraggable = false;
     }
   });
 

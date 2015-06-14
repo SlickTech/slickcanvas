@@ -6,14 +6,15 @@ class CanvasPolyline extends CanvasGraphNode {
     this._useCache = true;
   }
 
+  @override
   void _cacheGraph() {
     _cacheContext.clearRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
     _cacheContext.imageSmoothingEnabled = false;
     _cacheContext.beginPath();
-    List<Position> points = shell.points;
-    num x = shell.x;
-    num y = shell.y;
-    for(int i = 0; i < points.length; i++) {
+    var points = shell.points;
+    var x = shell.x;
+    var y = shell.y;
+    for (int i = 0; i < points.length; i++) {
       if (i == 0) {
         _cacheContext.moveTo(points[i].x - x, points[i].y - y);
       } else {
@@ -22,13 +23,14 @@ class CanvasPolyline extends CanvasGraphNode {
     }
   }
 
-  void __drawGraph(DOM.CanvasRenderingContext2D context) {
+  @override
+  void __drawGraph(dom.CanvasRenderingContext2D context) {
     context.beginPath();
-    List<Position> points = shell.points;
+    var points = shell.points;
     var origin = shell.origin;
-    num offsetX = origin.x - shell.x;
-    num offsetY = origin.y - shell.y;
-    for(int i = 0; i < points.length; i++) {
+    var offsetX = origin.x - shell.x;
+    var offsetY = origin.y - shell.y;
+    for (int i = 0; i < points.length; i++) {
       if (i == 0) {
         context.moveTo(points[i].x + offsetX, points[i].y + offsetY);
       } else {
@@ -37,8 +39,9 @@ class CanvasPolyline extends CanvasGraphNode {
     }
   }
 
+  @override
   dynamic getAttribute(String attr, [dynamic defaultValue]) {
-    switch(attr) {
+    switch (attr) {
       case X:
         return shell.x;
       case Y:
@@ -52,5 +55,6 @@ class CanvasPolyline extends CanvasGraphNode {
     }
   }
 
+  @override
   Polyline get shell => super.shell;
 }

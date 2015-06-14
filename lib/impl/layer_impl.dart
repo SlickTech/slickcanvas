@@ -1,11 +1,16 @@
 part of smartcanvas;
 
-abstract class LayerImpl extends NodeImpl implements Container<NodeImpl> {
-  DOM.Element _element;
+abstract class LayerImpl extends NodeImpl {
+  dynamic _element;
+
   LayerImpl(Layer shell): super(shell);
 
   void suspend();
+
   void resume();
 
-  DOM.Element get element => _element;
+  dynamic get element => _element;
+
+  @override
+  LayerImpl get layer => this;
 }

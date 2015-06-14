@@ -2,29 +2,33 @@ part of smartcanvas;
 
 class Circle extends Node {
 
-  Circle(Map<String, dynamic> config): super(config) {}
+  Circle([Map<String, dynamic> config = const {}]) : super(config);
 
-  void populateConfig() {
-    super.populateConfig();
-    num r = _attrs[R];
+  @override
+  Node _clone(Map<String, dynamic> config) => new Circle(config);
+
+  @override
+  void _populateConfig() {
+    super._populateConfig();
+    var r = attrs[R];
     if (r == null) {
-      r = _attrs[R] = 0;
+      r = attrs[R] = 0;
     }
     var width = r * 2;
     setAttribute(WIDTH, width);
     setAttribute(HEIGHT, width);
   }
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgCircle(this, isReflection);
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) =>
+    new SvgCircle(this, isReflection);
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasCircle(this);
-  }
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasCircle(this);
 
+  @override
   BBox getBBox(bool isAbsolute) {
-    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(x: pos.x - r, y: pos.y - r, width: this.width, height: this.height);
   }
 

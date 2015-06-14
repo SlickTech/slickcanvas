@@ -5,7 +5,7 @@ class SvgReflectionTests {
     test('add reflectable not to group on unstaged layer', () {
 
       // Add layer
-      Layer layer = new Layer(svg, {ID: 'unstaged_layer'});
+      Layer layer = new Layer(CanvasType.svg, {ID: 'unstaged_layer'});
       stage.addChild(layer);
 
       // Add group block with a reflectable node
@@ -29,7 +29,7 @@ class SvgReflectionTests {
       // add another reflectable node to group
       Rect rect2 = new Rect({ID: 'reflectableNode2', X: 200, Y:100, WIDTH: 100, HEIGHT: 100});
       group.addChild(rect2);
-      rect2.on(CLICK, (){print('reflectableNode2 clicked');});
+      rect2.on(click, (){print('reflectableNode2 clicked');});
 
       stage.addChild(layer);
 

@@ -65,14 +65,14 @@ void main() {
   });
 
   dom.Element canvasContainer = dom.document.querySelector('#big-canvas');
-  Stage canvasStage = new Stage(canvasContainer, canvas, {});
+  Stage canvasStage = new Stage(canvasContainer, defaultLayerType:CanvasType.canvas);
 
   dom.Element addBtn = dom.document.querySelector('.btn-add');
   addBtn.onClick.listen((e) {
     var shapes = dom.document.querySelectorAll('input[type=checkbox]:checked');
 
     shapes.forEach((shape) {
-      var node, svgNode, canvasNode;
+      var node, canvasNode;
 
       switch(shape.className) {
         case 'rect':
@@ -102,7 +102,7 @@ void main() {
       }
 
       canvasNode = node.clone({DRAGGABLE: true});
-      canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
+      canvasNode.on(mouseDown, (e){ canvasNode.moveToTop(); });
       canvasStage.addChild(canvasNode);
     });
   });

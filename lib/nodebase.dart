@@ -2,59 +2,48 @@ part of smartcanvas;
 
 int _guid = 0;
 
-/**
- *
- */
 class NodeBase extends EventBus {
-  int _uid;
-  Map<String, dynamic> _attrs = {};
 
-  NodeBase([Map<String, dynamic> config = const {}]) {
+  final int uid = ++_guid;
+  final Map<String, dynamic> attrs = {};
+
+  NodeBase(Map<String, dynamic> config) {
     if (config == null) {
       config = {};
     }
-    _attrs.addAll(config);
-    _uid = ++_guid;
-  }
-
-  void _setAttributeFromConfig(String attr, Map<String, dynamic> config, [dynamic defaultVal = null]) {
-    if (config.containsKey(attr)) {
-      setAttribute(attr, config[attr]);
-    } else if (defaultVal != null) {
-      setAttribute(attr, defaultVal);
-    }
+    attrs.addAll(config);
   }
 
   void setAttribute(String attr, dynamic value, [bool removeIfNull = false]) {
-    var oldValue = _attrs[attr];
+    var oldValue = attrs[attr];
     if (value == null && removeIfNull) {
       removeAttribute(attr);
     } else {
-      _attrs[attr] = value;
+      attrs[attr] = value;
     }
     if (oldValue != value) {
-      var event = attr + CHANGED;
+      var event = '${attr}Changed';
       if (hasListener(event)) {
         fire(event, value, oldValue);
-      } else{
-        fire(ATTR_CHANGED, attr, value, oldValue);
+      } else {
+        fire(attrChanged, attr, value, oldValue);
       }
     }
   }
 
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
-    dynamic rt = _attrs[attr];
+    var rt = attrs[attr];
     return rt == null ? defaultValue : rt;
   }
 
   void removeAttribute(String attr) {
-    var oldValue = _attrs[attr];
-    _attrs.remove(attr);
-    var event = attr + CHANGED;
+    var oldValue = attrs[attr];
+    attrs.remove(attr);
+    var event = '${attr}Changed';
     if (hasListener(event)) {
       fire(event, null, oldValue);
-    } else{
-      fire(ATTR_CHANGED, attr, null, oldValue);
+    } else {
+      fire(attrChanged, attr, null, oldValue);
     }
   }
 
@@ -63,10 +52,5 @@ class NodeBase extends EventBus {
     return '$value';
   }
 
-  bool hasAttribute(String attr){
-    return _attrs.containsKey(attr);
-  }
-
-  Map<String, dynamic> get attrs => _attrs;
-  int get uid => _uid;
+  bool hasAttribute(String attr) => attrs.containsKey(attr);
 }

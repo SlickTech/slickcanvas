@@ -1,21 +1,20 @@
 part of smartcanvas.svg;
 
-class SvgEllipse extends SvgNode{
-  double rx;
-  double ry;
+class SvgEllipse extends SvgNode {
 
-  SvgEllipse(Ellipse shell, bool isReflection): super(shell, isReflection) {}
+  SvgEllipse(Ellipse shell, bool isReflection) : super(shell, isReflection);
 
-  SVG.SvgElement _createElement() {
-    return new SVG.EllipseElement();
-  }
+  @override
+  svg.SvgElement _createElement() => new svg.EllipseElement();
 
+  @override
   Set<String> _getElementAttributeNames() {
     var attrs = super._getElementAttributeNames();
     attrs.addAll([CX, CY, RX, RY]);
     return attrs;
   }
 
+  @override
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     switch (attr) {
       case CX:
@@ -27,5 +26,8 @@ class SvgEllipse extends SvgNode{
     }
   }
 
-  String get _nodeName => SC_ELLIPSE;
+  static const String _scEllipse = '__sc_ellipse';
+
+  @override
+  String get _nodeName => _scEllipse;
 }

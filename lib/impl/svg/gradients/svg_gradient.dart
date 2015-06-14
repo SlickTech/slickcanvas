@@ -2,16 +2,18 @@ part of smartcanvas.svg;
 
 abstract class SvgGradient extends SvgNode {
 
-  SvgGradient(Gradient shell): super(shell, false) {}
+  SvgGradient(Gradient shell) : super(shell, false);
 
-  SVG.SvgElement _createElement() {
+  @override
+  svg.SvgElement _createElement() {
     var el = __createElement();
     el.nodes.addAll(_getStopElements());
     return el;
   }
 
-  SVG.SvgElement __createElement();
+  svg.SvgElement __createElement();
 
+  @override
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     if (attr == ID) {
       return super.getAttribute(attr, defaultValue != null ? defaultValue : shell.id);
@@ -20,10 +22,10 @@ abstract class SvgGradient extends SvgNode {
     }
   }
 
-  List<SVG.StopElement> _getStopElements() {
-    List<SVG.StopElement> stopElements = [];
+  List<svg.StopElement> _getStopElements() {
+    var stopElements = [];
     stops.forEach((stop) {
-      SVG.StopElement stopEl = new SVG.StopElement();
+      var stopEl = new svg.StopElement();
       stopEl.setAttribute(OFFSET, getValue(stop, OFFSET, '0%'));
       var color = stop[COLOR];
       if (color != null) {

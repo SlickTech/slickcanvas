@@ -1,17 +1,20 @@
 part of smartcanvas.svg;
 
 class SvgPolygon extends SvgNode {
-  SvgPolygon(Polygon shell, bool isReflection): super(shell, isReflection) {}
+  SvgPolygon(Polygon shell, bool isReflection): super(shell, isReflection);
 
-  SVG.SvgElement _createElement() {
-    return new SVG.PolygonElement();
-  }
+  @override
+  svg.SvgElement _createElement() => new svg.PolygonElement();
 
+  @override
   Set<String> _getElementAttributeNames() {
     var attrs = super._getElementAttributeNames();
     attrs.addAll([POINTS]);
     return attrs;
   }
 
-  String get _nodeName => SC_POLYGON;
+  static const String _scPolygon = '__sc_polygon';
+
+  @override
+  String get _nodeName => _scPolygon;
 }

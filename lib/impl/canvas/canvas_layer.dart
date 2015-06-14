@@ -1,29 +1,29 @@
 part of smartcanvas.canvas;
 
-class CanvasLayer extends CanvasNode implements LayerImpl {
+class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements LayerImpl {
 
-  List<CanvasGraphNode> _children = new List<CanvasGraphNode>();
+  static const String _scCanvas = '__sc_canvas';
 
   bool _suspended = false;
-  DOM.Element _element;
-  Set<String> _classNames = new Set<String>();
+  final dom.Element _element = new dom.DivElement();
+  final Set<String> _classNames = new Set<String>();
 
   CanvasLayer(Layer shell): super(shell) {
-    _element = new DOM.DivElement();
     _element.dataset['scNode'] = '${shell.uid}';
     _setElementAttributes();
     _setElementStyles();
+    _setClassName();
 
     _updateTiles();
     _registerEvents();
   }
 
   void _setClassName() {
-    _classNames.add(SC_CANVAS);
+    _classNames.add(_scCanvas);
     if (shell.hasAttribute(CLASS)) {
-      _classNames.addAll(getAttribute(CLASS).split(SPACE));
+      _classNames.addAll(getAttribute(CLASS).split(space));
     }
-    setAttribute(CLASS, _classNames.join(SPACE));
+    setAttribute(CLASS, _classNames.join(space));
   }
 
   void _setElementAttributes() {
@@ -31,9 +31,7 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     attrs.forEach(_setElementAttribute);
   }
 
-  Set<String> _getElementAttributeNames() {
-    return new Set<String>.from([ID, CLASS]);
-  }
+  Set<String> _getElementAttributeNames() => new Set<String>.from([ID, CLASS]);
 
   void _setElementAttribute(String attr) {
     var value = getAttribute(attr);
@@ -46,32 +44,31 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
 
   void _setElementStyles() {
     _element.style
-    ..position = ABSOLUTE
-    ..top = ZERO
-    ..left = ZERO
-    ..margin = ZERO
-    ..padding = ZERO
-    ..width = '${width}px'
-    ..height = '${height}px';
+      ..position = ABSOLUTE
+      ..top = ZERO
+      ..left = ZERO
+      ..margin = ZERO
+      ..padding = ZERO
+      ..width = '${width}px'
+      ..height = '${height}px';
   }
 
   void _updateTiles() {
-    if (width != null && width > 0 &&
-        height != null && height > 0) {
-      num nTilesInRow = (width / CanvasTile.MAX_WIDTH).ceil();
-      num nRows = (height / CanvasTile.MAX_HEIGHT).ceil();
-      num nTiles = 0;
-      num tileWidth = width / (width / CanvasTile.MAX_WIDTH).ceil();
-      num tileHeight = height / (height / CanvasTile.MAX_HEIGHT).ceil();
-      for (num i = 0; i < nRows; i++ ) {
-        for (num j = 0; j < nTilesInRow; j++) {
+    if (width != null && width > 0 && height != null && height > 0) {
+      var nTilesInRow = (width / CanvasTile.MAX_WIDTH).ceil();
+      var nRows = (height / CanvasTile.MAX_HEIGHT).ceil();
+      var nTiles = 0;
+      var tileWidth = width / (width / CanvasTile.MAX_WIDTH).ceil();
+      var tileHeight = height / (height / CanvasTile.MAX_HEIGHT).ceil();
+      for (int i = 0; i < nRows; i++) {
+        for (int j = 0; j < nTilesInRow; j++) {
           if ((i * nTilesInRow + j) < _tiles.length) {
-            CanvasTile tile = _tiles[nTiles];
+            var tile = _tiles[nTiles];
             _adjustTileSize(tile, tileWidth, tileHeight);
             ++nTiles;
             continue;
           } else {
-            CanvasTile tile = new CanvasTile(this, {
+            var tile = new CanvasTile({
               X: j * tileWidth,
               Y: i * tileHeight
             });
@@ -84,13 +81,13 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
       }
 
       while (nTiles < _tiles.length) {
-        CanvasTile tile = _tiles[nTiles];
+        var tile = _tiles[nTiles];
         tile.remove();
         _tiles.remove(tile);
       }
     }
 
-    _children.forEach((node) {
+    children.forEach((node) {
       node._updateTiles();
     });
   }
@@ -132,27 +129,27 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
   }
 
   void _onStageSet() {
-    if (_children.isNotEmpty) {
+    if (children.isNotEmpty) {
       AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
   }
 
   void addChild(CanvasGraphNode node) {
-    if (_children.isEmpty && stage != null) {
+    if (children.isEmpty && stage != null) {
       AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
 
-    _children.add(node);
+    children.add(node);
     node.parent = this;
     node._updateTiles();
   }
 
   void insertChild(int index, CanvasGraphNode node) {
-    if (_children.isEmpty) {
+    if (children.isEmpty) {
       AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
 
-    _children.insert(index, node);
+    children.insert(index, node);
     node.parent = this;
     node._updateTiles();
   }
@@ -165,15 +162,15 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     });
 
     node.parent = null;
-    _children.remove(node);
+    children.remove(node);
 
-    if (_children.isEmpty) {
+    if (children.isEmpty) {
       AnimationLoop.instance.unsubscribe(shell.uid.toString());
     }
   }
 
   void clearChildren() {
-    _children.forEach((node) {
+    children.forEach((node) {
       this.removeChild(node);
     });
   }
@@ -206,9 +203,11 @@ class CanvasLayer extends CanvasNode implements LayerImpl {
     parent = null;
   }
 
-  void translate() {}
+  void translate() {
+  }
 
-  List<CanvasNode> get children => _children;
-  DOM.Element get element => _element;
-  LayerImpl get layer => this;
+  dom.Element get element => _element;
+
+  @override
+  CanvasLayer get layer => this;
 }

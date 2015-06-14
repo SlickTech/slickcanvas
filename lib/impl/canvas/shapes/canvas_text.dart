@@ -6,18 +6,21 @@ class CanvasText extends CanvasGraphNode {
     shell.on('textChanged', _refresh);
   }
 
-  void _cacheGraph() {}
+  @override
+  void _cacheGraph() {
+  }
 
-  void __drawGraph(DOM.CanvasRenderingContext2D context) {
+  @override
+  void __drawGraph(dom.CanvasRenderingContext2D context) {
     context
-        ..beginPath()
-        ..font = shell.font;
+      ..beginPath()
+      ..font = shell.font;
 //        ..textBaseline = shell.textBaseline
 //        ..textAlign = shell.textAlign;
     context.closePath();
   }
 
-  void _fillGraph([DOM.CanvasRenderingContext2D context]) {
+  void _fillGraph([dom.CanvasRenderingContext2D context]) {
     if (context == null) {
       context = _cacheContext;
     }
@@ -38,7 +41,7 @@ class CanvasText extends CanvasGraphNode {
     }
   }
 
-  void _strokeGraph([DOM.CanvasRenderingContext2D context]) {
+  void _strokeGraph([dom.CanvasRenderingContext2D context]) {
     if (context == null) {
       context = _cacheContext;
     }
@@ -54,5 +57,6 @@ class CanvasText extends CanvasGraphNode {
     }
   }
 
+  @override
   Text get shell => super.shell;
 }

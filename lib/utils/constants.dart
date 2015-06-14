@@ -1,28 +1,25 @@
 part of smartcanvas;
 
-// canvas type
-const String svg = 'svg';
-const String canvas = 'canvas';
-
-const String SPACE = ' ';
-const String EMPTY = '';
-const String COMMA = ',';
+const String space = ' ';
+const String empty = '';
+const String comma = ',';
 
 // events
-const String MOUSEMOVE = 'mousemove';
-const String MOUSEDOWN = 'mousedown';
-const String MOUSEUP = 'mouseup';
-const String MOUSEENTER = 'mouseenter';
-const String MOUSELEAVE = 'mouseleave';
-const String MOUSEOVER = 'mouseover';
-const String MOUSEOUT = 'mouseout';
-const String CLICK = 'click';
-const String DBLCLICK = 'dblclick';
-const String DRAGSTART = 'dragstart';
-const String DRAGMOVE = 'dragmove';
-const String DRAGEND = 'dragend';
-const String CHANGED = 'Changed';
-const String ATTR_CHANGED = '*Changed';
+const String mouseMove = 'mousemove';
+const String mouseDown = 'mousedown';
+const String mouseUp = 'mouseup';
+const String mouseEnter = 'mouseenter';
+const String mouseLeave = 'mouseleave';
+const String mouseOver = 'mouseover';
+const String mouseOut = 'mouseout';
+const String click = 'click';
+const String dblClick = 'dblclick';
+const String dragStart = 'dragstart';
+const String dragMove = 'dragmove';
+const String dragEnd = 'dragend';
+const String changed = 'Changed';
+const String attrChanged = '*Changed';
+const String defAdded = 'defAdded';
 
 // attributes & styles
 const String X = 'x';
@@ -49,10 +46,6 @@ const String FONT_SIZE = 'font-size';
 const String FONT_FAMILY = 'font-family';
 const String FONT_WEIGHT = 'font-weight';
 const String FONT_STYLE = 'font-style';
-const String NORMAL = 'normal';
-const String BOLD = 'bold';
-const String BOLDER = 'bolder';
-const String LIGHTER = 'lighter';
 const String ID = 'id';
 const String CLASS = 'class';
 const String STYLE = 'style';
@@ -65,6 +58,10 @@ const String TEXT = 'text';
 const String PADDING = 'padding';
 const String POINTS = 'points';
 const String POSITION = 'position';
+const String normal = 'normal';
+const String bold = 'bold';
+const String bolder = 'bolder';
+const String lighter = 'lighter';
 const String LEFT = 'left';
 const String TOP = 'top';
 const String MARGIN = 'margin';
@@ -91,7 +88,6 @@ const String STOPS = 'stops';
 const String OFFSET = 'offset';
 const String COLOR = 'color';
 const String SPREAD_METHOD = 'spreadMethod';
-const String DEF_ADDED = 'defAdded';
 const String BACKGROUND = 'background';
 const String IS_STATIC = 'isStatic';
 const String HREF = 'href';
@@ -100,24 +96,7 @@ const String ROTATE = 'rotate';
 const String ROTATE_X = 'rotate_x';
 const String ROTATE_Y = 'rotate_y';
 const String NO_WRAP = 'nowrap';
-const String WORD_SPLITER = 'wordSpliter';
-
-// svg node names
-const String SC_LAYER = '__sc_layer';
-const String SC_GROUP = '__sc_group';
-const String SC_TEXT = '__sc_text';
-const String SC_RECT = '__sc_rect';
-const String SC_POLYLINE = '__sc_polyline';
-const String SC_POLYGON = '__sc_polygon';
-const String SC_PATH = '__sc_path';
-const String SC_LINE = '__sc_line';
-const String SC_ELLIPSE = '__sc_ellipse';
-const String SC_CIRCLE = '__sc_circle';
-const String SC_PATTERN = '__sc_pattern';
-const String SC_LINEAR_GRADIENT = '__sc_linear_gradient';
-const String SC_RADIAL_GRADIENT = '__sc_radial_gradient';
-const String SC_CANVAS = '__sc_canvas';
-const String SC_IMAGE = '__sc_image';
+const String WORD_SPLITTER = 'wordSplitter';
 
 // exception
 const String ExpNotImplemented = 'Not Implemented';

@@ -1,11 +1,15 @@
 part of smartcanvas.svg;
 
 class SvgDefLayerImpl {
-  Layer _layer = new Layer(svg, {ID: '__svg_def_layer'});
+
+  static const String _refCount = 'refCount';
+
+  final Layer _layer = new Layer(CanvasType.svg, {ID: '__svg_def_layer'});
+  final svg.DefsElement _defsEl = new svg.DefsElement();
+  final Map _suspendedDefs = {};
+
   SvgLayer _impl;
-  SVG.SvgElement _element;
-  SVG.DefsElement _defsEl = new SVG.DefsElement();
-  Map _suspendedDefs = {};
+  svg.SvgElement _element;
 
   SvgDefLayerImpl() {
     _impl = _layer.impl;
@@ -14,24 +18,24 @@ class SvgDefLayerImpl {
   }
 
   void addDef(Node defNode) {
-    SVG.SvgElement defImplEl = _element.querySelector('#${defNode.id}');
+    var defImplEl = _element.querySelector('#${defNode.id}');
     if (defImplEl == null) {
-      SvgNode defImpl = defNode.createImpl(svg);
+      SvgNode defImpl = defNode.createImpl(CanvasType.svg);
       defImplEl = defImpl.element;
       _defsEl.append(defImpl.element);
-      defImplEl.dataset['refCount'] = '1';
+      defImplEl.dataset[_refCount] = '1';
     } else {
-      defImplEl.dataset['refCount'] = '${int.parse(defImplEl.dataset['refCount']) + 1}';
+      defImplEl.dataset[_refCount] = '${int.parse(defImplEl.dataset[_refCount]) + 1}';
     }
-    defNode.fire(DEF_ADDED);
+    defNode.fire(defAdded);
   }
 
   void removeDef(Node defNode) {
-    SVG.SvgElement defImplEl = _element.querySelector('#${defNode.id}');
+    svg.SvgElement defImplEl = _element.querySelector('#${defNode.id}');
     if (defImplEl != null) {
-      num refCount = int.parse(defImplEl.dataset['refCount']);
-      if (--refCount > 0) {
-        defImplEl.dataset['refCount'] = refCount.toString();
+      num refCnt = int.parse(defImplEl.dataset[_refCount]);
+      if (--refCnt > 0) {
+        defImplEl.dataset[_refCount] = refCnt.toString();
       } else {
         defImplEl.remove();
       }
@@ -41,9 +45,9 @@ class SvgDefLayerImpl {
   void suspendDef(Node defNode) {
     String id = '${defNode.id}';
     if (!_suspendedDefs.containsKey(id)) {
-      SVG.SvgElement defImplEl = _element.querySelector('#$id');
+      svg.SvgElement defImplEl = _element.querySelector('#$id');
       if (defImplEl != null) {
-        var dummy = defImplEl.clone(true);
+        svg.SvgElement dummy = defImplEl.clone(true);
         dummy.classes.add("dummy");
         _suspendedDefs[id] = defImplEl;
         defImplEl.replaceWith(dummy);
@@ -54,7 +58,7 @@ class SvgDefLayerImpl {
   void resumeDef(Node defNode) {
     String id = '${defNode.id}';
     if (_suspendedDefs.containsKey(id)) {
-      SVG.SvgElement dummy = _element.querySelector('#$id');
+      svg.SvgElement dummy = _element.querySelector('#$id');
       if (dummy != null) {
         dummy.replaceWith(_suspendedDefs[id]);
         _suspendedDefs.remove(id);
@@ -64,10 +68,10 @@ class SvgDefLayerImpl {
 }
 
 class SvgDefLayer {
-  static Map<Stage, SvgDefLayerImpl> _impls = {};
+  static final Map<Stage, SvgDefLayerImpl> _impls = {};
 
   static SvgDefLayerImpl impl(Stage stage) {
-    SvgDefLayerImpl impl = _impls[stage];
+    var impl = _impls[stage];
     if (impl == null) {
       impl = _impls[stage] = new SvgDefLayerImpl();
       stage.insertChild(0, impl._layer);

@@ -2,39 +2,30 @@ part of smartcanvas;
 
 class _ReflectionLayer extends Layer {
 
-  _ReflectionLayer(Map<String, dynamic> config)
-      : super(svg, merge(config, {
-        ID: '__reflection_layer',
-        OPACITY: 0
-      }));
+  _ReflectionLayer([Map<String, dynamic> config = const {}])
+  : super(CanvasType.svg, merge(config, {
+    ID: '__reflection_layer',
+    OPACITY: 0
+  }));
 
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) => new SvgLayer(this, true);
+
+  @override
   void addChild(Node node) {
     if (node._reflection == null) {
       node._reflection = node._createReflection();
     }
 
-    _impl.addChild(node._reflection);
+    (impl as SvgLayer).addChild(node._reflection);
   }
 
+  @override
   void insertChild(int index, Node node) {
     if (node._reflection == null) {
       node._reflection = node._createReflection();
     }
-    _impl.insertChild(index, node._reflection);
-  }
-
-  void insertNode(Node node) {
-    // find next reflectable node in the same layer
-    Node nextReflectableNode = node.layer.firstReflectableNode(startIndex: node.layer._children.indexOf(node) + 1);
-    if (nextReflectableNode != null && nextReflectableNode._reflection != null) {
-      insertChild(_impl._children.indexOf(nextReflectableNode._reflection), node);
-    } else {
-      reflectNode(node);
-    }
-  }
-
-  void reflectionAdd(Node child) {
-    reflectNode(child);
+    (impl as SvgLayer).insertChild(index, node._reflection);
   }
 
   void reflectNode(Node node) {
@@ -50,12 +41,13 @@ class _ReflectionLayer extends Layer {
     var layerIndex = stage.children.indexOf(node_layer);
     bool reflectionAdded = false;
 
-    for (int i = layerIndex + 1,
-        len = _parent.children.length; i < len; i++) {
-      var layer = _parent.children[i];
+    for (int i = layerIndex + 1, len = _stage.children.length;
+    i < len; i++) {
+
+      Layer layer = _stage.children[i];
       var firstRefNode = layer.firstReflectableNode(excludeChild: true);
       if (firstRefNode != null && firstRefNode._reflection != null) {
-        var index = this._impl.children.indexOf(firstRefNode._reflection);
+        var index = (impl as SvgLayer).children.indexOf(firstRefNode._reflection);
         if (index != -1) {
           insertChild(index, node);
           reflectionAdded = true;

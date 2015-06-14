@@ -1,33 +1,27 @@
 part of smartcanvas.canvas;
 
-class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
+class CanvasTile extends NodeBase with Container<CanvasGraphNode> {
 
-  static num MAX_WIDTH = 800;
-  static num MAX_HEIGHT = 600;
+  static int MAX_WIDTH = 800;
+  static int MAX_HEIGHT = 600;
 
-  TransformMatrix _transformMatrix;
-
-  DOM.CanvasElement _element;
-  DOM.CanvasRenderingContext2D _context;
-  CanvasLayer _layer;
+  final dom.CanvasElement _element = new dom.CanvasElement();
+  dom.CanvasRenderingContext2D _context;
 
   bool _dirty = false;
-  bool _suspended =false;
-
-  List<CanvasGraphNode> _children = [];
+  bool _suspended = false;
 
   BBox _dirtyRagion;
   BBox _previousDirtyRagion;
 
-  CanvasTile(this._layer, Map<String, dynamic> config): super(config) {
-    _element = new DOM.CanvasElement();
+  CanvasTile(Map<String, dynamic> config): super(config) {
     _element.dataset['scNode'] = '${uid}';
 
     _setElementAttributes();
     _setElementStyles();
 
     _context = _element.context2D;
-    _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+    _context.scale(dom.window.devicePixelRatio, dom.window.devicePixelRatio);
 
     this
       ..on('widthChanged', _onWidthChanged)
@@ -35,11 +29,11 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
   }
 
   void _scaleCanvas() {
-      _element.setAttribute(WIDTH, '${this.width * DOM.window.devicePixelRatio}');
-      _element.setAttribute(HEIGHT, '${this.height * DOM.window.devicePixelRatio}');
-      _element.style.width = '${this.width}px';
-      _element.style.height = '${this.height}px';
-      _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+    _element.setAttribute(WIDTH, '${this.width * dom.window.devicePixelRatio}');
+    _element.setAttribute(HEIGHT, '${this.height * dom.window.devicePixelRatio}');
+    _element.style.width = '${this.width}px';
+    _element.style.height = '${this.height}px';
+    _context.scale(dom.window.devicePixelRatio, dom.window.devicePixelRatio);
   }
 
   void _setElementAttributes() {
@@ -52,7 +46,7 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     if (value != null) {
       if (value is! String || !value.isEmpty) {
         if ((attr == WIDTH || attr == HEIGHT)) {
-          value = value * DOM.window.devicePixelRatio;
+          value = value * dom.window.devicePixelRatio;
         }
         _element.attributes[attr] = '$value';
       }
@@ -61,34 +55,30 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
 
   void _setElementStyles() {
     _element.style
-    ..position = ABSOLUTE
-    ..top = '${y}px'
-    ..left = '${x}px'
-    ..margin = ZERO
-    ..padding = ZERO
-    ..borderWidth = ZERO
-    ..background = 'transparent'
-    ..width = '${width}px'
-    ..height = '${height}px';
+      ..position = ABSOLUTE
+      ..top = '${y}px'
+      ..left = '${x}px'
+      ..margin = ZERO
+      ..padding = ZERO
+      ..borderWidth = ZERO
+      ..background = 'transparent'
+      ..width = '${width}px'
+      ..height = '${height}px';
   }
 
-  Set<String> _getElementAttributeNames() {
-    return new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
-  }
+  Set<String> _getElementAttributeNames() => new Set<String>.from([ID, CLASS, WIDTH, HEIGHT]);
 
   void _onWidthChanged(newValue) {
     _element.style.width = '${newValue}px';
-    _element.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
+    _element.setAttribute(WIDTH, '${newValue * dom.window.devicePixelRatio}');
   }
 
   void _onHeightChanged(newValue) {
     _element.style.height = '${newValue}px';
-    _element.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
+    _element.setAttribute(HEIGHT, '${newValue * dom.window.devicePixelRatio}');
   }
 
-  void remove() {
-    _element.remove();
-  }
+  void remove() => _element.remove();
 
   void draw() {
     if (_suspended || _dirtyRagion == null) {
@@ -96,7 +86,7 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     }
 
     _context.save();
-    _context.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+    _context.scale(dom.window.devicePixelRatio, dom.window.devicePixelRatio);
 
     var left, top, right, bottom;
 
@@ -114,13 +104,13 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
       _context.clearRect(left - this.x, top - this.y, _dirtyRagion.width + 20, _dirtyRagion.height + 20);
     }
 
-    _children.forEach((node) {
+    children.forEach((node) {
       // only redraw node inside dirty ragion
       var bbox = node.shell.getBBox(true);
       if (bbox.left <= right &&
-          bbox.right >= left &&
-          bbox.top <= bottom &&
-          bbox.bottom >= top) {
+      bbox.right >= left &&
+      bbox.top <= bottom &&
+      bbox.bottom >= top) {
         _context.save();
         node.draw(this.x, this.y, _context);
         _context.restore();
@@ -140,42 +130,34 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     draw();
   }
 
-  void set x(num value) => setAttribute(X, value);
-  num get x => getAttribute(X, 0);
-
-  void set y(num value) => setAttribute(Y, value);
-  num get y => getAttribute(Y, 0);
-
-  void set width(num value) => setAttribute(WIDTH, value);
-  num get width => getAttribute(WIDTH, MAX_WIDTH);
-
-  void set height(num value) => setAttribute(HEIGHT, value);
-  num get height => getAttribute(HEIGHT, MAX_HEIGHT);
-
+  @override
   void addChild(CanvasGraphNode node) {
-    _children.add(node);
+    children.add(node);
   }
 
+  @override
   void removeChild(CanvasGraphNode node) {
-    _children.remove(node);
+    children.remove(node);
   }
 
+  @override
   void clearChildren() {
-    while(_children.isNotEmpty) {
-      _children.first.remove();
+    while (children.isNotEmpty) {
+      children.first.remove();
     }
   }
 
+  @override
   void insertChild(num index, CanvasGraphNode node) {
-    _children.insert(index, node);
+    children.insert(index, node);
   }
 
   void nodeDirty(BBox dirtyRagion) {
     if (_dirtyRagion == null) {
       _dirtyRagion = dirtyRagion;
     } else {
-      num x = min(_dirtyRagion.x, dirtyRagion.x);
-      num y = min(_dirtyRagion.y, dirtyRagion.y);
+      var x = min(_dirtyRagion.x, dirtyRagion.x);
+      var y = min(_dirtyRagion.y, dirtyRagion.y);
       _dirtyRagion = new BBox(
           x: x, y: y,
           width: max(_dirtyRagion.right, dirtyRagion.right) - x,
@@ -183,6 +165,21 @@ class CanvasTile extends NodeBase implements Container<CanvasGraphNode> {
     }
   }
 
-  List<CanvasGraphNode> get children => _children;
+  void set x(num value) => setAttribute(X, value);
+
+  num get x => getAttribute(X, 0);
+
+  void set y(num value) => setAttribute(Y, value);
+
+  num get y => getAttribute(Y, 0);
+
+  void set width(num value) => setAttribute(WIDTH, value);
+
+  num get width => getAttribute(WIDTH, MAX_WIDTH);
+
+  void set height(num value) => setAttribute(HEIGHT, value);
+
+  num get height => getAttribute(HEIGHT, MAX_HEIGHT);
+
   bool get dirty => _dirty;
 }

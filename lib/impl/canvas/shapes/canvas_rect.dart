@@ -12,6 +12,7 @@ class CanvasRect extends CanvasGraphNode {
     });
   }
 
+  @override
   void _cacheGraph() {
     if (shell.rx == null) {
       shell.rx = shell.ry;
@@ -33,11 +34,13 @@ class CanvasRect extends CanvasGraphNode {
     _cacheContext.closePath();
   }
 
-  void __drawGraph(DOM.CanvasRenderingContext2D context) {
+  @override
+  void __drawGraph(dom.CanvasRenderingContext2D context) {
     context.beginPath();
     context.rect(0, 0, width, height);
     context.closePath();
   }
 
+  @override
   Rect get shell => super.shell;
 }

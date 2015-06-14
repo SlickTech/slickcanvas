@@ -2,12 +2,12 @@ part of smartcanvas;
 
 class Text extends Node {
 
-  static TextMeasure _textMeasure = new TextMeasure();
+  static final TextMeasure _textMeasure = new TextMeasure();
   static const String PX_SPACE = 'px ';
 
   List<String> _parts = [];
 
-  Text(Map<String, dynamic> config): super(config) {
+  Text([Map<String, dynamic> config = const {}]) : super(config) {
     _updateParts();
 
     this
@@ -15,13 +15,15 @@ class Text extends Node {
       ..on('widthChange', _updateParts);
   }
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgText(this, isReflection);
-  }
+  @override
+  Node _clone(Map<String, dynamic> config) => new Text(config);
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasText(this);
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) =>
+    new SvgText(this, isReflection);
+
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasText(this);
 
   static num measureText(String font, String text) {
     return _textMeasure.measureText(font, text);
@@ -39,12 +41,12 @@ class Text extends Node {
       _parts = [this.text];
     } else {
       if (Text.measureText(font, text) > getAttribute(WIDTH)) {
-        List<String> words = text.split(wordSpliter);
-        num i = 0;
-        String partial = EMPTY;
-        String t;
-        while(i < words.length) {
-          t = (partial.isEmpty ? EMPTY : wordSpliter) + words[i];
+        var words = text.split(wordSplitter);
+        var i = 0;
+        var partial = empty;
+        var t;
+        while (i < words.length) {
+          t = (partial.isEmpty ? empty : wordSplitter) + words[i];
           if (Text.measureText(font, partial + t) > getAttribute(WIDTH)) {
             if (partial.isEmpty) {
               // The only word is too long to fit
@@ -52,7 +54,7 @@ class Text extends Node {
               ++i;
             } else {
               _parts.add(partial);
-              partial = EMPTY;
+              partial = empty;
             }
           } else {
             partial += t;
@@ -97,25 +99,24 @@ class Text extends Node {
   num get fontSize => getAttribute(FONT_SIZE, 12);
 
   void set fontWeight(String value) => setAttribute(FONT_WEIGHT, value);
-  String get fontWeight => getAttribute(FONT_WEIGHT, NORMAL);
+  String get fontWeight => getAttribute(FONT_WEIGHT, normal);
 
   /**
    * get font.
    */
-  String get font {
-    return '$fontSize' + PX_SPACE + fontFamily;
-  }
+  String get font => '$fontSize' + PX_SPACE + fontFamily;
 
   /**
    * set/get padding
    */
-  void set padding (num value) => setAttribute(PADDING, value);
+  void set padding(num value) => setAttribute(PADDING, value);
   num get padding => getAttribute(PADDING, 0);
 
+  @override
   num get width {
-    num rt = 0;
+    var rt = 0;
     _parts.forEach((t) {
-      num w = measureText(font,t);
+      num w = measureText(font, t);
       if (rt < w) {
         rt = w;
       }
@@ -123,9 +124,8 @@ class Text extends Node {
     return rt;
   }
 
-  num get height {
-    return fontSize * _parts.length;
-  }
+  @override
+  num get height => fontSize * _parts.length;
 
   void set textAnchor(String value) => setAttribute(TEXT_ANCHOR, value);
   String get textAnchor => getAttribute(TEXT_ANCHOR);
@@ -133,11 +133,12 @@ class Text extends Node {
   void set noWrap(bool value) => setAttribute(NO_WRAP, value);
   bool get noWrap => getAttribute(NO_WRAP, true);
 
-  void set wordSpliter(String value) => setAttribute(WORD_SPLITER, value);
-  String get wordSpliter => getAttribute(WORD_SPLITER, ' ');
+  void set wordSplitter(String value) => setAttribute(WORD_SPLITTER, value);
+  String get wordSplitter => getAttribute(WORD_SPLITTER, ' ');
 
+  @override
   BBox getBBox(bool isAbsolute) {
-    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(x: pos.x, y: pos.y - fontSize, width: this.width, height: this.height);
   }
 }

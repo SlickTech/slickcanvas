@@ -1,18 +1,20 @@
 part of smartcanvas.svg;
 
-bool _isMobile = isMobile();
-
 abstract class SvgNode extends NodeImpl {
-  SVG.SvgElement _element;
 
-  bool _dragstarting = false;
+  static final bool _isMobile = isMobile();
+
+  svg.SvgElement _element;
+
+  bool _dragStarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
   num _dragOffsetX;
   num _dragOffsetY;
 
-  Set<String> _classNames = new Set<String>();
-  Set<String> _registeredDOMEvents = new Set<String>();
+  final Set<String> _classNames = new Set<String>();
+  final Set<String> _registeredDOMEvents = new Set<String>();
+
   var _dragMoveHandler;
   var _dragEndHandler;
   bool _isReflection;
@@ -28,7 +30,7 @@ abstract class SvgNode extends NodeImpl {
 
     transform();
 
-    if (shell.listening) {
+    if (shell.isListening) {
       shell.eventListeners.forEach((k, v) {
         _registerEvent(k, v);
       });
@@ -40,7 +42,7 @@ abstract class SvgNode extends NodeImpl {
         _startDragHandling();
       }
 
-      this.shell.on('draggableChanged', (newValue) {
+      shell.on('draggableChanged', (newValue) {
         if (newValue) {
           _startDragHandling();
         } else {
@@ -49,55 +51,51 @@ abstract class SvgNode extends NodeImpl {
       });
     }
 
-    this.shell
+    shell
       ..on('translateXChanged', transform)
       ..on('translateYChanged', transform)
       ..on('scaleXChanged', transform)
       ..on('scaleYChanged', transform)
       ..on('rotationChanged', transform)
-      ..on(ATTR_CHANGED, _handleAttrChange);
+      ..on(attrChanged, _handleAttrChange);
   }
 
-  String get type => svg;
+  @override
+  CanvasType get type => CanvasType.svg;
 
-  SVG.SvgElement get element => _element;
+  svg.SvgElement get element => _element;
 
-  SVG.SvgElement _createElement();
+  svg.SvgElement _createElement();
 
   void _setClassName() {
     _classNames.add(_nodeName);
     if (shell.hasAttribute(CLASS)) {
-      _classNames.addAll(getAttribute(CLASS).split(SPACE));
+      _classNames.addAll(getAttribute(CLASS).split(space));
     }
-    setAttribute(CLASS, _classNames.join(SPACE));
+    setAttribute(CLASS, _classNames.join(space));
   }
 
-  void _startDragHandling() {
+  void _startDragHandling() =>
     _element.onMouseDown.listen(dragStart).resume();
-  }
 
   void _stopDragHandling() {
     _element.onMouseDown.listen(dragStart).cancel();
     _dragEnd();
   }
 
-  Set<String> _getElementAttributeNames() {
-    return new Set<String>.from([ID, CLASS]);
-  }
+  Set<String> _getElementAttributeNames() => new Set<String>.from([ID, CLASS]);
 
-  List<String> _getStyleNames() {
-    return [
-      STROKE,
-      STROKE_WIDTH,
-      STROKE_OPACITY,
-      STROKE_LINECAP,
-      STROKE_DASHARRAY,
-      FILL,
-      FILL_OPACITY,
-      OPACITY,
-      DISPLAY
-    ];
-  }
+  List<String> _getStyleNames() => [
+    STROKE,
+    STROKE_WIDTH,
+    STROKE_OPACITY,
+    STROKE_LINECAP,
+    STROKE_DASHARRAY,
+    FILL,
+    FILL_OPACITY,
+    OPACITY,
+    DISPLAY
+  ];
 
   void _setElementAttributes() {
     var attrs = _getElementAttributeNames();
@@ -126,17 +124,16 @@ abstract class SvgNode extends NodeImpl {
         if (_isReflection) {
           _element.style.setProperty(name, 'trasparent');
         } else {
-          var baseTag = DOM.document.querySelector('base');
+          var baseTag = dom.document.querySelector('base');
           if (baseTag == null) {
             _element.style.setProperty(name, 'url(#${value.id})');
 
             // On FireFox there is some strageness, the fill parrtern or gradient
             // is not always take effect. This is hack to force FireFox repaint the
             // the block so that pattern and gradient can show up.
-            if (DOM.window.navigator.userAgent
-                .toLowerCase()
-                .contains('firefox')) {
-              value.on(DEF_ADDED, () {
+            if (dom.window.navigator.userAgent
+            .toLowerCase().contains('firefox')) {
+              value.on(defAdded, () {
                 _element.style.setProperty(name, 'transparent');
                 new Future.delayed(new Duration(seconds: 0), () {
                   _element.style.setProperty(name, 'url(#${value.id})');
@@ -150,7 +147,7 @@ abstract class SvgNode extends NodeImpl {
             }
           } else {
             void _setFillUrl(Timer t) {
-              String newLocation = DOM.window.location.toString();
+              var newLocation = dom.window.location.toString();
               if (newLocation == _oldLocation) {
                 return;
               }
@@ -159,7 +156,7 @@ abstract class SvgNode extends NodeImpl {
 
               if (newLocation.contains('#')) {
                 newLocation =
-                    newLocation.substring(0, newLocation.indexOf('#'));
+                newLocation.substring(0, newLocation.indexOf('#'));
               }
 
               _element.style.setProperty(
@@ -168,10 +165,9 @@ abstract class SvgNode extends NodeImpl {
               // On FireFox there is some strageness, the fill parrtern or gradient
               // is not always take effect. This is hack to force FireFox repaint the
               // the block so that pattern and gradient can show up.
-              if (DOM.window.navigator.userAgent
-                  .toLowerCase()
-                  .contains('firefox')) {
-                value.on(DEF_ADDED, () {
+              if (dom.window.navigator.userAgent
+              .toLowerCase().contains('firefox')) {
+                value.on(defAdded, () {
                   _element.style.setProperty(name, 'transparent');
                   new Future.delayed(new Duration(seconds: 0), () {
                     _element.style.setProperty(
@@ -198,6 +194,7 @@ abstract class SvgNode extends NodeImpl {
     }
   }
 
+  @override
   void remove() {
     if (_locationCheckTimer != null) {
       _locationCheckTimer.cancel();
@@ -215,66 +212,60 @@ abstract class SvgNode extends NodeImpl {
     parent = null;
   }
 
-  void _registerEvent(String event, EventHandlers handler) {
+  void _registerEvent(String event, EventHandlers handlers) {
     if (isDomEvent(event)) {
       if (_isReflection && !_registeredDOMEvents.contains(event)) {
-        Function eventHandler = fireEvent(handler);
         _registeredDOMEvents.add(event);
         switch (event) {
-          case MOUSEDOWN:
-            _element.onMouseDown.listen(eventHandler);
+          case mouseDown:
+            _element.onMouseDown.listen((e) => handlers(e));
             break;
-          case MOUSEUP:
-            _element.onMouseUp.listen(eventHandler);
+          case mouseUp:
+            _element.onMouseUp.listen((e) => handlers(e));
             break;
-          case MOUSEENTER:
-            _element.onMouseEnter.listen(eventHandler);
+          case mouseEnter:
+            _element.onMouseEnter.listen((e) => handlers(e));
             break;
-          case MOUSELEAVE:
-            _element.onMouseLeave.listen(eventHandler);
+          case mouseLeave:
+            _element.onMouseLeave.listen((e) => handlers(e));
             break;
-          case MOUSEOVER:
-            _element.onMouseOver.listen(eventHandler);
+          case mouseOver:
+            _element.onMouseOver.listen((e) => handlers(e));
             break;
-          case MOUSEOUT:
-            _element.onMouseOut.listen(eventHandler);
+          case mouseOut:
+            _element.onMouseOut.listen((e) => handlers(e));
             break;
-          case MOUSEMOVE:
+          case mouseMove:
             _element.onMouseMove.listen(_onMouseMove);
             break;
-          case CLICK:
-            _element.onClick.listen(eventHandler);
+          case click:
+            _element.onClick.listen((e) => handlers(e));
             break;
-          case DBLCLICK:
-            _element.onDoubleClick.listen(eventHandler);
+          case dblClick:
+            _element.onDoubleClick.listen((e) => handlers(e));
             break;
         }
       }
     } else {
-      Function eventHandler = fireEvent(handler);
-      _element.on[event].listen(eventHandler);
+      _element.on[event].listen((e) => handlers(e));
     }
   }
 
-  Function fireEvent(EventHandlers handlers) {
-    return (e) => handlers(e);
-  }
-
-  void dragStart(DOM.MouseEvent e) {
+  void dragStart(dom.MouseEvent e) {
     if (e.button != 0 ||
-        (DOM.window.navigator.userAgent.contains('Mac OS') &&
-            e.ctrlKey) || // simulated right click on Mac
-        stage.dragging || _dragstarting) {
+    (dom.window.navigator.userAgent.contains('Mac OS') &&
+    e.ctrlKey) || // simulated right click on Mac
+    stage.isDragging || _dragStarting) {
       return;
     }
 
     e.preventDefault();
     e.stopPropagation();
-    this._dragstarting = true;
+    _dragStarting = true;
 
     var pointerPosition = this.stage.pointerPosition;
-    this._dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX;
-    this._dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY;
+    _dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX;
+    _dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -296,7 +287,7 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void _dragMove(e) {
-    if (_dragstarting) {
+    if (_dragStarting) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -309,7 +300,7 @@ abstract class SvgNode extends NodeImpl {
       shell.translateX = (pointerPosition.x - this._dragOffsetX);
       shell.translateY = (pointerPosition.y - this._dragOffsetY);
 
-      shell.fire(DRAGMOVE, e);
+      shell.fire(dragMove, e);
     }
   }
 
@@ -319,11 +310,11 @@ abstract class SvgNode extends NodeImpl {
       e.stopPropagation();
     }
 
-    _dragstarting = false;
+    _dragStarting = false;
     _dragging = false;
 
     if (_dragStarted) {
-      shell.fire(DRAGEND, e);
+      shell.fire(dragEnd, e);
     }
     _dragStarted = false;
 
@@ -338,9 +329,9 @@ abstract class SvgNode extends NodeImpl {
     }
   }
 
-  void _onMouseMove(DOM.MouseEvent e) {
+  void _onMouseMove(dom.MouseEvent e) {
     if (!_dragging) {
-      shell.fire(MOUSEMOVE, e);
+      shell.fire(mouseMove, e);
     }
   }
 
@@ -380,9 +371,7 @@ abstract class SvgNode extends NodeImpl {
     }
   }
 
-  bool _isStyle(String attr) {
-    return _getStyleNames().contains(attr);
-  }
+  bool _isStyle(String attr) => _getStyleNames().contains(attr);
 
   String _mapToElementAttr(String attr) {
     if (_getElementAttributeNames().contains(attr)) {
@@ -392,13 +381,12 @@ abstract class SvgNode extends NodeImpl {
   }
 
   void transform() {
-    num r = shell.rotate;
-    SVG.Matrix matrix = new SVG.SvgSvgElement().createSvgMatrix();
+    var r = shell.rotate;
+    var matrix = new svg.SvgSvgElement().createSvgMatrix();
 
     if (r != null) {
-      var pos = shell.absolutePosition;
-      num rx = shell.x + shell.getAttribute(ROTATE_X, 0);
-      num ry = shell.y + shell.getAttribute(ROTATE_Y, 0);
+      var rx = shell.x + shell.getAttribute(ROTATE_X, 0);
+      var ry = shell.y + shell.getAttribute(ROTATE_Y, 0);
       if (rx != 0 || ry != 0) {
         matrix = matrix.translate(rx, ry);
         matrix = matrix.rotate(r);
@@ -413,12 +401,11 @@ abstract class SvgNode extends NodeImpl {
     _setTransform(matrix);
   }
 
-  void _setTransform(SVG.Matrix matrix) {
+  void _setTransform(svg.Matrix matrix) {
     try {
-      if (_element is SVG.GraphicsElement) {
-        SVG.GraphicsElement el = _element as SVG.GraphicsElement;
-        SVG.Transform tr =
-            el.transform.baseVal.createSvgTransformFromMatrix(matrix);
+      if (_element is svg.GraphicsElement) {
+        var el = _element as svg.GraphicsElement;
+        var tr = el.transform.baseVal.createSvgTransformFromMatrix(matrix);
         if (el.transform.baseVal.numberOfItems == 0) {
           el.transform.baseVal.appendItem(tr);
         } else {
@@ -435,7 +422,7 @@ abstract class SvgNode extends NodeImpl {
   bool get isDragging => _dragging;
 
   List get _defs {
-    List defs = [];
+    var defs = [];
 
     // don't add defs on reflecton layer
     if (_isReflection) {
@@ -451,6 +438,4 @@ abstract class SvgNode extends NodeImpl {
     }
     return defs;
   }
-
-  SvgLayer get layer => super.layer;
 }

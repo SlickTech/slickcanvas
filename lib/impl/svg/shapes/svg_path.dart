@@ -1,27 +1,32 @@
 part of smartcanvas.svg;
 
 class SvgPath extends SvgNode {
-    SvgPath(Path shell, bool isReflection) : super(shell, isReflection) {
-        this.shell.on('dChanged', () => _setElementAttribute(D));
-    }
+  SvgPath(Path shell, bool isReflection) : super(shell, isReflection) {
+    this.shell.on('dChanged', () => _setElementAttribute(D));
+  }
 
-    SVG.SvgElement _createElement() {
-        return new SVG.PathElement();
-    }
+  @override
+  svg.SvgElement _createElement() => new svg.PathElement();
 
-    Set<String> _getElementAttributeNames() {
-        var attrs = super._getElementAttributeNames();
-        attrs.addAll([D]);
-        return attrs;
-    }
+  @override
+  Set<String> _getElementAttributeNames() {
+    var attrs = super._getElementAttributeNames();
+    attrs.addAll([D]);
+    return attrs;
+  }
 
-    List<String> _getStyleNames() {
-        var rt = super._getStyleNames();
-        rt.addAll([STROKE_LINE_JOIN, STROKE_LINECAP]);
-        return rt;
-    }
+  @override
+  List<String> _getStyleNames() {
+    var rt = super._getStyleNames();
+    rt.addAll([STROKE_LINE_JOIN, STROKE_LINECAP]);
+    return rt;
+  }
 
-    String get _nodeName => SC_PATH;
+  static const String _scPath = '__sc_path';
 
-    SVG.PathElement get element => super.element;
+  @override
+  String get _nodeName => _scPath;
+
+  @override
+  svg.PathElement get element => super.element;
 }

@@ -4,13 +4,14 @@ abstract class CanvasGraphNode extends CanvasNode {
 
   bool _dirty = false;
   bool _useCache = false;
-  DOM.CanvasElement _cacheCanvas;
-  DOM.CanvasRenderingContext2D _cacheContext;
+
+  final dom.CanvasElement _cacheCanvas = new dom.CanvasElement();
+  dom.CanvasRenderingContext2D _cacheContext;
+
   BBox _oldBBox = new BBox(x: double.MAX_FINITE, y: double.MAX_FINITE,
-      width: -double.MAX_FINITE, height: -double.MAX_FINITE);
+  width: -double.MAX_FINITE, height: -double.MAX_FINITE);
 
   CanvasGraphNode(Node shell): super(shell) {
-    _cacheCanvas = new DOM.CanvasElement();
     _cacheContext = _cacheCanvas.context2D;
 
     _setElementAttributes();
@@ -21,15 +22,15 @@ abstract class CanvasGraphNode extends CanvasNode {
       ..on('translateYChanged', () => _refresh())
       ..on('widthChanged', _onWidthChanged)
       ..on('heighChanged', _onHeightChanged)
-      ..on(ATTR_CHANGED, () {
-        if (_useCache) {
-          _updateCache(true);
-        } else {
-          _tiles.forEach((tile) {
-            tile.nodeDirty(this.shell.getBBox(true));
-          });
-          _oldBBox = shell.getBBox(true);
-        }
+      ..on(attrChanged, () {
+      if (_useCache) {
+        _updateCache(true);
+      } else {
+        _tiles.forEach((tile) {
+          tile.nodeDirty(this.shell.getBBox(true));
+        });
+        _oldBBox = shell.getBBox(true);
+      }
     });
 
     new Future.delayed(new Duration(seconds:0), () {
@@ -38,7 +39,7 @@ abstract class CanvasGraphNode extends CanvasNode {
       }
     });
 
-    _cacheContext.scale(DOM.window.devicePixelRatio, DOM.window.devicePixelRatio);
+    _cacheContext.scale(dom.window.devicePixelRatio, dom.window.devicePixelRatio);
   }
 
   void _setElementAttributes() {
@@ -51,7 +52,7 @@ abstract class CanvasGraphNode extends CanvasNode {
     if (value != null) {
       if (value is! String || !value.isEmpty) {
         if ((attr == WIDTH || attr == HEIGHT)) {
-          value = value * DOM.window.devicePixelRatio;
+          value = value * dom.window.devicePixelRatio;
         }
         _cacheCanvas.attributes[attr] = '$value';
       }
@@ -60,13 +61,13 @@ abstract class CanvasGraphNode extends CanvasNode {
 
   void _onWidthChanged(newValue) {
     _cacheCanvas.style.width = '${newValue}px';
-    _cacheCanvas.setAttribute(WIDTH, '${newValue * DOM.window.devicePixelRatio}');
+    _cacheCanvas.setAttribute(WIDTH, '${newValue * dom.window.devicePixelRatio}');
     _refresh(true);
   }
 
   void _onHeightChanged(newValue) {
     _cacheCanvas.style.height = '${newValue}px';
-    _cacheCanvas.setAttribute(HEIGHT, '${newValue * DOM.window.devicePixelRatio}');
+    _cacheCanvas.setAttribute(HEIGHT, '${newValue * dom.window.devicePixelRatio}');
     _refresh(true);
   }
 
@@ -104,16 +105,17 @@ abstract class CanvasGraphNode extends CanvasNode {
     _oldBBox = shell.getBBox(true);
   }
 
-  void _drawGraph(DOM.CanvasRenderingContext2D context) {
+  void _drawGraph(dom.CanvasRenderingContext2D context) {
     __drawGraph(context);
     _fillGraph(context);
     _strokeGraph(context);
   }
 
   void _cacheGraph();
-  void __drawGraph(DOM.CanvasRenderingContext2D context);
 
-  void _fillGraph([DOM.CanvasRenderingContext2D context]) {
+  void __drawGraph(dom.CanvasRenderingContext2D context);
+
+  void _fillGraph([dom.CanvasRenderingContext2D context]) {
     if (context == null) {
       context = _cacheContext;
     }
@@ -132,7 +134,7 @@ abstract class CanvasGraphNode extends CanvasNode {
     }
   }
 
-  void _strokeGraph([DOM.CanvasRenderingContext2D context]) {
+  void _strokeGraph([dom.CanvasRenderingContext2D context]) {
     if (context == null) {
       context = _cacheContext;
     }
@@ -146,14 +148,13 @@ abstract class CanvasGraphNode extends CanvasNode {
   }
 
   void _updateTiles() {
-    List<CanvasTile> newTiles = [];
-    BBox bbox = this.shell.getBBox(true);
-    num i = 0;
+    var newTiles = [];
+    var bbox = this.shell.getBBox(true);
     layer._tiles.forEach((tile) {
       if (bbox.left <= (tile.x + tile.width) &&
-          bbox.right >= tile.x &&
-          bbox.top <= (tile.y + tile.height) &&
-          bbox.bottom >= tile.y) {
+      bbox.right >= tile.x &&
+      bbox.top <= (tile.y + tile.height) &&
+      bbox.bottom >= tile.y) {
         if (!tile.children.contains(this)) {
           tile.addChild(this);
           tile.nodeDirty(this.shell.getBBox(true));
@@ -163,13 +164,12 @@ abstract class CanvasGraphNode extends CanvasNode {
         tile.children.remove(this);
         tile.nodeDirty(this.shell.getBBox(true));
       }
-      i++;
     });
     this._tiles = newTiles;
     _oldBBox = shell.getBBox(true);
   }
 
-  void draw(num offsetX, num offsetY, DOM.CanvasRenderingContext2D context) {
+  void draw(num offsetX, num offsetY, dom.CanvasRenderingContext2D context) {
     var matrix = shell.transformMatrix;
     context.save();
 
@@ -187,8 +187,8 @@ abstract class CanvasGraphNode extends CanvasNode {
     context.transform(matrix.m11, matrix.m12, matrix.m21, matrix.m22, shell.x - offsetX, shell.y - offsetY);
 
     if (_useCache) {
-      context.drawImageScaled(_cacheCanvas, 0, 0, _cacheCanvas.width / DOM.window.devicePixelRatio,
-          _cacheCanvas.height / DOM.window.devicePixelRatio);
+      context.drawImageScaled(_cacheCanvas, 0, 0, _cacheCanvas.width / dom.window.devicePixelRatio,
+      _cacheCanvas.height / dom.window.devicePixelRatio);
     } else {
       _drawGraph(context);
     }

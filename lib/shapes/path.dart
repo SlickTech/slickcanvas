@@ -5,11 +5,15 @@ class Path extends Node {
   SvgPath _svgImpl;
   var _bbox = null;
 
-  Path(Map<String, dynamic> config): super(config) {
+  Path([Map<String, dynamic> config = const {}]) : super(config) {
     _svgImpl = _createSvgImpl(false);
     this.on('dChanged', () => _bbox = null);
   }
 
+  @override
+  Node _clone(Map<String, dynamic> config) => new Path(config);
+
+  @override
   NodeImpl _createSvgImpl([bool isReflection = false]) {
     if (isReflection) {
       return new SvgPath(this, isReflection);
@@ -19,30 +23,28 @@ class Path extends Node {
     return _svgImpl;
   }
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasPath(this);
-  }
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasPath(this);
 
-  List<SVG.PathSeg> get pathSeg {
-    return _svgImpl.element.pathSegList;
-  }
+  List<svg.PathSeg> get pathSeg => _svgImpl.element.pathSegList;
 
+  @override
   BBox getBBox(bool isAbsolute) {
     if (this.stage != null) {
       if (_bbox != null) {
         var halfStrokeWidth = this.strokeWidth / 2;
         return new BBox(x: this.x + _bbox.x - halfStrokeWidth, y: this.y + _bbox.y - halfStrokeWidth,
-            width: _bbox.width + this.strokeWidth, height: _bbox.height + this.strokeWidth);
+        width: _bbox.width + this.strokeWidth, height: _bbox.height + this.strokeWidth);
       }
 
       var reflection = this.reflection;
       if (reflection == null) {
         reflection = this._createReflection();
-        (this.stage._reflectionLayer.impl as Container).addChild(reflection);
+        (stage._reflectionLayer.impl as SvgLayer).addChild(reflection);
       }
       _bbox = (reflection as SvgPath).element.getBBox();
       var rt = new BBox(x: this.x + _bbox.x, y: this.y + _bbox.y,
-          width: _bbox.width, height: _bbox.height);
+      width: _bbox.width, height: _bbox.height);
 
       if (this.reflection == null) {
         reflection.remove();
@@ -55,11 +57,13 @@ class Path extends Node {
   void set d(String value) => setAttribute(D, value);
   String get d => getAttribute(D);
 
+  @override
   num get width {
     var bbox = getBBox(true);
     return bbox.right;
   }
 
+  @override
   num get height {
     var bbox = getBBox(true);
     return bbox.bottom;

@@ -1,3 +1,14 @@
+#0.2.0
+* Fixed errors complained by dev-compiler.
+* Changed styles according to dart style guid.
+* Fixed path drawing for canvas
+* Added AnimLoopStatu enum
+* BREAKING CHANGE - renamed event const strings from MOUSEUP, MOUSEDOWN, MOUSEMOVE, MOUSELEAVE, MOUSEOVER, MOUSEOUT,
+CLICK, DBLCLICK, DRAGSTART, DRAGEND, DRAGMOVE, CHANGED, ATTR_CHANGED to mouseUp, mouseDown, mouseMove, mouseLeave, 
+mouseOver, mouseOut, click, delClick, dragStart, dragEnd, dragMove, changed, attrChanged.
+* BREAKING CHANGE - added CanvasType enum, Layer type should be specified by CanvasType instead.
+
+
 #0.1.9
 * Fixed an issue where node jump to different location during drag move if stage panned or zoomed.
 * Fixed an issue where node dragging stopped working after panning stage.

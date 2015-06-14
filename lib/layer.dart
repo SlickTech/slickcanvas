@@ -1,85 +1,85 @@
 part of smartcanvas;
 
 class Layer extends Group {
-  Stage _parent;
-  LayerImpl _impl;
-  String _type;
+  Stage _stage;
+  final CanvasType type;
 
-  Layer(this._type, Map<String, dynamic> config) : super(config) {
-    _layer = this;
-    _impl = createImpl(_type);
+  Layer(this.type, [Map<String, dynamic> config = const {}]) : super(config) {
+    _impl = createImpl(type);
   }
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return  new SvgLayer(this, isReflection);
-  }
+  @override
+  Node _createNewInstance(Map<String, dynamic> config) => new Layer(this.type, config);
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasLayer(this);
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) => new SvgLayer(this, isReflection);
 
-  Layer _clone() {
-     return new Layer(_type, _attrs);
-  }
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasLayer(this);
 
   void suspend() {
     if (_impl != null) {
-      _impl.suspend();
+      (_impl as LayerImpl).suspend();
     }
   }
 
   void resume() {
     if (_impl != null) {
-      _impl.resume();
+      (_impl as LayerImpl).resume();
     }
   }
 
-  void _handleStageDragMove(e) {
-    _transformMatrix.translateX = _parent._transformMatrix.translateX;
-    _transformMatrix.translateY = _parent._transformMatrix.translateY;
-    fire('translateChanged');
-  }
-
+  @override
   void remove() {
-    if (_parent != null) {
+    if (_stage != null) {
       if (_impl != null) {
         _impl.remove();
       }
 
       if (_reflection != null) {
-        _children.forEach((child) {
+        children.forEach((child) {
           if (child._reflection != null) {
             child._reflection.remove();
           }
         });
       }
 
-      _parent.children.remove(this);
-      String sUid = uid.toString();
-      _parent
+      _stage.children.remove(this);
+      var sUid = uid.toString();
+      _stage
         ..off('widthChanged', sUid)
         ..off('heightChanged', sUid);
-      _parent = null;
+      _stage = null;
     }
   }
 
+  @override
   Layer get layer => this;
 
-  String get type => _type;
+  @override
+  LayerImpl get impl => _impl;
 
   void set stage(Stage value) {
-    _parent = value;
-    _transformMatrix = _parent._transformMatrix;
+    _stage = value;
+    _transformMatrix = _stage._transformMatrix;
 
-    String sUid = uid.toString();
-    _parent
-      ..on('widthChanged', (newValue) { width = newValue; }, sUid)
-      ..on('heightChanged', (newValue) { height = newValue; }, sUid);
+    var sUid = uid.toString();
+    _stage
+      ..on('widthChanged', (newValue) {
+      width = newValue;
+    }, sUid)
+      ..on('heightChanged', (newValue) {
+      height = newValue;
+    }, sUid);
     fire('stageSet');
   }
-  Stage get stage => _parent;
 
+  Stage get stage => _stage;
+
+  @override
   num get width => getAttribute(WIDTH);
+
+  @override
   num get height => getAttribute(HEIGHT);
 
   void set background(String value) => setAttribute(BACKGROUND, value);

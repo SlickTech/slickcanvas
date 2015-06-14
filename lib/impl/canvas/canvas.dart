@@ -1,8 +1,8 @@
 library smartcanvas.canvas;
 
-import 'dart:html' as DOM;
+import 'dart:html' as dom;
 import 'dart:math';
-import 'dart:svg' as SVG;
+import 'dart:svg' as svg;
 import 'dart:async';
 
 import '../../smartcanvas.dart';

@@ -1,13 +1,14 @@
 part of smartcanvas;
 
 class RadialGradient extends Gradient {
-  RadialGradient(Map<String, dynamic> config): super(config) {}
+  RadialGradient([Map<String, dynamic> config = const {}]) : super(config);
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgRadialGradient(this);
-  }
+  @override
+  Node _clone(Map<String, dynamic> config) => new RadialGradient(config);
 
-  NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) => new SvgRadialGradient(this);
+
+  @override
+  NodeImpl _createCanvasImpl() => throw ExpNotImplemented;
 }

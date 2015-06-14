@@ -1,19 +1,20 @@
 part of smartcanvas.svg;
 
-class SvgCircle extends SvgNode{
+class SvgCircle extends SvgNode {
 
-  SvgCircle(Circle shell, bool isReflection): super(shell, isReflection) {}
+  SvgCircle(Circle shell, bool isReflection): super(shell, isReflection);
 
-  SVG.SvgElement _createElement() {
-    return new SVG.CircleElement();
-  }
+  @override
+  svg.SvgElement _createElement() => new svg.CircleElement();
 
+  @override
   Set<String> _getElementAttributeNames() {
     var attrs = super._getElementAttributeNames();
     attrs.addAll([CX, CY, R]);
     return attrs;
   }
 
+  @override
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     switch (attr) {
       case CX:
@@ -25,6 +26,7 @@ class SvgCircle extends SvgNode{
     }
   }
 
+  @override
   String _mapToElementAttr(String attr) {
     switch (attr) {
       case X:
@@ -36,5 +38,8 @@ class SvgCircle extends SvgNode{
     }
   }
 
-  String get _nodeName => SC_CIRCLE;
+  static const String _scCircle = '__sc_circle';
+
+  @override
+  String get _nodeName => _scCircle;
 }

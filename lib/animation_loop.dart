@@ -1,13 +1,16 @@
 part of smartcanvas;
 
+enum AnimLoopStatus {
+  started,
+  stopped,
+}
+
 class AnimationLoop {
 
-  static const num s_stopped = 0;
-  static const num s_started = 1;
   static AnimationLoop _instance = null;
 
-  num _loopStatus = s_stopped;
-  Map<String, Function> _subscribers = {};
+  AnimLoopStatus _loopStatus = AnimLoopStatus.stopped;
+  final Map<String, Function> _subscribers = {};
 
   static AnimationLoop get instance {
     if (_instance == null) {
@@ -17,23 +20,23 @@ class AnimationLoop {
   }
 
   void _start() {
-    if (_loopStatus != s_started) {
-      _loopStatus = s_started;
-      DOM.window.animationFrame.then(onAnimationFrame);
-   }
+    if (_loopStatus != AnimLoopStatus.started) {
+      _loopStatus = AnimLoopStatus.started;
+      dom.window.animationFrame.then(onAnimationFrame);
+    }
   }
 
   void _stop() {
-    _loopStatus = s_stopped;
+    _loopStatus = AnimLoopStatus.stopped;
   }
 
   void onAnimationFrame(num timestamp) {
-    if (_loopStatus == s_started) {
-      _subscribers.forEach((id, callback){
+    if (_loopStatus == AnimLoopStatus.started) {
+      _subscribers.forEach((id, callback) {
         callback(timestamp);
       });
 
-      DOM.window.animationFrame.then(onAnimationFrame);
+      dom.window.animationFrame.then(onAnimationFrame);
     }
   }
 

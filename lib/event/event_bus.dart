@@ -1,20 +1,24 @@
-part of smartcanvas;
+library smartcanvas.event_bus;
+
+import 'package:dart_ext/function_ext.dart';
+
+part 'event_handler.dart';
 
 class EventBus {
-  Map<String, EventHandlers> _eventListeners = {};
+  final Map<String, EventHandlers> eventListeners = {};
 
   void on(String events, Function handler, [String id]) {
     List<String> ss = events.split(' ');
     ss.forEach((event) {
-      if (_eventListeners[event] == null) {
-        _eventListeners[event] = new EventHandlers();
+      if (eventListeners[event] == null) {
+        eventListeners[event] = new EventHandlers();
       }
-      _eventListeners[event].add(new EventHandler(id, handler));
+      eventListeners[event].add(new EventHandler(id, handler));
     });
   }
 
   void off(String event, [String id]) {
-    EventHandlers listeners = _eventListeners[event];
+    EventHandlers listeners = eventListeners[event];
     if (listeners != null) {
       var i = 0;
       while (i < listeners.length) {
@@ -27,21 +31,19 @@ class EventBus {
       }
 
       if (listeners.isEmpty) {
-        _eventListeners.remove(event);
+        eventListeners.remove(event);
       }
     }
   }
 
   void fire(String event, [dynamic arg0, arg1, arg2, arg3, arg4, arg5]) {
-    EventHandlers listeners = _eventListeners[event];
+    EventHandlers listeners = eventListeners[event];
     if (listeners != null) {
       listeners(arg0, arg1, arg2, arg3, arg4, arg5);
     }
   }
 
   bool hasListener(String event) {
-    return _eventListeners[event] != null;
+    return eventListeners[event] != null;
   }
-
-  Map<String, EventHandlers> get eventListeners => _eventListeners;
 }

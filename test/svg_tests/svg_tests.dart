@@ -1,7 +1,7 @@
 library smartcanvas.test.svg;
 
-import 'dart:svg' as SVG;
-import 'package:unittest/unittest.dart';
+import 'dart:svg' as svg;
+import 'package:test/test.dart';
 import 'package:smartcanvas/smartcanvas.dart';
 import 'package:smartcanvas/impl/svg/svg.dart';
 import '../test.dart';

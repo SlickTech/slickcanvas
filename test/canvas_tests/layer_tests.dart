@@ -6,7 +6,7 @@ class LayerTests {
   }
 
   static void _elementTest() {
-    Layer layer = new Layer('canvas', {
+    Layer layer = new Layer(CanvasType.canvas, {
       ID: '__canvas_layer',
       CLASS: '__my_canvas'
     });

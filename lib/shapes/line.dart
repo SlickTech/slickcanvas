@@ -1,15 +1,17 @@
 part of smartcanvas;
 
 class Line extends Node {
-  Line(Map<String, dynamic> config): super(config) {}
+  Line([Map<String, dynamic> config = const {}]): super(config);
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgLine(this, isReflection);
-  }
+  @override
+  Node _clone(Map<String, dynamic> config) => new Line(config);
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasLine(this);
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) =>
+    new SvgLine(this, isReflection);
+
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasLine(this);
 
   void set points(List<num> points) {
     assert(points.length >= 4);
@@ -18,8 +20,9 @@ class Line extends Node {
     setAttribute(X2, points[2]);
     setAttribute(Y2, points[3]);
   }
+
   List<num> get points => [getAttribute(X1, 0), getAttribute(Y1, 0),
-                           getAttribute(X2, 0), getAttribute(Y2, 0)];
+    getAttribute(X2, 0), getAttribute(Y2, 0)];
 
   void set x1(num value) => setAttribute(X1, value);
   num get x1 => getAttribute(X1, 0);
@@ -33,9 +36,10 @@ class Line extends Node {
   void set y2(num value) => setAttribute(Y2, value);
   num get y2 => getAttribute(Y2, 0);
 
+  @override
   BBox getBBox(bool isAbsolute) {
-    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(x: pos.x + min(x1, x2), y: pos.y + min(y1, y2),
-        width: (x1 - x2).abs(), height: (y1 - y2).abs());
+    width: (x1 - x2).abs(), height: (y1 - y2).abs());
   }
 }

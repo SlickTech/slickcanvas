@@ -1,21 +1,28 @@
 part of smartcanvas;
 
+enum CanvasType {
+  svg,
+  canvas
+}
+
 abstract class Node extends NodeBase {
-  Layer _layer;
+
   NodeImpl _impl;
-  Container<Node> _parent;
+  ContainerNode _parent;
   SvgNode _reflection;
   TransformMatrix _transformMatrix = new TransformMatrix();
-  num _x0, _y0;
-  bool _listening = false;
 
-  Node([Map<String, dynamic> config = const {}]) : super(config) {
-    populateConfig();
+  num _x0, _y0;
+  bool _isListening = false;
+
+  Node(Map<String, dynamic> config) : super(config) {
+    _populateConfig();
   }
 
-  void populateConfig() {
+  void _populateConfig() {
     _x0 = getAttribute(X, 0);
     _y0 = getAttribute(Y, 0);
+
     if (hasAttribute(OFFSET_X)) {
       _transformMatrix.translateX -= getAttribute(OFFSET_X);
     }
@@ -43,20 +50,19 @@ abstract class Node extends NodeBase {
     }
   }
 
-  NodeImpl createImpl(type) {
+  NodeImpl createImpl(CanvasType type) {
     switch (type) {
-      case svg:
+      case CanvasType.svg:
         return _createSvgImpl();
       default:
         return _createCanvasImpl();
     }
   }
 
-  SvgNode _createReflection() {
-    return _createSvgImpl(true);
-  }
+  SvgNode _createReflection() => _createSvgImpl(true);
 
   NodeImpl _createSvgImpl([bool isReflection = false]);
+
   NodeImpl _createCanvasImpl();
 
   void moveTo(Container parent) {
@@ -68,7 +74,7 @@ abstract class Node extends NodeBase {
 
   void moveUp() {
     int index;
-    Container container = _parent;
+    ContainerNode container = _parent;
     if (container != null) {
       index = container.children.indexOf(this);
       if (index != container.children.length - 1) {
@@ -80,7 +86,7 @@ abstract class Node extends NodeBase {
 
   void moveDown() {
     int index;
-    Container container = _parent;
+    ContainerNode container = _parent;
     if (container != null) {
       index = container.children.indexOf(this);
       if (index > 0) {
@@ -91,7 +97,7 @@ abstract class Node extends NodeBase {
   }
 
   void moveToTop() {
-    Container container = _parent;
+    ContainerNode container = _parent;
     if (container != null) {
       int index = container.children.indexOf(this);
       if (index != container.children.length - 1) {
@@ -103,7 +109,7 @@ abstract class Node extends NodeBase {
 
   void moveToBottom() {
     int index;
-    Container container = _parent;
+    ContainerNode container = _parent;
     if (container != null) {
       index = container.children.indexOf(this);
       if (index > 0) {
@@ -113,17 +119,18 @@ abstract class Node extends NodeBase {
     }
   }
 
+  @override
   NodeBase on(String events, Function handler, [String id]) {
-    List<String> ss = events.split(SPACE);
+    List<String> ss = events.split(space);
     ss.forEach((event) {
-      if (_eventListeners[event] == null) {
-        _eventListeners[event] = new EventHandlers();
+      if (eventListeners[event] == null) {
+        eventListeners[event] = new EventHandlers();
       }
-      _eventListeners[event].add(new EventHandler(id, handler));
+      eventListeners[event].add(new EventHandler(id, handler));
 
-      if (!_listening) {
-        _listening = isDomEvent(event);
-        if (_listening && _parent != null) {
+      if (!_isListening) {
+        _isListening = isDomEvent(event);
+        if (_isListening && _parent != null) {
           (_parent as Group)._reflectChild(this);
         }
       }
@@ -141,30 +148,36 @@ abstract class Node extends NodeBase {
   }
 
   Node clone([Map<String, dynamic> config]) {
-    ClassMirror cm = reflectClass(this.runtimeType);
-    Map<String, dynamic> cnfg;
-    if (config != null) {
-      cnfg = new Map<String, dynamic>.from(_attrs);
-      cnfg.addAll(config);
-    } else {
-      cnfg = _attrs;
-    }
-    Node clone = cm.newInstance(const Symbol(EMPTY), [cnfg]).reflectee;
-    if (_impl != null) {
-      clone._impl = clone.createImpl(_impl.type);
-    }
-    clone._transformMatrix = this._transformMatrix.clone();
-    return clone;
+    Map<String, dynamic> clonedConfig = merge(attrs, config);
+    var copy = _clone(clonedConfig);
+    copy._transformMatrix = _transformMatrix.clone();
+    return copy;
+//    ClassMirror cm = reflectClass(this.runtimeType);
+//    Map<String, dynamic> cnfg;
+//    if (config != null) {
+//      cnfg = new Map<String, dynamic>.from(attrs);
+//      cnfg.addAll(config);
+//    } else {
+//      cnfg = attrs;
+//    }
+//    Node clone = cm.newInstance(const Symbol(empty), [cnfg]).reflectee;
+//    if (_impl != null) {
+//      clone._impl = clone.createImpl(_impl.type);
+//    }
+//    clone._transformMatrix = this._transformMatrix.clone();
+//    return clone;
   }
 
+  Node _clone(Map<String, dynamic> config);
+
   BBox getBBox(bool isAbsolute) {
-    Position pos = isAbsolute ? this.absolutePosition : this.position;
+    var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(x: pos.x, y: pos.y, width: this.width, height: this.height);
   }
 
   Position getRelativePosition(Node referenceParent) {
-    Position pos = position;
-    Position posParent;
+    var pos = position;
+    var posParent;
     var parent = _parent;
     while (parent != null) {
       posParent = (parent as Node).position;
@@ -201,27 +214,23 @@ abstract class Node extends NodeBase {
    *
    * A node is reflectable if the node was draggable or listening
    */
-  bool get reflectable {
-    return draggable || _listening;
-  }
+  bool get reflectable => draggable || _isListening;
 
   /**
    * Get the layer of the node
    */
   Layer get layer {
-    Node parent = this._parent as Node;
+    var parent = this._parent;
     while (parent != null && parent is! Layer) {
-      parent = parent._parent as Node;
+      parent = parent._parent;
     }
-    return parent;
+    return parent != null ? parent as Layer : null;
   }
 
   /**
    * Get the stage
    */
-  Stage get stage {
-    return layer == null ? null : layer.stage;
-  }
+  Stage get stage => layer == null ? null : layer.stage;
 
   NodeImpl get impl => _impl;
 
@@ -234,35 +243,35 @@ abstract class Node extends NodeBase {
   void set x(num value) {
     translateX = value - _x0;
   }
-  num get x {
-    return _x0 + _transformMatrix.translateX;
-  }
+
+  num get x => _x0 + _transformMatrix.translateX;
 
   void set y(num value) {
     translateY = value - _y0;
   }
-  num get y {
-    return _y0 + _transformMatrix.translateY;
-  }
+
+  num get y => _y0 + _transformMatrix.translateY;
 
   void set offsetX(num value) {
-    num oldValue = getAttribute(OFFSET_X, 0);
+    var oldValue = getAttribute(OFFSET_X, 0);
     if (oldValue != value) {
-      _attrs[OFFSET_X] = value;
+      attrs[OFFSET_X] = value;
       _transformMatrix.translateX += value - oldValue;
       fire('offsetXChanged', value, oldValue);
     }
   }
+
   num get offsetX => getAttribute(OFFSET_X, 0);
 
   void set offsetY(num value) {
     num oldValue = getAttribute(OFFSET_Y, 0);
     if (oldValue != value) {
-      _attrs[OFFSET_Y] = value;
+      attrs[OFFSET_Y] = value;
       _transformMatrix.translateY += value - oldValue;
       fire('offsetYChanged', value, oldValue);
     }
   }
+
   num get offsetY => getAttribute(OFFSET_Y, 0);
 
   void set width(num value) => setAttribute(WIDTH, value);
@@ -301,7 +310,7 @@ abstract class Node extends NodeBase {
   void set draggable(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
 
-  bool get listening => _listening;
+  bool get isListening => _isListening;
 
   void set visible(bool value) {
     if (!value) {
@@ -310,6 +319,7 @@ abstract class Node extends NodeBase {
       removeAttribute(DISPLAY);
     }
   }
+
   bool get visible => !hasAttribute(DISPLAY);
 
   bool get isDragging {
@@ -320,77 +330,83 @@ abstract class Node extends NodeBase {
   }
 
   void set scaleX(num x) {
-    num oldValue = _transformMatrix.scaleX;
+    var oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
     if (oldValue != x) {
       fire('scaleXChanged', x, oldValue);
     }
   }
+
   num get scaleX => _transformMatrix.scaleX;
 
   void set scaleY(num y) {
-    num oldValue = _transformMatrix.scaleY;
+    var oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
     if (oldValue != y) {
       fire('scaleYChanged', y, oldValue);
     }
   }
+
   num get scaleY => _transformMatrix.scaleY;
 
   void set translateX(num tx) {
-    num oldValue = _transformMatrix.translateX;
+    var oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
     if (oldValue != tx) {
       fire('translateXChanged', tx, oldValue);
     }
   }
+
   num get translateX => _transformMatrix.translateX;
 
   void set translateY(num ty) {
-    num oldValue = _transformMatrix.translateY;
+    var oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
     if (oldValue != ty) {
       fire('translateYChanged', ty, oldValue);
     }
   }
+
   num get translateY => _transformMatrix.translateY;
 
   void set rotate(num r) {
-    num oldValue = getAttribute(ROTATE, null);
+    var oldValue = getAttribute(ROTATE, null);
     setAttribute(ROTATE, r);
     if (oldValue != r) {
       fire('rotationChanged', r, oldValue);
     }
   }
+
   num get rotate => getAttribute(ROTATE, null);
 
   void set rotateX(num r) {
-    num oldValue = getAttribute(ROTATE_X, null);
+    var oldValue = getAttribute(ROTATE_X, null);
     setAttribute(ROTATE_X, r);
     if (oldValue != r) {
       fire('rotationChanged', r, oldValue);
     }
   }
+
   num get rotateX => getAttribute(ROTATE_X, null);
 
   void set rotateY(num r) {
-    num oldValue = getAttribute(ROTATE_Y, null);
+    var oldValue = getAttribute(ROTATE_Y, null);
     setAttribute(ROTATE_Y, r);
     if (oldValue != r) {
       fire('rotationChanged', r, oldValue);
     }
   }
+
   num get rotateY => getAttribute(ROTATE_Y, null);
 
   TransformMatrix get transformMatrix => _transformMatrix;
 
-  Position get position {
-    return new Position(x: _x0 + transformMatrix.translateX, y: _y0 + transformMatrix.translateY);
-  }
+  Position get position => new Position(x: _x0 + transformMatrix.translateX,
+    y: _y0 + transformMatrix.translateY);
 
   void set absolutePosition(Position pos) {
-    Position position = new Position();
-    Position posParent;
+    var position = new Position();
+    var posParent;
     var parent = _parent;
     while (parent != null && parent is! Layer) {
       posParent = (parent as Node).position;
@@ -403,8 +419,8 @@ abstract class Node extends NodeBase {
   }
 
   Position get absolutePosition {
-    Position pos = position;
-    Position posParent;
+    var pos = position;
+    var posParent;
     var parent = _parent;
     while (parent != null && parent is! Layer) {
       posParent = (parent as Node).position;
@@ -417,12 +433,12 @@ abstract class Node extends NodeBase {
   SvgNode get reflection => _reflection;
 
   String get svgString {
-    if (_impl != null && _impl.type == svg) {
+    if (_impl != null && _impl.type == CanvasType.svg) {
       return (_impl as SvgNode).element.toString();
     }
 
-    Layer dummyLayer = new Layer(svg, {});
-    Node copy = this.clone();
+    var dummyLayer = new Layer(CanvasType.svg, {});
+    var copy = this.clone();
     dummyLayer.addChild(copy);
     return (copy.impl as SvgNode).element.toString();
   }

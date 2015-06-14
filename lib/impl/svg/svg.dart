@@ -1,10 +1,10 @@
 library smartcanvas.svg;
 
-import 'dart:html' as DOM;
-import 'dart:svg' as SVG;
+import 'dart:html' as dom;
+import 'dart:svg' as svg;
 import 'dart:async';
-import 'dart:math';
 import 'package:dart_ext/collection_ext.dart';
+import '../../event/event_bus.dart';
 
 import '../../smartcanvas.dart';
 
@@ -13,6 +13,7 @@ part 'svg_group.dart';
 part 'svg_layer.dart';
 part 'svg_pattern.dart';
 part 'svg_def_layer.dart';
+part 'svg_container_node.dart';
 
 part 'shapes/svg_circle.dart';
 part 'shapes/svg_rect.dart';

@@ -4,7 +4,7 @@ class TextMeasure {
   var _context;
 
   TextMeasure() {
-    var canvas = new DOM.CanvasElement(width: 0, height: 0);
+    var canvas = new dom.CanvasElement(width: 0, height: 0);
     _context = canvas.context2D;
   }
 

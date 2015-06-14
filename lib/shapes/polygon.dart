@@ -1,22 +1,29 @@
 part of smartcanvas;
 
-class Polygon extends Node{
+class Polygon extends Node {
   BBox _bbox = null;
   List<Position> _points = null;
 
-  Polygon(Map<String, dynamic> config): super(config) {
-    this.on('translateXChanged translateYChanged', () => _bbox = null);
-    this.on('pointsChanged', () { _bbox = null; _points = null; });
+  Polygon([Map<String, dynamic> config = const {}]) : super(config) {
+    this
+      ..on('translateXChanged translateYChanged', () => _bbox = null)
+      ..on('pointsChanged', () {
+      _bbox = null;
+      _points = null;
+    });
   }
 
-  NodeImpl _createSvgImpl([bool isReflection = false]) {
-    return new SvgPolygon(this, isReflection);
-  }
+  @override
+  Node _clone(Map<String, dynamic> config) => new Polygon(config);
 
-  NodeImpl _createCanvasImpl() {
-    return new CanvasPolygon(this);
-  }
+  @override
+  NodeImpl _createSvgImpl([bool isReflection = false]) =>
+    new SvgPolygon(this, isReflection);
 
+  @override
+  NodeImpl _createCanvasImpl() => new CanvasPolygon(this);
+
+  @override
   BBox getBBox(bool isAbsolute) {
     _getBBox();
     return new BBox(x: this.x, y: this.y, width: _bbox.width, height: _bbox.height);
@@ -24,13 +31,12 @@ class Polygon extends Node{
 
   void _getBBox() {
     if (_bbox == null) {
-      List<Position> points = this.points;
-      num minX = double.MAX_FINITE;
-      num maxX = -double.MAX_FINITE;
-      num minY = double.MAX_FINITE;
-      num maxY = -double.MAX_FINITE;
-      for(int i = 0; i < points.length; i++)
-      {
+      var points = this.points;
+      var minX = double.MAX_FINITE;
+      var maxX = -double.MAX_FINITE;
+      var minY = double.MAX_FINITE;
+      var maxY = -double.MAX_FINITE;
+      for (int i = 0; i < points.length; i++) {
         minX = min(minX, points[i].x);
         maxX = max(maxX, points[i].x);
         minY = min(minY, points[i].y);
@@ -38,22 +44,32 @@ class Polygon extends Node{
       }
       var halfStrokeWidth = strokeWidth / 2;
       _bbox = new BBox(x: minX - halfStrokeWidth, y: minY - halfStrokeWidth,
-          width: maxX - minX + strokeWidth, height: maxY - minY + strokeWidth);
+      width: maxX - minX + strokeWidth, height: maxY - minY + strokeWidth);
     }
   }
 
   void set points(dynamic value) {
     if (value is String) {
       setAttribute(POINTS, value);
-    } else if (value is List<num>) {
-      setAttribute(POINTS, value);
-    } else if (value is List<Position>) {
-      List<num> ps = [];
-      value.forEach((Position p) {
-        ps.add(p.x);
-        ps.add(p.y);
-      });
-      setAttribute(POINTS, ps);
+    } else if (value is List) {
+      if (value.isNotEmpty) {
+        if (value.first is num) {
+          setAttribute(POINTS, value);
+        } else if (value.first is Position) {
+          var ps = [];
+          value.forEach((Position p) {
+            ps.add(p.x);
+            ps.add(p.y);
+          });
+          setAttribute(POINTS, ps);
+        } else {
+          throw new Exception('Invalid parameter');
+        }
+      } else {
+        setAttribute(POINTS, []);
+      }
+    } else {
+      throw new Exception('Invalid parameter');
     }
   }
 
@@ -63,16 +79,20 @@ class Polygon extends Node{
       var ps = getAttribute(POINTS);
       if (ps != null) {
         if (ps is String) {
-          List<String> pss = ps.split(COMMA);
+          var pss = ps.split(comma);
           for (int i = 0; i < pss.length; i += 2) {
-            _points.add(new Position(x: double.parse(pss[i]), y: double.parse(pss[i + 1])));
+            _points.add(new Position(x: num.parse(pss[i]), y: num.parse(pss[i + 1])));
           }
-        } else if (ps is List<num>) {
-          for (int i = 0; i < ps.length; i += 2) {
-            _points.add(new Position(x: ps[i], y: ps[i+2]));
+        } else if (ps is List) {
+          if (ps.isNotEmpty) {
+            if (ps.first is num) {
+              for (int i = 0; i < ps.length; i += 2) {
+                _points.add(new Position(x: ps[i], y: ps[i + 1]));
+              }
+            }
+          } else {
+            _points.addAll(ps);
           }
-        } else {
-          _points.addAll(ps);
         }
       }
     }
@@ -81,21 +101,25 @@ class Polygon extends Node{
 
   String get pointsString => getAttribute(POINTS, '');
 
+  @override
   num get x {
     _getBBox();
     return super.x + _bbox.x;
   }
 
+  @override
   num get y {
     _getBBox();
     return super.y + _bbox.y;
   }
 
+  @override
   num get width {
     _getBBox();
     return _bbox.width;
   }
 
+  @override
   num get height {
     _getBBox();
     return _bbox.height;

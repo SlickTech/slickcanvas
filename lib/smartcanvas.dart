@@ -1,30 +1,26 @@
 library smartcanvas;
 
 // external dependencies
-import 'dart:html' as DOM;
+import 'dart:html' as dom;
 import 'dart:math';
-import 'dart:svg' as SVG;
-//import 'dart:async';
+import 'dart:svg' as svg;
 
-//@MirrorsUsed(targets: const ['smartcanvas', 'smartcanvas.svg'], override: "*")
-import 'dart:mirrors';
+import 'package:r2d2/r2d2_client.dart';
+import 'package:dart_ext/collection_ext.dart';
 
-import 'package:dart_ext/dart_ext.dart';
-
+import 'event/event_bus.dart';
 import 'impl/svg/svg.dart';
 import 'impl/canvas/canvas.dart';
 
 part 'nodebase.dart';
 part 'node.dart';
-part 'container.dart';
+part 'utils/container.dart';
 part 'stage.dart';
 part 'group.dart';
 part 'layer.dart';
 part 'pattern.dart';
 part 'animation_loop.dart';
-
-part 'event/event_handler.dart';
-part 'event/event_bus.dart';
+part 'container_node.dart';
 
 part 'reflection/reflection_layer.dart';
 

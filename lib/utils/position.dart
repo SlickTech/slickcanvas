@@ -9,15 +9,9 @@ class Position {
     this.y = y;
   }
 
-  Position operator+(Position p) {
-    return new Position(x: x + p.x, y: y + p.y);
-  }
+  Position operator + (Position p) => new Position(x: x + p.x, y: y + p.y);
 
-  Position operator-(Position p) {
-    return new Position(x: x - p.x, y: y - p.y);
-  }
+  Position operator - (Position p) => new Position(x: x - p.x, y: y - p.y);
 
-  String toString() {
-    return '${x}, ${y}';
-  }
+  String toString() => '${x}, ${y}';
 }

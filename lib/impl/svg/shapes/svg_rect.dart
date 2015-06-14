@@ -1,17 +1,20 @@
 part of smartcanvas.svg;
 
 class SvgRect extends SvgNode {
-  SvgRect(Rect shell, bool isReflection): super(shell, isReflection) {}
+  SvgRect(Rect shell, bool isReflection): super(shell, isReflection);
 
-  SVG.SvgElement _createElement() {
-    return new SVG.RectElement();
-  }
+  @override
+  svg.SvgElement _createElement() => new svg.RectElement();
 
+  @override
   Set<String> _getElementAttributeNames() {
     var attrs = super._getElementAttributeNames();
     attrs.addAll(['x', 'y', 'rx', 'ry', 'width', 'height']);
     return attrs;
   }
 
-  String get _nodeName => SC_RECT;
+  static const String _scRect = '__sc_rect';
+
+  @override
+  String get _nodeName => _scRect;
 }

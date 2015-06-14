@@ -2,25 +2,28 @@ part of smartcanvas.svg;
 
 class SvgPattern extends SvgGroup {
 
-  SvgPattern(SCPattern shell): super(shell, false) {}
+  static const String scPattern = '__sc_pattern';
 
-  SVG.SvgElement _createElement() {
-    return new SVG.PatternElement();
-  }
+  SvgPattern(SCPattern shell): super(shell, false);
 
+  @override
+  svg.SvgElement _createElement() => new svg.PatternElement();
+
+  @override
   Set<String> _getElementAttributeNames() {
     var rt = super._getElementAttributeNames();
     rt.addAll([WIDTH, HEIGHT, PATTERN_UNITS]);
     return rt;
   }
 
+  @override
   dynamic getAttribute(String attr, [dynamic defaultValue = null]) {
     if (attr == ID) {
       return super.getAttribute(attr, defaultValue != null ? defaultValue : shell.id);
-    } else {
-      return super.getAttribute(attr, defaultValue);
     }
+    return super.getAttribute(attr, defaultValue);
   }
 
-  String get _nodeName => SC_PATTERN;
+  @override
+  String get _nodeName => scPattern;
 }
