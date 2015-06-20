@@ -6,7 +6,7 @@ abstract class ContainerNode extends Node with Container<Node> {
 
   @override
   Node _clone(Map<String, dynamic> config) {
-    var copy = _createNewInstance(config);
+    ContainerNode copy = _createNewInstance(config);
     children.forEach((child) {
       copy.addChild(child.clone());
     });
