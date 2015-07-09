@@ -1,3 +1,6 @@
+#0.2.0+1
+* Fixed reflectChild out of range exception
+
 #0.2.0
 * Fixed errors complained by dev-compiler.
 * Changed styles according to dart style guid.

@@ -61,7 +61,12 @@ abstract class ContainerNode extends Node with Container<Node> {
         }
       } else if (nextReflectableChild._reflection != null) {
         var grpReflection = _reflection as Container;
-        grpReflection.insertChild(grpReflection.children.indexOf(nextReflectableChild._reflection), child._reflection);
+        var index = grpReflection.children.indexOf(nextReflectableChild._reflection);
+        if (index != -1) {
+          grpReflection.insertChild(index, child._reflection);
+        } else {
+          grpReflection.addChild(child._reflection);
+        }
       }
     } else if (parent != null) {
       // this group wasn't reflectable before, since the child is
