@@ -73,10 +73,10 @@ void main() {
   });
 
   dom.Element svgContainer = dom.document.querySelector('.svg-canvas');
-  Stage svgStage = new Stage(svgContainer, svg, {});
+  Stage svgStage = new Stage(svgContainer);
 
   dom.Element canvasContainer = dom.document.querySelector('.canvas-canvas');
-  Stage canvasStage = new Stage(canvasContainer, canvas, {});
+  Stage canvasStage = new Stage(canvasContainer, defaultLayerType:CanvasType.canvas);
 
   dom.Element nodes = dom.document.querySelector('.node-list');
 
@@ -118,7 +118,7 @@ void main() {
       }
 
       svgNode = node.clone({DRAGGABLE: true});
-      svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
+      svgNode.on(mouseDown, (e){ svgNode.moveToTop(); });
       svgStage.addChild(svgNode);
 
 //      svgNode = node.clone({DRAGGABLE: true, ROTATE: 45, ROTATE_X: 50, ROTATE_Y: 50});
@@ -126,7 +126,7 @@ void main() {
 //      svgStage.addChild(svgNode);
 
       canvasNode = node.clone({DRAGGABLE: true});
-      canvasNode.on(MOUSEDOWN, (e){ canvasNode.moveToTop(); });
+      canvasNode.on(mouseDown, (e){ canvasNode.moveToTop(); });
       canvasStage.addChild(canvasNode);
 
 //      canvasNode = node.clone({DRAGGABLE: true, ROTATE: 45, ROTATE_X: 50, ROTATE_Y: 50});
