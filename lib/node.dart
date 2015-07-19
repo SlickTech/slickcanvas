@@ -33,6 +33,10 @@ abstract class Node extends NodeBase {
 
     _transformMatrix.scaleX = getAttribute(SCALE_X, 1);
     _transformMatrix.scaleY = getAttribute(SCALE_Y, 1);
+
+    if (getAttribute(VISIBLE, true) == false) {
+      visible = false;
+    }
   }
 
   void remove() {
@@ -148,24 +152,10 @@ abstract class Node extends NodeBase {
   }
 
   Node clone([Map<String, dynamic> config]) {
-    Map<String, dynamic> clonedConfig = merge(attrs, config);
+    var clonedConfig = merge(attrs, config);
     var copy = _clone(clonedConfig);
     copy._transformMatrix = _transformMatrix.clone();
     return copy;
-//    ClassMirror cm = reflectClass(this.runtimeType);
-//    Map<String, dynamic> cnfg;
-//    if (config != null) {
-//      cnfg = new Map<String, dynamic>.from(attrs);
-//      cnfg.addAll(config);
-//    } else {
-//      cnfg = attrs;
-//    }
-//    Node clone = cm.newInstance(const Symbol(empty), [cnfg]).reflectee;
-//    if (_impl != null) {
-//      clone._impl = clone.createImpl(_impl.type);
-//    }
-//    clone._transformMatrix = this._transformMatrix.clone();
-//    return clone;
   }
 
   Node _clone(Map<String, dynamic> config);
@@ -310,6 +300,9 @@ abstract class Node extends NodeBase {
   void set draggable(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
 
+  void set resizable(bool value) => setAttribute(RESIZABLE, value);
+  bool get resizable => getAttribute(RESIZABLE, false);
+
   bool get isListening => _isListening;
 
   void set visible(bool value) {
@@ -443,7 +436,5 @@ abstract class Node extends NodeBase {
     return (copy.impl as SvgNode).element.toString();
   }
 
-  String get dataUrl {
-    throw 'not implemented';
-  }
+  String get dataUrl => throw new Exception('not implemented');
 }

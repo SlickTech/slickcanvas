@@ -170,6 +170,10 @@ abstract class CanvasGraphNode extends CanvasNode {
   }
 
   void draw(num offsetX, num offsetY, dom.CanvasRenderingContext2D context) {
+    if (shell.visible == false) {
+      return;
+    }
+
     var matrix = shell.transformMatrix;
     context.save();
 
