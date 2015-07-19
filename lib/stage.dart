@@ -107,7 +107,7 @@ class Stage extends NodeBase with Container<Node> {
 
   void _onMouseDown(e) {
     _setPointerPosition(e);
-    fire('stageMouseDown', e);
+    fire(stageMouseDown, e);
     if (isDraggable) {
       _dragStart(e);
     }
@@ -115,7 +115,7 @@ class Stage extends NodeBase with Container<Node> {
 
   void _onMouseMove(e) {
     _setPointerPosition(e);
-    fire('stageMouseMove', e);
+    fire(stageMouseMove, e);
     if (_dragStarting) {
       _dragMove(e);
     }
@@ -123,7 +123,7 @@ class Stage extends NodeBase with Container<Node> {
 
   void _onMouseUp(e) {
     _setPointerPosition(e);
-    fire('stageMouseUp', e);
+    fire(stageMouseUp, e);
     if (_dragging) {
       _dragEnd(e);
     }
