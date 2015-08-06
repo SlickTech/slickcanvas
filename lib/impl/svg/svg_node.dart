@@ -20,6 +20,7 @@ abstract class SvgNode extends NodeImpl {
   bool _isReflection;
   Timer _locationCheckTimer;
   String _oldLocation;
+  bool _fillChanged = false;
 
   SvgNode(Node shell, this._isReflection) : super(shell) {
     _setClassName();
@@ -146,17 +147,19 @@ abstract class SvgNode extends NodeImpl {
               _locationCheckTimer = null;
             }
           } else {
+            _fillChanged = true;
+
             void _setFillUrl(Timer t) {
               var newLocation = dom.window.location.toString();
-              if (newLocation == _oldLocation) {
+
+              if (newLocation == _oldLocation && _fillChanged == false) {
                 return;
               }
 
               _oldLocation = newLocation;
 
               if (newLocation.contains('#')) {
-                newLocation =
-                newLocation.substring(0, newLocation.indexOf('#'));
+                newLocation = newLocation.substring(0, newLocation.indexOf('#'));
               }
 
               _element.style.setProperty(
@@ -176,10 +179,12 @@ abstract class SvgNode extends NodeImpl {
                 });
               }
             }
-            ;
 
             _setFillUrl(null);
 
+            _fillChanged = false;
+
+            // set a timer to detect location change
             if (_locationCheckTimer == null) {
               _locationCheckTimer = new Timer.periodic(
                   new Duration(milliseconds: 100), _setFillUrl);
