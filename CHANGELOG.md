@@ -1,3 +1,6 @@
+##0.2.0+3
+* Fix missing constant.
+
 ##0.2.0+2
 * Fixed an issue where invisible node still shows on canvas.
 * Add VISIBLE configuration to allow node configured to invisible.

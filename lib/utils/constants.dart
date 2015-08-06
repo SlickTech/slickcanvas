@@ -100,6 +100,7 @@ const ROTATE_Y = 'rotate_y';
 const NO_WRAP = 'nowrap';
 const WORD_SPLITTER = 'wordSplitter';
 const SHOW_CONTROLS = 'showControls';
+const VISIBLE = 'visible';
 
 // exception
 const ExpNotImplemented = 'Not Implemented';
