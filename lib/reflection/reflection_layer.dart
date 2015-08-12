@@ -5,7 +5,7 @@ class _ReflectionLayer extends Layer {
   _ReflectionLayer([Map<String, dynamic> config = const {}])
   : super(CanvasType.svg, merge(config, {
     ID: '__reflection_layer',
-    OPACITY: 0
+//    OPACITY: 0
   }));
 
   @override
@@ -18,6 +18,7 @@ class _ReflectionLayer extends Layer {
     }
 
     (impl as SvgLayer).addChild(node._reflection);
+    node.fire('reflection_complete');
   }
 
   @override
@@ -26,6 +27,7 @@ class _ReflectionLayer extends Layer {
       node._reflection = node._createReflection();
     }
     (impl as SvgLayer).insertChild(index, node._reflection);
+    node.fire('reflection_complete');
   }
 
   void reflectNode(Node node) {

@@ -7,14 +7,26 @@ part 'event_handler.dart';
 class EventBus {
   final Map<String, EventHandlers> eventListeners = {};
 
-  void on(String events, Function handler, [String id]) {
-    List<String> ss = events.split(' ');
-    ss.forEach((event) {
-      if (eventListeners[event] == null) {
-        eventListeners[event] = new EventHandlers();
-      }
-      eventListeners[event].add(new EventHandler(id, handler));
-    });
+  void on(events, Function handler, [String id]) {
+    if (events is List) {
+      events.forEach((String event) {
+        _on(event, handler, id);
+      });
+    } else if (events is String) {
+
+      // for backward compatible
+      List<String> ss = events.split(' ');
+      ss.forEach((event) {
+        _on(event, handler, id);
+      });
+    }
+  }
+
+  void _on(String event, Function handler, [String id]) {
+    if (eventListeners[event] == null) {
+      eventListeners[event] = new EventHandlers();
+    }
+    eventListeners[event].add(new EventHandler(id, handler));
   }
 
   void off(String event, [String id]) {

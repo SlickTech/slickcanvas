@@ -29,5 +29,5 @@ abstract class CanvasNode extends NodeImpl {
   CanvasType get type => CanvasType.canvas;
 
   @override
-  CanvasLayer get layer => super.layer;
+  CanvasLayer get layer => shell.layer.impl;
 }

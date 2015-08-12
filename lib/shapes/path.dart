@@ -26,32 +26,50 @@ class Path extends Node {
   @override
   NodeImpl _createCanvasImpl() => new CanvasPath(this);
 
-  List<svg.PathSeg> get pathSeg => _svgImpl.element.pathSegList;
+  List<svg.PathSeg> get pathSeg {
+    var el = _svgImpl.element;
+    if (el is svg.GElement) {
+      // impl's reflection has control points
+      el = el.children[0];
+    }
+    return el.pathSegList;
+  }
 
   @override
   BBox getBBox(bool isAbsolute) {
     if (this.stage != null) {
-      if (_bbox != null) {
-        var halfStrokeWidth = this.strokeWidth / 2;
-        return new BBox(x: this.x + _bbox.x - halfStrokeWidth, y: this.y + _bbox.y - halfStrokeWidth,
-        width: _bbox.width + this.strokeWidth, height: _bbox.height + this.strokeWidth);
-      }
+      // TODO: improve it.
 
       var reflection = this.reflection;
       if (reflection == null) {
+        if (_bbox != null) {
+          // TODO: should recalculate?
+          return _bbox;
+        }
+
         reflection = this._createReflection();
         (stage._reflectionLayer.impl as SvgLayer).addChild(reflection);
       }
-      _bbox = (reflection as SvgPath).element.getBBox();
-      var rt = new BBox(x: this.x + _bbox.x, y: this.y + _bbox.y,
-      width: _bbox.width, height: _bbox.height);
+
+      var bbx = reflection.getBBox(isAbsolute);
+      _bbox = new BBox(
+        x: bbx.x,
+        y: bbx.y,
+        width: bbx.width * actualScaleX,
+        height: bbx.height * actualScaleY
+      );
 
       if (this.reflection == null) {
         reflection.remove();
       }
-      return rt;
+      return _bbox;
     }
-    return new BBox(x: this.x, y: this.y, width: getAttribute(WIDTH, 0), height: getAttribute(HEIGHT, 0));
+    return new BBox(
+      x: this.x,
+      y: this.y,
+      width: getAttribute(WIDTH, 0) * actualScaleX,
+      height: getAttribute(HEIGHT, 0) * actualScaleY
+    );
   }
 
   void set d(String value) => setAttribute(D, value);
@@ -60,7 +78,7 @@ class Path extends Node {
   @override
   num get width {
     var bbox = getBBox(true);
-    return bbox.right;
+    return bbox.right - bbox.left;
   }
 
   @override

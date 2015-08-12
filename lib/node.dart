@@ -135,32 +135,42 @@ abstract class Node extends NodeBase {
   }
 
   @override
-  NodeBase on(String events, Function handler, [String id]) {
-    List<String> ss = events.split(space);
-    ss.forEach((event) {
-      if (eventListeners[event] == null) {
-        eventListeners[event] = new EventHandlers();
-      }
-      eventListeners[event].add(new EventHandler(id, handler));
-
-      if (!_isListening) {
-        _isListening = isDomEvent(event);
-        if (_isListening && _parent != null) {
-          (_parent as Group)._reflectChild(this);
-        }
-      }
-
-      if (_impl != null) {
-        _impl.on(event, handler, id);
-      }
-
-      if (_reflection != null) {
-        _reflection.on(event, handler, id);
-      }
-    });
-    // allow chaining
-    return this;
+  void on(events, Function handler, [String id]) {
+    if (events is List) {
+      events.forEach((String event) {
+        _on(event, handler, id);
+      });
+    } else if (events is String) {
+      List<String> ss = events.split(space);
+      ss.forEach((String event) {
+        _on(event, handler, id);
+      });
+    }
   }
+
+  void _on(String event, Function handler, [String id]) {
+    if (eventListeners[event] == null) {
+      eventListeners[event] = new EventHandlers();
+    }
+    eventListeners[event].add(new EventHandler(id, handler));
+
+    if (!_isListening) {
+      _isListening = isDomEvent(event);
+      if (_isListening && _parent != null) {
+        (_parent as Group)._reflectChild(this);
+      }
+    }
+
+    if (_impl != null) {
+      _impl.on(event, handler, id);
+    }
+
+    if (_reflection != null) {
+      _reflection.on(event, handler, id);
+    }
+  }
+
+
 
   Node clone([Map<String, dynamic> config]) {
     var clonedConfig = merge(attrs, config);
@@ -172,7 +182,7 @@ abstract class Node extends NodeBase {
 
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x, y: pos.y, width: this.width * scaleX, height: this.height * scaleY);
+    return new BBox(x: pos.x, y: pos.y, width: this.actualWidth, height: this.actualHeight);
   }
 
   Position getRelativePosition(Node referenceParent) {
@@ -204,6 +214,18 @@ abstract class Node extends NodeBase {
     visible = false;
   }
 
+  void showControls() {
+    if (_reflection != null && _reflection.hasControls) {
+      _reflection.showControlPoints();
+    }
+  }
+
+  void hideControls() {
+    if (_reflection != null && _reflection.hasControls) {
+      _reflection.hideControlPoints();
+    }
+  }
+
   /**
    * Get parent of this node
    */
@@ -214,7 +236,7 @@ abstract class Node extends NodeBase {
    *
    * A node is reflectable if the node was draggable or listening
    */
-  bool get reflectable => getAttribute(REFLECTABLE, true) && (draggable || _isListening);
+  bool get reflectable => getAttribute(REFLECTABLE, true) && (draggable || _isListening || resizable);
   void set reflectable (bool value) => setAttribute(REFLECTABLE, value);
 
   /**
@@ -257,7 +279,7 @@ abstract class Node extends NodeBase {
     var oldValue = getAttribute(OFFSET_X, 0);
     if (oldValue != value) {
       attrs[OFFSET_X] = value;
-      _transformMatrix.translateX += value - oldValue;
+      _x0 = value;
       fire('offsetXChanged', value, oldValue);
     }
   }
@@ -268,7 +290,7 @@ abstract class Node extends NodeBase {
     num oldValue = getAttribute(OFFSET_Y, 0);
     if (oldValue != value) {
       attrs[OFFSET_Y] = value;
-      _transformMatrix.translateY += value - oldValue;
+      _y0 = value;
       fire('offsetYChanged', value, oldValue);
     }
   }
@@ -277,9 +299,11 @@ abstract class Node extends NodeBase {
 
   void set width(num value) => setAttribute(WIDTH, value);
   num get width => getAttribute(WIDTH, 0);
+  num get actualWidth => width * scaleX * getAttribute(RESIZE_SCALE_X, 1);
 
   void set height(num value) => setAttribute(HEIGHT, value);
   num get height => getAttribute(HEIGHT, 0);
+  num get actualHeight => height * scaleY * getAttribute(RESIZE_SCALE_Y, 1);
 
   void set stroke(dynamic value) => setAttribute(STROKE, value);
   dynamic get stroke => getAttribute(STROKE);
@@ -308,8 +332,14 @@ abstract class Node extends NodeBase {
   void set opacity(num value) => setAttribute(OPACITY, value);
   num get opacity => getAttribute(OPACITY, 1);
 
+  void set cursor(String value) => setAttribute(CURSOR, value);
+  String get cursor => getAttribute(CURSOR, 'default');
+
   void set draggable(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
+
+  void set resizable(bool value) => setAttribute(RESIZABLE, value);
+  bool get resizable => getAttribute(RESIZABLE, false);
 
   bool get isListening => _isListening;
 
@@ -334,27 +364,43 @@ abstract class Node extends NodeBase {
     var oldValue = _transformMatrix.scaleX;
     _transformMatrix.scaleX = x;
     if (oldValue != x) {
-      fire('scaleXChanged', x, oldValue);
+      fire(scaleXChanged, x, oldValue);
     }
   }
 
   num get scaleX => _transformMatrix.scaleX;
+  num get actualScaleX =>
+    _transformMatrix.scaleX * getAttribute(RESIZE_SCALE_X, 1);
 
   void set scaleY(num y) {
     var oldValue = _transformMatrix.scaleY;
     _transformMatrix.scaleY = y;
     if (oldValue != y) {
-      fire('scaleYChanged', y, oldValue);
+      fire(scaleYChanged, y, oldValue);
     }
   }
 
   num get scaleY => _transformMatrix.scaleY;
+  num get actualScaleY =>
+    _transformMatrix.scaleY * getAttribute(RESIZE_SCALE_Y, 1);
+
+  void setScale(num sx, num sy) {
+    var oldSx = _transformMatrix.scaleX;
+    var oldSy = _transformMatrix.scaleY;
+
+    _transformMatrix.scaleX = sx;
+    _transformMatrix.scaleY = sy;
+
+    if (oldSx != sx || oldSy != sy) {
+      fire(scaleChanged, sx, sy, oldSx, oldSy);
+    }
+  }
 
   void set translateX(num tx) {
     var oldValue = _transformMatrix.translateX;
     _transformMatrix.translateX = tx;
     if (oldValue != tx) {
-      fire('translateXChanged', tx, oldValue);
+      fire(translateXChanged, tx, oldValue);
     }
   }
 
@@ -364,11 +410,23 @@ abstract class Node extends NodeBase {
     var oldValue = _transformMatrix.translateY;
     _transformMatrix.translateY = ty;
     if (oldValue != ty) {
-      fire('translateYChanged', ty, oldValue);
+      fire(translateYChanged, ty, oldValue);
     }
   }
 
   num get translateY => _transformMatrix.translateY;
+
+  void translate(num tx, num ty) {
+    var oldTx = _transformMatrix.translateX;
+    _transformMatrix.translateX = tx;
+
+    var oldTy = _transformMatrix.translateY;
+    _transformMatrix.translateY = ty;
+
+    if (oldTx != tx || oldTy != ty) {
+      fire(translateChanged, tx, ty, oldTx, oldTy);
+    }
+  }
 
   void set rotate(num r) {
     var oldValue = getAttribute(ROTATE, null);

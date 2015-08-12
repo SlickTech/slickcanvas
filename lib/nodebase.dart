@@ -25,9 +25,8 @@ class NodeBase extends EventBus {
       var event = '${attr}Changed';
       if (hasListener(event)) {
         fire(event, value, oldValue);
-      } else {
-        fire(attrChanged, attr, value, oldValue);
       }
+      fire(attrChanged, attr, value, oldValue);
     }
   }
 

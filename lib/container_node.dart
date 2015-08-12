@@ -136,4 +136,62 @@ abstract class ContainerNode extends Node with Container<Node> {
       }
     }
   }
+
+  @override
+  BBox getBBox(bool isAbsolute) {
+    Map box = {
+      'left': double.MAX_FINITE,
+      'right': -double.MAX_FINITE,
+      'top': double.MAX_FINITE,
+      'bottom': -double.MAX_FINITE
+    };
+
+    for (Node node in children) {
+      var bbx = node.getBBox(isAbsolute);
+
+      if (isAbsolute == false && node is ContainerNode) {
+        box['left'] = min(box['left'], node.x + bbx.left);
+        box['right'] = max(box['right'], node.y + bbx.right);
+        box['top'] = min(box['top'], node.x + bbx.top);
+        box['bottom'] = max(box['bottom'], node.y + bbx.bottom);
+      } else {
+        box['left'] = min(box['left'], bbx.left);
+        box['right'] = max(box['right'], bbx.right);
+        box['top'] = min(box['top'], bbx.top);
+        box['bottom'] = max(box['bottom'], bbx.bottom);
+      }
+    }
+
+    box.forEach((k, value) {
+      if (value.abs() == double.MAX_FINITE) {
+        switch (k) {
+          case 'right':
+            box[k] = width;
+            break;
+          case 'bottom':
+            box[k] = height;
+            break;
+          default:
+            box[k] = 0;
+            break;
+        }
+      }
+    });
+
+    if (isAbsolute == false) {
+      return new BBox(
+        x: x + box['left'],
+        y: y + box['top'],
+        width: (box['right'] - box['left']) * scaleX * getAttribute(RESIZE_SCALE_X, 1),
+        height: (box['bottom'] - box['top']) * scaleY * getAttribute(RESIZE_SCALE_Y, 1)
+      );
+    }
+
+    return new BBox(
+      x: box['left'],
+      y: box['top'],
+      width: (box['right'] - box['left']) * scaleX * getAttribute(RESIZE_SCALE_X, 1),
+      height: (box['bottom'] - box['top']) * scaleY * getAttribute(RESIZE_SCALE_Y, 1)
+    );
+  }
 }

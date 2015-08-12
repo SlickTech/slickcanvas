@@ -8,6 +8,10 @@ void main() {
     WIDTH: 100,
     HEIGHT: 100,
     FILL: 'red',
+    MIN_WIDTH: 50,
+    MIN_HEIGHT: 50,
+    MAX_WIDTH: 200,
+    MAX_HEIGHT: 200
 //    OFFSET_X: -100,
 //    OFFSET_Y: -100
   });
@@ -16,7 +20,7 @@ void main() {
     R: 50,
     FILL: 'yellow',
     OFFSET_X: -100,
-    OFFSET_Y: -100
+    OFFSET_Y: -100,
   });
 
   Ellipse ellipse = new Ellipse({
@@ -120,15 +124,22 @@ void main() {
           break;
       }
 
-      svgNode = node.clone({DRAGGABLE: true});
+      svgNode = node.clone({DRAGGABLE: true, RESIZABLE: true});
       svgNode.on(mouseDown, (e){ svgNode.moveToTop(); });
       svgStage.addChild(svgNode);
+      svgNode.showControls();
+
+//      var t = node.clone({DRAGGABLE: true});
+//      t.scaleX = 2;
+//      t.scaleY = 2;
+//      svgStage.addChild(t);
+
 
 //      svgNode = node.clone({DRAGGABLE: true, ROTATE: 45, ROTATE_X: 50, ROTATE_Y: 50});
 //      svgNode.on(MOUSEDOWN, (e){ svgNode.moveToTop(); });
 //      svgStage.addChild(svgNode);
 
-      canvasNode = node.clone({DRAGGABLE: true});
+      canvasNode = node.clone({DRAGGABLE: true, RESIZABLE: true});
       canvasNode.on(mouseDown, (e){ canvasNode.moveToTop(); });
       canvasStage.addChild(canvasNode);
 

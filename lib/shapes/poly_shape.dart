@@ -16,7 +16,12 @@ abstract class PolyShape extends Node {
   @override
   BBox getBBox(bool isAbsolute) {
     _getBBox();
-    return new BBox(x: this.x, y: this.y, width: _bbox.width, height: _bbox.height);
+    return new BBox(
+      x: this.x,
+      y: this.y,
+      width: _bbox.width * actualScaleX,
+      height: _bbox.height * actualScaleY
+    );
   }
 
   void _getBBox() {
@@ -32,12 +37,12 @@ abstract class PolyShape extends Node {
         minY = min(minY, points[i].y);
         maxY = max(maxY, points[i].y);
       }
-      var halfStrokeWidth = strokeWidth / 2 + 10;
+      var halfStrokeWidth = strokeWidth / 2;
       _bbox = new BBox(
-        x: minX - halfStrokeWidth,
-        y: minY - halfStrokeWidth,
-        width: maxX - minX + strokeWidth + 20,
-        height: maxY - minY + strokeWidth + 16
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY
       );
     }
   }

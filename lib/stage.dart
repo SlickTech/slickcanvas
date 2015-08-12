@@ -87,19 +87,18 @@ class Stage extends NodeBase with Container<Node> {
       setAttribute(HEIGHT, _container.clientHeight);
     }
 
-    var scale = getAttribute(SCALE);
-    if (scale != null) {
-      scaleX = scale;
-      scaleY = scale;
+    var s = getAttribute(SCALE);
+    if (s != null) {
+      scale(s, s);
     } else {
-      scale = getAttribute(SCALE_X);
-      if (scale != null) {
-        scaleX = scale;
+      s = getAttribute(SCALE_X);
+      if (s != null) {
+        scaleX = s;
       }
 
-      scale = getAttribute(SCALE_Y);
-      if (scale != null) {
-        scaleY = scale;
+      s = getAttribute(SCALE_Y);
+      if (s != null) {
+        scaleY = s;
       }
     }
   }
@@ -131,9 +130,9 @@ class Stage extends NodeBase with Container<Node> {
   void _setPointerPosition(e) {
     var elementClientRect = _element.getBoundingClientRect();
     var x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX -
-    _transformMatrix.translateX;
+      _transformMatrix.translateX;
     var y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY -
-    _transformMatrix.translateY;
+      _transformMatrix.translateY;
     this._pointerPosition = new Position(x: x, y: y);
   }
 
@@ -141,7 +140,7 @@ class Stage extends NodeBase with Container<Node> {
     if (_pointerPosition != null) {
       var factor = oldScaleX / newScaleX;
       _pointerPosition.x = _pointerPosition.x * factor +
-      _transformMatrix.translateX * (factor - 1);
+        _transformMatrix.translateX * (factor - 1);
     }
   }
 
@@ -149,7 +148,7 @@ class Stage extends NodeBase with Container<Node> {
     if (_pointerPosition != null) {
       var factor = oldScaleY / newScaleY;
       _pointerPosition.y = _pointerPosition.y * factor +
-      _transformMatrix.translateY * (factor - 1);
+        _transformMatrix.translateY * (factor - 1);
     }
   }
 
@@ -266,8 +265,10 @@ class Stage extends NodeBase with Container<Node> {
       _dragStarted = true;
     }
 
-    translateX += _pointerPosition.x - _preDragPointerPosition.x;
-    translateY += _pointerPosition.y - _preDragPointerPosition.y;
+    translate(
+      translateX + _pointerPosition.x - _preDragPointerPosition.x,
+      translateY + _pointerPosition.y - _preDragPointerPosition.y
+    );
     _preDragPointerPosition = _pointerPosition;
     fire(dragMove, e);
   }
@@ -318,7 +319,7 @@ class Stage extends NodeBase with Container<Node> {
 
     if (oldValue != x) {
       _updatePointerPositionXFromScaleXChange(x, oldValue);
-      fire('scaleXChanged', x, oldValue);
+      fire(scaleXChanged, x, oldValue);
     }
   }
 
@@ -328,34 +329,35 @@ class Stage extends NodeBase with Container<Node> {
 
     if (oldValue != y) {
       _updatePointerPositionYFromScaleYChange(y, oldValue);
-      fire('scaleYChanged', y, oldValue);
+      fire(scaleYChanged, y, oldValue);
     }
-  }
-
-  void set scale(scale) {
-    num x, y;
-    if (scale is num) {
-      x = scale;
-      y = scale;
-    } else if (scale is Map) {
-      x = getValue(scale, X);
-      y = getValue(scale, Y);
-      if (x == null && y == null) {
-        return;
-      } else if (x == null) {
-        x = y;
-      } else if (y == null) {
-        y = x;
-      }
-    }
-
-    scaleX = x;
-    scaleY = y;
   }
 
   num get scaleX => _transformMatrix.scaleX;
-
   num get scaleY => _transformMatrix.scaleY;
+
+  void scale(num sx, num sy) {
+    var oldSx = _transformMatrix.scaleX;
+    var oldSy = _transformMatrix.scaleY;
+
+    _transformMatrix.scaleX = sx;
+    _transformMatrix.scaleY = sy;
+
+    bool changed = false;
+    if (oldSx != sx) {
+      _updatePointerPositionXFromScaleXChange(sx, oldSx);
+      changed = true;
+    }
+
+    if (oldSy != sy) {
+      _updatePointerPositionYFromScaleYChange(sy, oldSy);
+      changed = true;
+    }
+
+    if (changed) {
+      fire(scaleChanged, sx, sy, oldSx, oldSy);
+    }
+  }
 
   void set translateX(num tx) {
     var oldValue = _transformMatrix.translateX;
@@ -365,7 +367,7 @@ class Stage extends NodeBase with Container<Node> {
 //      if (this._dragging == false) {
       _updatePointerPositionXFromTranslateXChange(tx, oldValue);
 //      }
-      fire('translateXChanged', tx, oldValue);
+      fire(translateXChanged, tx, oldValue);
     }
   }
 
@@ -379,11 +381,35 @@ class Stage extends NodeBase with Container<Node> {
 //      if (!this._dragging == false) {
       _updatePointerPositionYFromTranslateYChange(ty, oldValue);
 //      }
-      fire('translateYChanged', ty, oldValue);
+      fire(translateYChanged, ty, oldValue);
     }
   }
 
   num get translateY => _transformMatrix.translateY;
+
+  void translate(num tx, num ty) {
+    var oldTx = _transformMatrix.translateX;
+    var oldTy = _transformMatrix.translateY;
+
+    _transformMatrix.translateX = tx;
+    _transformMatrix.translateY = ty;
+
+    bool changed = false;
+
+    if (oldTx != tx) {
+      _updatePointerPositionXFromTranslateXChange(tx, oldTx);
+      changed = true;
+    }
+
+    if (oldTy != ty) {
+      _updatePointerPositionYFromTranslateYChange(ty, oldTy);
+      changed = true;
+    }
+
+    if (changed) {
+      fire(translateChanged, tx, ty, oldTx, oldTy);
+    }
+  }
 
   dom.Element get container => _container;
 

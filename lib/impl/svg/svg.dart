@@ -2,6 +2,7 @@ library smartcanvas.svg;
 
 import 'dart:html' as dom;
 import 'dart:svg' as svg;
+import 'dart:math';
 import 'dart:async';
 import 'package:dart_ext/collection_ext.dart';
 import '../../event/event_bus.dart';
@@ -14,6 +15,17 @@ part 'svg_layer.dart';
 part 'svg_pattern.dart';
 part 'svg_def_layer.dart';
 part 'svg_container_node.dart';
+part 'svg_draggable_node.dart';
+
+part 'control_points/svg_control_point.dart';
+part 'control_points/svg_n_control_point.dart';
+part 'control_points/svg_s_control_point.dart';
+part 'control_points/svg_w_control_point.dart';
+part 'control_points/svg_e_control_point.dart';
+part 'control_points/svg_nw_control_point.dart';
+part 'control_points/svg_ne_control_point.dart';
+part 'control_points/svg_sw_control_point.dart';
+part 'control_points/svg_se_control_point.dart';
 
 part 'shapes/svg_circle.dart';
 part 'shapes/svg_rect.dart';

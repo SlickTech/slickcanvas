@@ -18,8 +18,13 @@ abstract class CanvasGraphNode extends CanvasNode {
     _setElementStyles();
 
     shell
-      ..on('translateXChanged', () => _refresh())
-      ..on('translateYChanged', () => _refresh())
+      ..on(translateXChanged, () => _refresh())
+      ..on(translateYChanged, () => _refresh())
+      ..on(translateChanged, () => _refresh())
+      ..on(scaleXChanged, () => _refresh())
+      ..on(scaleYChanged, () => _refresh())
+      ..on(scaleChanged, () => _refresh())
+      ..on(resize, () => _refresh())
       ..on('widthChanged', _onWidthChanged)
       ..on('heighChanged', _onHeightChanged)
       ..on(attrChanged, () {
@@ -178,8 +183,8 @@ abstract class CanvasGraphNode extends CanvasNode {
     context.save();
 
     if (shell.rotate != null) {
-      num rx = shell.x + shell.getAttribute(ROTATE_X, 0);
-      num ry = shell.y + shell.getAttribute(ROTATE_Y, 0);
+      num rx = shell.x + getAttribute(ROTATE_X, 0);
+      num ry = shell.y + getAttribute(ROTATE_Y, 0);
       if (rx != 0 || ry != 0) {
         context.translate(rx, ry);
         context.rotate(shell.rotate * PI / 180);
@@ -188,7 +193,14 @@ abstract class CanvasGraphNode extends CanvasNode {
         context.rotate(shell.rotate * PI / 180);
       }
     }
-    context.transform(matrix.m11, matrix.m12, matrix.m21, matrix.m22, shell.x - offsetX, shell.y - offsetY);
+    context.transform(
+      matrix.m11 * getAttribute(RESIZE_SCALE_X, 1),
+      matrix.m12,
+      matrix.m21,
+      matrix.m22 * getAttribute(RESIZE_SCALE_Y, 1),
+      shell.x - offsetX,
+      shell.y - offsetY
+    );
 
     if (_useCache) {
       context.drawImageScaled(_cacheCanvas, 0, 0, _cacheCanvas.width / dom.window.devicePixelRatio,

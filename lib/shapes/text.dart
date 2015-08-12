@@ -12,7 +12,7 @@ class Text extends Node {
 
     this
       ..on('textChanged', _updateParts)
-      ..on('widthChange', _updateParts);
+      ..on('widthChanged', _updateParts);
   }
 
   @override
@@ -37,7 +37,9 @@ class Text extends Node {
   }
 
   void _updateParts() {
-    if (noWrap || !hasAttribute(WIDTH)) {
+    _parts.clear();
+
+    if (wrap == false || !hasAttribute(WIDTH)) {
       _parts = [this.text];
     } else {
       if (Text.measureText(font, text) > getAttribute(WIDTH)) {
@@ -86,9 +88,9 @@ class Text extends Node {
 //  void set fontVariant(String value) => setAttribute('font-variant', value);
 //  String get fontVariant => getAttribute('font-variant', 'normal');
 //
-//  /**
-//   *  set/get font style. Can be 'normal', 'italic' or 'bold'. 'normal' is default.
-//   */
+  /**
+   *  set/get font style. Can be 'normal', 'italic' or 'bold'. 'normal' is default.
+   */
   void set fontStyle(String value) => setAttribute('font-style', value);
   String get fontStyle => getAttribute('font-style', 'normal');
 
@@ -130,8 +132,8 @@ class Text extends Node {
   void set textAnchor(String value) => setAttribute(TEXT_ANCHOR, value);
   String get textAnchor => getAttribute(TEXT_ANCHOR);
 
-  void set noWrap(bool value) => setAttribute(NO_WRAP, value);
-  bool get noWrap => getAttribute(NO_WRAP, true);
+  void set wrap(bool value) => setAttribute(WRAP, value);
+  bool get wrap => getAttribute(WRAP, false);
 
   void set wordSplitter(String value) => setAttribute(WORD_SPLITTER, value);
   String get wordSplitter => getAttribute(WORD_SPLITTER, ' ');
@@ -139,6 +141,6 @@ class Text extends Node {
   @override
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x, y: pos.y - fontSize * scaleY, width: this.width * scaleX, height: this.height * scaleY);
+    return new BBox(x: pos.x, y: pos.y - fontSize, width: actualWidth, height: this.actualHeight);
   }
 }

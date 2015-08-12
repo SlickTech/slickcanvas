@@ -32,6 +32,16 @@ const stageMouseMove = 'stageMouseMove';
 const stageDblClick = 'stageDblClick';
 const stageClick = 'stageClick';
 
+const resize = 'resize';
+
+const scaleChanged = 'scaleChanged';
+const scaleXChanged = 'scaleXChanged';
+const scaleYChanged = 'scaleYChanged';
+
+const translateChanged = 'translateChanged';
+const translateXChanged = 'translateXChanged';
+const translateYChanged = 'translateYChanged';
+
 // attributes & styles
 const X = 'x';
 const Y = 'y';
@@ -97,11 +107,22 @@ const NS_XLINK = 'http://www.w3.org/1999/xlink';
 const ROTATE = 'rotate';
 const ROTATE_X = 'rotate_x';
 const ROTATE_Y = 'rotate_y';
-const NO_WRAP = 'nowrap';
+const WRAP = 'wrap';
 const WORD_SPLITTER = 'wordSplitter';
-const SHOW_CONTROLS = 'showControls';
 const VISIBLE = 'visible';
 const REFLECTABLE = 'reflectable';
+const RESIZABLE = 'resizable';
+const CURSOR = 'cursor';
+const SHOW_CONTROLS_ON_CLICK = 'showControlsOnClick';
+const CONTROLS = 'controls';
+
+const RESIZE_SCALE_X = '__resizeScaleX';
+const RESIZE_SCALE_Y = '__resizeScaleY';
+
+const MIN_WIDTH = 'minWidth';
+const MIN_HEIGHT = 'minHeight';
+const MAX_WIDTH = 'maxWidth';
+const MAX_HEIGHT = 'maxHeight';
 
 // exception
 const ExpNotImplemented = 'Not Implemented';

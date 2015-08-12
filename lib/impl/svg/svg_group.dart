@@ -2,33 +2,41 @@ part of smartcanvas.svg;
 
 class SvgGroup extends SvgContainerNode {
 
-    SvgGroup(Group shell, bool isReflection) : super(shell, isReflection);
+  SvgGroup(Group shell, bool isReflection) : super(shell, isReflection);
 
-    @override
-    svg.SvgElement _createElement() => new svg.GElement();
+  @override
+  svg.SvgElement _createElement() => new svg.GElement();
 
-    @override
-    void _setElementAttribute(String attr) {
-        super._setElementAttribute(attr);
-        num x = shell.attrs[X];
-        num y = shell.attrs[Y];
-        bool b = false;
-        if (x != null) {
-            shell.translateX = x;
-            b = true;
-        }
+  @override
+  Set<String> _getElementAttributeNames() {
+    var attrs = super._getElementAttributeNames();
+    attrs.addAll([X, Y, WIDTH, HEIGHT]);
+    return attrs;
+  }
 
-        if (y != null) {
-            shell.translateY = y;
-            b = true;
-        }
+  @override
+  bool _setElementAttribute(String attr) {
+    var rt = super._setElementAttribute(attr);
+    var value = shell.attrs[attr];
 
-        if (b) {
-            transform();
-        }
+    if (attr == X) {
+      _implElement.attributes.remove(X);
+      if (value != null) {
+        shell.translateX = value;
+        rt = true;
+      }
+    } else if (attr == Y) {
+      _implElement.attributes.remove(Y);
+      if (value != null) {
+        shell.translateY = value;
+        rt= true;
+      }
     }
+    return rt;
+  }
 
-    static const String _scGroup = '__sc_group';
-    @override
-    String get _nodeName => _scGroup;
+  static const String _scGroup = '__sc_group';
+
+  @override
+  String get _nodeName => _scGroup;
 }

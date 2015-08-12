@@ -30,10 +30,10 @@ class Circle extends Node {
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(
-      x: pos.x - r * scaleX,
-      y: pos.y - r * scaleY,
-      width: this.width * scaleX,
-      height: this.height * scaleY
+      x: pos.x - r,
+      y: pos.y - r,
+      width: this.actualWidth,
+      height: this.actualHeight
     );
   }
 

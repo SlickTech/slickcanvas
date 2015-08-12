@@ -68,33 +68,37 @@ class GridLayer extends Layer {
     this.stage
       ..on('widthChanged', (newValue){ _axisX.x2 = newValue; })
       ..on('heightChanged', (newValue) { _axisY.y2 = newValue; })
-      ..on('translateXChanged', _onStageTranslateXChanged)
-      ..on('translateYChanged', _onStageTranslateYChanged)
-      ..on('scaleXChanged', _onStageScaleXChanged)
-      ..on('scaleYChanged', _onStageScaleYChanged);
+      ..on(translateChanged, _onStageTranslateChanged)
+      ..on(scaleXChanged, _onStageScaleXChanged)
+      ..on(scaleYChanged, _onStageScaleYChanged)
+      ..on(scaleChanged, _onStageScaleChange);
   }
 
-  void _onStageTranslateXChanged(newValue) {
-    _grid.x = -newValue;
-    _deltaX = newValue % gridSize;
+  void _onStageTranslateChanged(num newTx, num newTy) {
+    _grid.x = -newTx;
+    _grid.y = -newTy;
+
+    _deltaX = newTx % gridSize;
+    _deltaY = newTy % gridSize;
+
     _gridPatternLine.d = 'M0 ${_deltaY}L${gridSize} ${_deltaY}M${_deltaX} 0L${_deltaX} ${gridSize}';
-    _axisX.x = -newValue;
+
+    _axisX.x = -newTx;
+    _axisY.y = -newTy;
   }
 
-  void _onStageTranslateYChanged(newValue) {
-    _grid.y = -newValue;
-    _deltaY = newValue % gridSize;
-    _gridPatternLine.d = 'M0 ${_deltaY}L${gridSize} ${_deltaY}M${_deltaX} 0L${_deltaX} ${gridSize}';
-    _axisY.y = -newValue;
+  void _onStageScaleChange(num newScaleX, num newScaleY) {
+    _onStageScaleXChanged(newScaleX);
+    _onStageScaleYChanged(newScaleY);
   }
 
-  void _onStageScaleXChanged(newValue) {
+  void _onStageScaleXChanged(num newValue) {
     num newWidth = this.width / newValue;
     _grid.width = newWidth;
     _axisX.x2 = newWidth;
   }
 
-  void _onStageScaleYChanged(newValue) {
+  void _onStageScaleYChanged(num newValue) {
     num newHeight = this.height / newValue;
     _grid.height = newHeight;
     _axisY.y2 = newHeight;
@@ -184,11 +188,13 @@ void main() {
     _gridLayer.suspend();
     _drawingLayer.suspend();
 
-    stage.scale = newScale;
+    stage.scale(newScale, newScale);
 
     // scale at pointer position;
-    stage.translateX += stage.pointerPosition.x - x;
-    stage.translateY += stage.pointerPosition.y - y;
+    stage.translate(
+      stage.translateX + stage.pointerPosition.x - x,
+      stage.translateY + stage.pointerPosition.y - y
+    );
 
     _gridLayer.resume();
     _drawingLayer.resume();

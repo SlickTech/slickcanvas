@@ -40,8 +40,8 @@ class EventHandlers {
   bool get isNotEmpty => _handlers.isNotEmpty;
 
   call([dynamic arg0, arg1, arg2, arg3, arg4, arg5]) {
-    _handlers.forEach((handler) {
+    for (EventHandler handler in _handlers) {
       handler(arg0, arg1, arg2, arg3, arg4, arg5);
-    });
+    }
   }
 }

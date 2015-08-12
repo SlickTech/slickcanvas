@@ -18,10 +18,10 @@ class Ellipse extends Node {
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
     return new BBox(
-      x: pos.x - rx * scaleX,
-      y: pos.y - ry * scaleY,
-      width: width * scaleX,
-      height: height * scaleY
+      x: pos.x - rx,
+      y: pos.y - ry,
+      width: this.actualWidth,
+      height: this.actualHeight
     );
   }
 

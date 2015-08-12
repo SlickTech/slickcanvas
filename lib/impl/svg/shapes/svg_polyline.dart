@@ -15,12 +15,12 @@ class SvgPolyline extends SvgPolyShape {
   }
 
   @override
-  void _setElementAttribute(String attr) {
+  bool _setElementAttribute(String attr) {
     if (attr == POINTS) {
-      _element.attributes[attr] = shell.pointsString;
-    } else {
-      super._setElementAttribute(attr);
+      _implElement.attributes[attr] = shell.pointsString;
+      return false;
     }
+    return super._setElementAttribute(attr);
   }
 
   void set points(List<num> value) => setAttribute(POINTS, value);

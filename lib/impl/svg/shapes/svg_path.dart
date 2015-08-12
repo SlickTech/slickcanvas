@@ -26,7 +26,4 @@ class SvgPath extends SvgNode {
 
   @override
   String get _nodeName => _scPath;
-
-  @override
-  svg.PathElement get element => super.element;
 }

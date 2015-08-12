@@ -8,7 +8,7 @@ abstract class SvgContainerNode extends SvgNode with Container<SvgNode> {
   void addChild(SvgNode child) {
     children.add(child);
     child.parent = this;
-    this._element.append(child._element);
+    this._implElement.append(child.element);
 
     if (stage != null && !_isReflection) {
       _addDefs(child);
@@ -37,7 +37,7 @@ abstract class SvgContainerNode extends SvgNode with Container<SvgNode> {
   void insertChild(int index, SvgNode node) {
     node.parent = this;
     children.insert(index, node);
-    this._element.nodes.insert(index, node._element);
+    this._implElement.nodes.insert(index, node.element);
     _addDefs(node);
   }
 

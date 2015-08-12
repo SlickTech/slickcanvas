@@ -2,7 +2,10 @@ part of smartcanvas.svg;
 
 class SvgText extends SvgNode {
   SvgText(Text shell, bool isReflection): super(shell, isReflection) {
-    shell.on('textChanged', _handleTextChange);
+    shell
+      ..on('textChanged', _handleTextChange)
+      ..on('widthChanged', _handleTextChange)
+    ;
   }
 
   @override
@@ -18,15 +21,17 @@ class SvgText extends SvgNode {
 
     var parts = shell.partsOfWrappedText();
 
+    var preTspan;
     for (num i = 0; i < parts.length; ++i) {
       if (i == 0) {
         text.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSplitter));
       } else {
         svg.TSpanElement tspan = new svg.TSpanElement();
         tspan.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSplitter));
-        tspan.setAttribute('dx', '-${Text.measureText(shell.font, parts[i - 1] + shell.wordSplitter)}');
+        tspan.setAttribute('x', '0');
         tspan.setAttribute('dy', '${shell.fontSize}');
         text.append(tspan);
+        preTspan = tspan;
       }
     }
   }
@@ -41,11 +46,11 @@ class SvgText extends SvgNode {
   @override
   void _setElementStyles() {
     super._setElementStyles();
-    _element.style.setProperty(FONT_SIZE, '${shell.fontSize}px');
-    _element.style.setProperty(FONT_FAMILY, '${shell.fontFamily}');
-    _element.style.setProperty(FONT_WEIGHT, '${shell.fontWeight}');
-    _element.style.setProperty(FONT_STYLE, '${shell.fontStyle}');
-    _element.style.setProperty(TEXT_ANCHOR, '${shell.textAnchor}');
+    _implElement.style.setProperty(FONT_SIZE, '${shell.fontSize}px');
+    _implElement.style.setProperty(FONT_FAMILY, '${shell.fontFamily}');
+    _implElement.style.setProperty(FONT_WEIGHT, '${shell.fontWeight}');
+    _implElement.style.setProperty(FONT_STYLE, '${shell.fontStyle}');
+    _implElement.style.setProperty(TEXT_ANCHOR, '${shell.textAnchor}');
   }
 
   @override
@@ -59,10 +64,10 @@ class SvgText extends SvgNode {
     return super._isStyle(attr);
   }
 
-  void _handleTextChange() => _updateTextContent(_element);
+  void _handleTextChange() => _updateTextContent(_implElement);
 
   @override
-  num get width => (_element as svg.TextElement).getBBox().width;
+  num get width => (_implElement as svg.TextElement).getBBox().width;
 
   static const String _scText = '__sc_text';
 

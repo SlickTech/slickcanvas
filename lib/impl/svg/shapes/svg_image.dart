@@ -15,17 +15,17 @@ class SvgImage extends SvgNode {
   }
 
   @override
-  void _setElementAttribute(String attr) {
-    var value = getAttribute(attr);
-    if (value != null) {
-      if (!(value is String) || !value.isEmpty) {
-        if (attr == HREF) {
-          _element.setAttributeNS(NS_XLINK, HREF, '$value');
-        } else {
-          _element.attributes[attr] = '$value';
+  bool _setElementAttribute(String attr) {
+    if (attr == HREF) {
+      var value = getAttribute(attr);
+      if (value != null) {
+        if (value is! String || !value.isEmpty) {
+          _implElement.setAttributeNS(NS_XLINK, HREF, '$value');
         }
       }
+      return false;
     }
+    return super._setElementAttribute(attr);
   }
 
   static const String _scImage = '__sc_image';

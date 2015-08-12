@@ -14,14 +14,15 @@ abstract class SvgPolyShape extends SvgNode {
   }
 
   @override
-  void _setElementAttribute(String attr) {
+  bool _setElementAttribute(String attr) {
     if (attr == X) {
       _offsetX = getAttribute(attr, 0);
+      return false;
     } else if (attr == Y) {
       _offsetY = getAttribute(attr, 0);
-    } else {
-      super._setElementAttribute(attr);
+      return false;
     }
+    return super._setElementAttribute(attr);
   }
 
   @override

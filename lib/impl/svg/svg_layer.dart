@@ -23,25 +23,25 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
   List<String> _getStyleNames() => [BACKGROUND, OPACITY, DISPLAY];
 
   @override
-  void _setElementAttribute(String attr) {
+  bool _setElementAttribute(String attr) {
     if (attr == 'viewBox') {
       _setViewBox();
-      _element.setAttribute('preserveAspectRatio', 'none');
-    } else {
-      super._setElementAttribute(attr);
+      _implElement.setAttribute('preserveAspectRatio', 'none');
+      return false;
     }
+    return super._setElementAttribute(attr);
   }
 
   void _setViewBox() {
     var w = getAttribute(WIDTH, 0) / this.getAttribute(SCALE_X, 1);
     var h = getAttribute(HEIGHT, 0) / this.getAttribute(SCALE_Y, 1);
-    _element.setAttribute('viewBox', '0 0 $w $h');
+    _implElement.setAttribute('viewBox', '0 0 $w $h');
   }
 
   @override
   void _setElementStyles() {
     super._setElementStyles();
-    _element.style
+    _implElement.style
       ..position = ABSOLUTE
       ..top = ZERO
       ..left = ZERO
@@ -54,7 +54,7 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
     if (_suspendRefCount > 0) {
       if (--_suspendRefCount == 0) {
         var idx = this.shell.stage.children.indexOf(this.shell);
-        this.shell.stage.element.nodes[idx].replaceWith(this._element);
+        this.shell.stage.element.nodes[idx].replaceWith(this._implElement);
 
         this._defs.forEach((def) {
           SvgDefLayer.impl(stage).resumeDef(def);
@@ -65,11 +65,11 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
 
   @override
   void suspend() {
-    if (this._element.parent != null) {
+    if (this._implElement.parent != null) {
       if (_suspendRefCount == 0) {
-        svg.SvgElement dummy = this._element.clone(true);
+        svg.SvgElement dummy = this._implElement.clone(true);
         dummy.classes.add('dummy');
-        this._element.replaceWith(dummy);
+        this._implElement.replaceWith(dummy);
 
         this._defs.forEach((def) {
           SvgDefLayer.impl(stage).suspendDef(def);
@@ -83,10 +83,12 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
   void remove() {
     var sUid = shell.uid.toString();
     shell.stage
-      ..off('scaleXChanged', sUid)
-      ..off('scaleYChanged', sUid)
-      ..off('translateXChanged', sUid)
-      ..off('translateYChanged', sUid);
+      ..off(scaleXChanged, sUid)
+      ..off(scaleYChanged, sUid)
+      ..off(scaleChanged, sUid)
+      ..off(translateXChanged, sUid)
+      ..off(translateYChanged, sUid)
+      ..off(translateChanged, sUid);
 
     if (!_isReflection) {
       children.forEach((child) {
@@ -107,10 +109,12 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
 
     var sUid = shell.uid.toString();
     shell.stage
-      ..on('scaleXChanged', _onScaleXChanged, sUid)
-      ..on('scaleYChanged', _onScaleYChanged, sUid)
-      ..on('translateXChanged', _onTranslateXChanged, sUid)
-      ..on('translateYChanged', _onTranslateYChanged, sUid);
+      ..on(scaleXChanged, _scaleViewBoxWidth, sUid)
+      ..on(scaleYChanged, _scaleViewBoxHeight, sUid)
+      ..on(scaleChanged, _onScaleChanged, sUid)
+      ..on(translateXChanged, _onTranslateXChanged, sUid)
+      ..on(translateYChanged, _onTranslateYChanged, sUid)
+      ..on(translateChanged, _onTranslateChanged, sUid);
 
     if (!_isReflection) {
       children.forEach((child) {
@@ -120,51 +124,57 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
   }
 
   void _onWidthChanged(newValue) {
-    _element.setAttribute(WIDTH, '$newValue');
-    (_element as svg.SvgSvgElement).viewBox.baseVal
+    _implElement.setAttribute(WIDTH, '$newValue');
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal
       ..width = newValue / (getAttribute(SCALE_X, 1) * shell.stage.scaleX);
   }
 
   void _onHeightChanged(newValue) {
-    _element.setAttribute(HEIGHT, '$newValue');
-    (_element as svg.SvgSvgElement).viewBox.baseVal
+    _implElement.setAttribute(HEIGHT, '$newValue');
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal
       ..height = newValue / (getAttribute(SCALE_Y, 1) * shell.stage.scaleY);
   }
 
   void _onOpacityChanged(num newValue) {
-    _element.style.opacity = '$newValue';
+    _implElement.style.opacity = '$newValue';
   }
 
-  void _onScaleXChanged(num newValue) => _scaleViewBoxWidth(newValue);
-
-  void _onScaleYChanged(num newValue) => _scaleViewBoxHeight(newValue);
+  void _onScaleChanged(num scaleX, num scaleY) {
+    _scaleViewBoxWidth(scaleX);
+    _scaleViewBoxHeight(scaleY);
+  }
 
   void _scaleViewBoxWidth(num scaleX) {
     if (scaleX == 0) {
       scaleX = 0.0000001;
     }
-    (_element as svg.SvgSvgElement).viewBox.baseVal.width =
-    getAttribute(WIDTH, 0) / scaleX;
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal.width =
+      getAttribute(WIDTH, 0) / scaleX;
   }
 
   void _scaleViewBoxHeight(num scaleY) {
     if (scaleY == 0) {
       scaleY = 0.0000001;
     }
-    (_element as svg.SvgSvgElement).viewBox.baseVal.height =
-    getAttribute(HEIGHT, 0) / scaleY;
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal.height =
+      getAttribute(HEIGHT, 0) / scaleY;
   }
 
-  void _onTranslateXChanged(newValue) => _translateViewBoxX(newValue);
+  void _onTranslateChanged(num tx, num ty) {
+    _translateViewBoxX(tx);
+    _translateViewBoxY(ty);
+  }
 
-  void _onTranslateYChanged(newValue) => _translateViewBoxY(newValue);
+  void _onTranslateXChanged(num newValue) => _translateViewBoxX(newValue);
+
+  void _onTranslateYChanged(num newValue) => _translateViewBoxY(newValue);
 
   void _translateViewBoxX(num translateX) {
-    (_element as svg.SvgSvgElement).viewBox.baseVal.x = -translateX;
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal.x = -translateX;
   }
 
   void _translateViewBoxY(num translateY) {
-    (_element as svg.SvgSvgElement).viewBox.baseVal.y = -translateY;
+    (_implElement as svg.SvgSvgElement).viewBox.baseVal.y = -translateY;
   }
 
   static const String _scLayer = '__sc_layer';
@@ -173,7 +183,7 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
   String get _nodeName => _scLayer;
 
   Position get position {
-    var viewBox = (_element as svg.SvgSvgElement).viewBox;
+    var viewBox = (_implElement as svg.SvgSvgElement).viewBox;
     return new Position(x: -viewBox.baseVal.x, y: -viewBox.baseVal.y);
   }
 
