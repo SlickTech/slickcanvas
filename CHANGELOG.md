@@ -1,3 +1,6 @@
+##0.2.0+4
+* Add REFLECTABLE attribute to force a note be not reflectable.
+
 ##0.2.0+3
 * Fix missing constant.
 

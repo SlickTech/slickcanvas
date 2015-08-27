@@ -7,6 +7,7 @@ class Group extends ContainerNode {
   @override
   Node _createNewInstance(Map<String, dynamic> config) => new Group(config);
 
+  @override
   NodeImpl _createSvgImpl([bool isReflection = false]) {
     var impl = new SvgGroup(this, isReflection);
 
@@ -44,21 +45,26 @@ class Group extends ContainerNode {
     }
   }
 
+  @override
   NodeImpl _createCanvasImpl() {
     throw ExpNotImplemented;
   }
 
+  @override
   bool get reflectable {
-    var rt = super.reflectable;
-    if (!rt) {
-      for (int i = 0; i < children.length; i++) {
-        if (children[i].reflectable) {
-          rt = true;
-          break;
+    if (getAttribute(REFLECTABLE, true)) {
+      var rt = super.reflectable;
+      if (!rt) {
+        for (int i = 0; i < children.length; i++) {
+          if (children[i].reflectable) {
+            rt = true;
+            break;
+          }
         }
       }
+      return rt;
     }
-    return rt;
+    return false;
   }
 
   List get _defs {

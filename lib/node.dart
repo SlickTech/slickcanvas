@@ -17,6 +17,16 @@ abstract class Node extends NodeBase {
 
   Node(Map<String, dynamic> config) : super(config) {
     _populateConfig();
+
+    on('reflectableChanged', () {
+      if (reflectable && _reflection == null) {
+        if (this.parent != null) {
+          (this.parent as ContainerNode)._reflectChild(this);
+        }
+      } else if (_reflection != null) {
+        _reflection.remove();
+      }
+    });
   }
 
   void _populateConfig() {
@@ -204,7 +214,7 @@ abstract class Node extends NodeBase {
    *
    * A node is reflectable if the node was draggable or listening
    */
-  bool get reflectable => draggable || _isListening;
+  bool get reflectable => getAttribute(REFLECTABLE, true) && (draggable || _isListening);
 
   /**
    * Get the layer of the node
@@ -299,9 +309,6 @@ abstract class Node extends NodeBase {
 
   void set draggable(bool value) => setAttribute(DRAGGABLE, value);
   bool get draggable => getAttribute(DRAGGABLE, false);
-
-  void set resizable(bool value) => setAttribute(RESIZABLE, value);
-  bool get resizable => getAttribute(RESIZABLE, false);
 
   bool get isListening => _isListening;
 

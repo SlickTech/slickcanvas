@@ -101,6 +101,7 @@ const NO_WRAP = 'nowrap';
 const WORD_SPLITTER = 'wordSplitter';
 const SHOW_CONTROLS = 'showControls';
 const VISIBLE = 'visible';
+const REFLECTABLE = 'reflectable';
 
 // exception
 const ExpNotImplemented = 'Not Implemented';
