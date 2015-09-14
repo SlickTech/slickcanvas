@@ -9,7 +9,7 @@ class SvgRect extends SvgNode {
   @override
   Set<String> _getElementAttributeNames() {
     var attrs = super._getElementAttributeNames();
-    attrs.addAll(['x', 'y', 'rx', 'ry', 'width', 'height']);
+    attrs.addAll([X, Y, RX, RY, WIDTH, HEIGHT]);
     return attrs;
   }
 

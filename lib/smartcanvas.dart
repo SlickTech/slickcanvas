@@ -37,6 +37,7 @@ part 'shapes/ellipse.dart';
 part 'shapes/rect.dart';
 part 'shapes/line.dart';
 part 'shapes/text.dart';
+part 'shapes/poly_shape.dart';
 part 'shapes/polygon.dart';
 part 'shapes/path.dart';
 part 'shapes/polyline.dart';

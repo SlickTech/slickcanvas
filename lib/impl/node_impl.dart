@@ -44,4 +44,10 @@ abstract class NodeImpl {
   }
 
   num get strokeWidth => shell.strokeWidth;
+
+  void set translateX(num value) { shell.translateX = value; }
+  num get translateX => shell.translateX;
+
+  void set translateY(num value) { shell.translateY = value; }
+  num get translateY => shell.translateY;
 }

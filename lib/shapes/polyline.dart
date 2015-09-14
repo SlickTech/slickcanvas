@@ -1,17 +1,9 @@
 part of smartcanvas;
 
-class Polyline extends Node {
-  BBox _bbox = null;
-  List<Position> _points = null;
+class Polyline extends PolyShape {
 
   Polyline([Map<String, dynamic> config = const {}]): super(config) {
     setAttribute(FILL, 'none');
-    this
-      ..on('translateXChanged translateYChanged', () => _bbox = null)
-      ..on('pointsChanged', () {
-      _bbox = null;
-      _points = null;
-    });
   }
 
   @override
@@ -24,6 +16,7 @@ class Polyline extends Node {
   @override
   NodeImpl _createCanvasImpl() => new CanvasPolyline(this);
 
+  @override
   void set points(dynamic value) {
     if (value is List) {
       if (value.isNotEmpty) {
@@ -44,6 +37,7 @@ class Polyline extends Node {
     }
   }
 
+  @override
   List<Position> get points {
     if (_points == null) {
       _points = [];
@@ -65,65 +59,13 @@ class Polyline extends Node {
     return _points;
   }
 
+  @override
   String get pointsString {
     var rt = empty;
     points.forEach((point) {
       rt += '${rt.length == 0 ? empty : " "}${point.x},${point.y}';
     });
     return rt;
-  }
-
-  @override
-  BBox getBBox(bool isAbsolute) {
-    _getBBox();
-    return new BBox(x: this.x, y: this.y, width: _bbox.width, height: _bbox.height);
-  }
-
-  void _getBBox() {
-    if (_bbox == null) {
-      var points = this.points;
-      var minX = double.MAX_FINITE;
-      var maxX = -double.MAX_FINITE;
-      var minY = double.MAX_FINITE;
-      var maxY = -double.MAX_FINITE;
-      for (int i = 0; i < points.length; i++) {
-        minX = min(minX, points[i].x);
-        maxX = max(maxX, points[i].x);
-        minY = min(minY, points[i].y);
-        maxY = max(maxY, points[i].y);
-      }
-      var halfStrokeWidth = strokeWidth / 2 + 10;
-      _bbox = new BBox(x: minX - halfStrokeWidth, y: minY - halfStrokeWidth,
-      width: maxX - minX + strokeWidth + 20, height: maxY - minY + strokeWidth + 16);
-    }
-  }
-
-  @override
-  num get x {
-    _getBBox();
-    return super.x + _bbox.x;
-  }
-
-  @override
-  num get y {
-    _getBBox();
-    return super.y + _bbox.y;
-  }
-
-  @override
-  num get width {
-    _getBBox();
-    return _bbox.width;
-  }
-
-  @override
-  num get height {
-    _getBBox();
-    return _bbox.height;
-  }
-
-  Position get origin {
-    return new Position(x: super.x, y: super.y);
   }
 
   // Fill is always none

@@ -58,12 +58,15 @@ void main() {
   Polygon polygon = new Polygon({
     'points': "220,10,300,210,170,250,-123,234",
     'fill': 'lime',
+    X: 200
   });
 
   Polyline polyline = new Polyline({
     'points': [200, 200, -100, -100, 100, 0],
     'stroke': 'red',
-    'stroke-width': 5
+    'stroke-width': 5,
+    X: 100,
+    Y: 100
   });
 
   Image image = new Image({

@@ -1,17 +1,8 @@
 part of smartcanvas;
 
-class Polygon extends Node {
-  BBox _bbox = null;
-  List<Position> _points = null;
+class Polygon extends PolyShape {
 
-  Polygon([Map<String, dynamic> config = const {}]) : super(config) {
-    this
-      ..on('translateXChanged translateYChanged', () => _bbox = null)
-      ..on('pointsChanged', () {
-      _bbox = null;
-      _points = null;
-    });
-  }
+  Polygon([Map<String, dynamic> config = const {}]) : super(config);
 
   @override
   Node _clone(Map<String, dynamic> config) => new Polygon(config);
@@ -24,30 +15,6 @@ class Polygon extends Node {
   NodeImpl _createCanvasImpl() => new CanvasPolygon(this);
 
   @override
-  BBox getBBox(bool isAbsolute) {
-    _getBBox();
-    return new BBox(x: this.x, y: this.y, width: _bbox.width, height: _bbox.height);
-  }
-
-  void _getBBox() {
-    if (_bbox == null) {
-      var points = this.points;
-      var minX = double.MAX_FINITE;
-      var maxX = -double.MAX_FINITE;
-      var minY = double.MAX_FINITE;
-      var maxY = -double.MAX_FINITE;
-      for (int i = 0; i < points.length; i++) {
-        minX = min(minX, points[i].x);
-        maxX = max(maxX, points[i].x);
-        minY = min(minY, points[i].y);
-        maxY = max(maxY, points[i].y);
-      }
-      var halfStrokeWidth = strokeWidth / 2;
-      _bbox = new BBox(x: minX - halfStrokeWidth, y: minY - halfStrokeWidth,
-      width: maxX - minX + strokeWidth, height: maxY - minY + strokeWidth);
-    }
-  }
-
   void set points(dynamic value) {
     if (value is String) {
       setAttribute(POINTS, value);
@@ -73,6 +40,7 @@ class Polygon extends Node {
     }
   }
 
+  @override
   List<Position> get points {
     if (_points == null) {
       _points = [];
@@ -100,28 +68,4 @@ class Polygon extends Node {
   }
 
   String get pointsString => getAttribute(POINTS, '');
-
-  @override
-  num get x {
-    _getBBox();
-    return super.x + _bbox.x;
-  }
-
-  @override
-  num get y {
-    _getBBox();
-    return super.y + _bbox.y;
-  }
-
-  @override
-  num get width {
-    _getBBox();
-    return _bbox.width;
-  }
-
-  @override
-  num get height {
-    _getBBox();
-    return _bbox.height;
-  }
 }

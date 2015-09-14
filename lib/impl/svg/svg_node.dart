@@ -269,8 +269,8 @@ abstract class SvgNode extends NodeImpl {
     _dragStarting = true;
 
     var pointerPosition = this.stage.pointerPosition;
-    _dragOffsetX = pointerPosition.x - shell.translateX / shell.scaleX;
-    _dragOffsetY = pointerPosition.y - shell.translateY / shell.scaleY;
+    _dragOffsetX = pointerPosition.x - translateX / shell.scaleX;
+    _dragOffsetY = pointerPosition.y - translateY / shell.scaleY;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -302,8 +302,8 @@ abstract class SvgNode extends NodeImpl {
         _dragStarted = true;
       }
       var pointerPosition = this.stage.pointerPosition;
-      shell.translateX = (pointerPosition.x - this._dragOffsetX);
-      shell.translateY = (pointerPosition.y - this._dragOffsetY);
+      translateX = (pointerPosition.x - this._dragOffsetX);
+      translateY = (pointerPosition.y - this._dragOffsetY);
 
       shell.fire(dragMove, e);
     }
@@ -401,7 +401,7 @@ abstract class SvgNode extends NodeImpl {
       }
     }
 
-    matrix = matrix.translate(shell.translateX, shell.translateY);
+    matrix = matrix.translate(translateX, translateY);
     matrix = matrix.scaleNonUniform(shell.scaleX, shell.scaleY);
     _setTransform(matrix);
   }
