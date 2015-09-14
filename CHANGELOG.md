@@ -1,3 +1,6 @@
+##0.2.0+5
+* fixed an issue where polyline/polygon position attribute does not work
+
 ##0.2.0+4
 * Add REFLECTABLE attribute to force a note be not reflectable.
 
