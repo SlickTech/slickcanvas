@@ -209,6 +209,7 @@ class Stage extends NodeBase with Container<Node> {
     if (node is Layer) {
       children.remove(node);
       node._stage = null;
+      node._reflection = null;
     } else {
       _defaultLayer.removeChild(node);
     }

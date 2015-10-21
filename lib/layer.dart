@@ -44,12 +44,11 @@ class Layer extends Group {
         });
       }
 
-      _stage.children.remove(this);
       var sUid = uid.toString();
       _stage
         ..off('widthChanged', sUid)
         ..off('heightChanged', sUid);
-      _stage = null;
+      _stage.removeChild(this);
     }
   }
 
