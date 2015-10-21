@@ -1,3 +1,6 @@
+##0.2.0+6
+* fixed an issue where adding a node to a layer which is removed from stage, the node get reflected. 
+
 ##0.2.0+5
 * fixed an issue where polyline/polygon position attribute does not work
 
