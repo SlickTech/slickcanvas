@@ -25,6 +25,7 @@ abstract class Node extends NodeBase {
         }
       } else if (_reflection != null) {
         _reflection.remove();
+        _reflection = null;
       }
     });
   }
@@ -215,6 +216,7 @@ abstract class Node extends NodeBase {
    * A node is reflectable if the node was draggable or listening
    */
   bool get reflectable => getAttribute(REFLECTABLE, true) && (draggable || _isListening);
+  void set reflectable (bool value) => setAttribute(REFLECTABLE, value);
 
   /**
    * Get the layer of the node
