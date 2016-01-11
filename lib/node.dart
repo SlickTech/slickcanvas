@@ -165,7 +165,6 @@ abstract class Node extends NodeBase {
   Node clone([Map<String, dynamic> config]) {
     var clonedConfig = merge(attrs, config);
     var copy = _clone(clonedConfig);
-    copy._transformMatrix = _transformMatrix.clone();
     return copy;
   }
 
@@ -173,7 +172,7 @@ abstract class Node extends NodeBase {
 
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x, y: pos.y, width: this.width, height: this.height);
+    return new BBox(x: pos.x, y: pos.y, width: this.width * scaleX, height: this.height * scaleY  );
   }
 
   Position getRelativePosition(Node referenceParent) {

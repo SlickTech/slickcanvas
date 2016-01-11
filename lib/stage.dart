@@ -12,8 +12,7 @@ class Stage extends NodeBase with Container<Node> {
   bool _dragStarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
-  num _dragOffsetX = 0;
-  num _dragOffsetY = 0;
+  Position _preDragPointerPosition;
   final TransformMatrix _transformMatrix = new TransformMatrix();
 
   Stage(this._container, {Map<String, dynamic> config: const {}, defaultLayerType: CanvasType.svg})
@@ -255,8 +254,7 @@ class Stage extends NodeBase with Container<Node> {
 
     this._dragStarting = true;
 
-    this._dragOffsetX = _pointerPosition.x;
-    this._dragOffsetY = _pointerPosition.y;
+    _preDragPointerPosition = _pointerPosition;
   }
 
   void _dragMove(dom.MouseEvent e) {
@@ -267,8 +265,10 @@ class Stage extends NodeBase with Container<Node> {
       fire(dragStart, e);
       _dragStarted = true;
     }
-    translateX += _pointerPosition.x - _dragOffsetX;
-    translateY += _pointerPosition.y - _dragOffsetY;
+
+    translateX += _pointerPosition.x - _preDragPointerPosition.x;
+    translateY += _pointerPosition.y - _preDragPointerPosition.y;
+    _preDragPointerPosition = _pointerPosition;
     fire(dragMove, e);
   }
 

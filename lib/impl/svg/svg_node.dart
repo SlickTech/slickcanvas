@@ -9,8 +9,7 @@ abstract class SvgNode extends NodeImpl {
   bool _dragStarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
-  num _dragOffsetX;
-  num _dragOffsetY;
+  Position _preDragPointerPosition;
 
   final Set<String> _classNames = new Set<String>();
   final Set<String> _registeredDOMEvents = new Set<String>();
@@ -268,9 +267,7 @@ abstract class SvgNode extends NodeImpl {
     e.stopPropagation();
     _dragStarting = true;
 
-    var pointerPosition = this.stage.pointerPosition;
-    _dragOffsetX = pointerPosition.x - translateX / shell.scaleX;
-    _dragOffsetY = pointerPosition.y - translateY / shell.scaleY;
+    _preDragPointerPosition = this.stage.pointerPosition;
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
@@ -302,9 +299,9 @@ abstract class SvgNode extends NodeImpl {
         _dragStarted = true;
       }
       var pointerPosition = this.stage.pointerPosition;
-      translateX = (pointerPosition.x - this._dragOffsetX);
-      translateY = (pointerPosition.y - this._dragOffsetY);
-
+      translateX += pointerPosition.x - _preDragPointerPosition.x;
+      translateY += pointerPosition.y - _preDragPointerPosition.y;
+      _preDragPointerPosition = pointerPosition;
       shell.fire(dragMove, e);
     }
   }
@@ -402,6 +399,9 @@ abstract class SvgNode extends NodeImpl {
     }
 
     matrix = matrix.translate(translateX, translateY);
+    var cx = shell.x- translateX;
+    var cy = shell.y - translateY;
+    matrix = matrix.translate(-cx * (shell.scaleX - 1), -cy * (shell.scaleY - 1));
     matrix = matrix.scaleNonUniform(shell.scaleX, shell.scaleY);
     _setTransform(matrix);
   }
