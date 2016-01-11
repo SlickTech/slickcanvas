@@ -1,3 +1,7 @@
+##0.2.0+8
+* Fixed an issue here scale config does not applied.
+* Scale node at its origin.
+
 ##0.2.0+7
 * Add reflectable setter
 
