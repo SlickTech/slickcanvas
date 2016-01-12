@@ -139,6 +139,6 @@ class Text extends Node {
   @override
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x, y: pos.y - fontSize, width: this.width, height: this.height);
+    return new BBox(x: pos.x, y: pos.y - fontSize * scaleY, width: this.width * scaleX, height: this.height * scaleY);
   }
 }

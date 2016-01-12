@@ -10,7 +10,7 @@ abstract class NodeImpl {
 
   void remove();
 
-  LayerImpl get layer => shell.layer.impl;
+  LayerImpl get layer => shell.layer != null ? shell.layer.impl : null;
 
   Stage get stage => shell.stage;
 
@@ -50,4 +50,6 @@ abstract class NodeImpl {
 
   void set translateY(num value) { shell.translateY = value; }
   num get translateY => shell.translateY;
+
+  BBox getBBox(bool isAbsolute) => shell.getBBox(isAbsolute);
 }

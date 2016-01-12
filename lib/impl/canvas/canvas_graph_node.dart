@@ -27,9 +27,9 @@ abstract class CanvasGraphNode extends CanvasNode {
         _updateCache(true);
       } else {
         _tiles.forEach((tile) {
-          tile.nodeDirty(this.shell.getBBox(true));
+          tile.nodeDirty(this.getBBox(true));
         });
-        _oldBBox = shell.getBBox(true);
+        _oldBBox = this.getBBox(true);
       }
     });
 
@@ -87,9 +87,9 @@ abstract class CanvasGraphNode extends CanvasNode {
       _updateCache(dirty);
     } else {
       _tiles.forEach((tile) {
-        tile.nodeDirty(this.shell.getBBox(true));
+        tile.nodeDirty(this.getBBox(true));
       });
-      _oldBBox = shell.getBBox(true);
+      _oldBBox = this.getBBox(true);
     }
   }
 
@@ -100,9 +100,9 @@ abstract class CanvasGraphNode extends CanvasNode {
       _strokeGraph();
     }
     _tiles.forEach((tile) {
-      tile.nodeDirty(this.shell.getBBox(true));
+      tile.nodeDirty(this.getBBox(true));
     });
-    _oldBBox = shell.getBBox(true);
+    _oldBBox = this.getBBox(true);
   }
 
   void _drawGraph(dom.CanvasRenderingContext2D context) {
@@ -149,7 +149,7 @@ abstract class CanvasGraphNode extends CanvasNode {
 
   void _updateTiles() {
     var newTiles = [];
-    var bbox = this.shell.getBBox(true);
+    var bbox = this.getBBox(true);
     layer._tiles.forEach((tile) {
       if (bbox.left <= (tile.x + tile.width) &&
       bbox.right >= tile.x &&
@@ -157,16 +157,16 @@ abstract class CanvasGraphNode extends CanvasNode {
       bbox.bottom >= tile.y) {
         if (!tile.children.contains(this)) {
           tile.addChild(this);
-          tile.nodeDirty(this.shell.getBBox(true));
+          tile.nodeDirty(this.getBBox(true));
         }
         newTiles.add(tile);
       } else if (tile.children.contains(this)) {
         tile.children.remove(this);
-        tile.nodeDirty(this.shell.getBBox(true));
+        tile.nodeDirty(this.getBBox(true));
       }
     });
     this._tiles = newTiles;
-    _oldBBox = shell.getBBox(true);
+    _oldBBox = this.getBBox(true);
   }
 
   void draw(num offsetX, num offsetY, dom.CanvasRenderingContext2D context) {

@@ -17,7 +17,12 @@ class Ellipse extends Node {
   @override
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x - rx, y: pos.y - ry, width: this.width, height: this.height);
+    return new BBox(
+      x: pos.x - rx * scaleX,
+      y: pos.y - ry * scaleY,
+      width: width * scaleX,
+      height: height * scaleY
+    );
   }
 
   void set rx(num value) => setAttribute(RX, value);

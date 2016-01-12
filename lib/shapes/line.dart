@@ -39,7 +39,11 @@ class Line extends Node {
   @override
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x + min(x1, x2), y: pos.y + min(y1, y2),
-    width: (x1 - x2).abs(), height: (y1 - y2).abs());
+    return new BBox(
+      x: pos.x + min(x1, x2) * scaleX,
+      y: pos.y + min(y1, y2) * scaleY - (strokeWidth / 2)* scaleY,
+      width: (x1 - x2).abs() * scaleX,
+      height: ((y1 - y2).abs() + strokeWidth)* scaleY
+    );
   }
 }

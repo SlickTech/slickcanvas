@@ -23,7 +23,6 @@ class CanvasRect extends CanvasGraphNode {
 
     // arcTo would be nicer, but browser support is patchy (Opera)
     _cacheContext.beginPath();
-    _cacheContext.scale(shell.scaleX, shell.scaleY);
     _cacheContext.moveTo(shell.rx.toDouble(), 0);
     _cacheContext.lineTo((width - shell.rx).toDouble(), 0);
     _cacheContext.arc(width - shell.rx, shell.ry, shell.ry, PI * 3 / 2, 0, false);
@@ -39,7 +38,6 @@ class CanvasRect extends CanvasGraphNode {
   @override
   void __drawGraph(dom.CanvasRenderingContext2D context) {
     context.beginPath();
-    _cacheContext.scale(shell.scaleX, shell.scaleY);
     context.rect(0, 0, width, height);
     context.closePath();
   }

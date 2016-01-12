@@ -172,7 +172,7 @@ abstract class Node extends NodeBase {
 
   BBox getBBox(bool isAbsolute) {
     var pos = isAbsolute ? this.absolutePosition : this.position;
-    return new BBox(x: pos.x, y: pos.y, width: this.width * scaleX, height: this.height * scaleY  );
+    return new BBox(x: pos.x, y: pos.y, width: this.width * scaleX, height: this.height * scaleY);
   }
 
   Position getRelativePosition(Node referenceParent) {

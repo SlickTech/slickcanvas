@@ -106,7 +106,7 @@ class CanvasTile extends NodeBase with Container<CanvasGraphNode> {
 
     children.forEach((node) {
       // only redraw node inside dirty ragion
-      var bbox = node.shell.getBBox(true);
+      var bbox = node.getBBox(true);
       if (bbox.left <= right &&
       bbox.right >= left &&
       bbox.top <= bottom &&
