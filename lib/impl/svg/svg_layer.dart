@@ -53,7 +53,7 @@ class SvgLayer extends SvgContainerNode implements LayerImpl {
   void resume() {
     if (_suspendRefCount > 0) {
       if (--_suspendRefCount == 0) {
-        var idx = this.shell.parent.children.indexOf(this.shell);
+        var idx = this.shell.stage.children.indexOf(this.shell);
         this.shell.stage.element.nodes[idx].replaceWith(this._element);
 
         this._defs.forEach((def) {
