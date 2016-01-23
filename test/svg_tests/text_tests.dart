@@ -30,7 +30,7 @@ class SvgTextTests {
       Y: 50,
       TEXT: 'Learning SmartCanvas is fun.',
       WIDTH: 80,
-      NO_WRAP: false,
+      WRAP: true,
     });
     stage.addChild(text);
 

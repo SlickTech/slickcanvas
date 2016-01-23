@@ -1,3 +1,6 @@
+##0.2.1
+* implement resizable
+
 ##0.2.0+8
 * Fixed an issue here scale config does not applied.
 * Scale node at its origin.
