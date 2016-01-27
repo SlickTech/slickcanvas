@@ -1,4 +1,7 @@
-##0.2.1
+## 0.2.1+1
+* fix Circle BBox
+
+## 0.2.1
 * implement resizable
 
 ##0.2.0+8
