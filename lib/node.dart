@@ -156,7 +156,10 @@ abstract class Node extends NodeBase {
 
     if (!_isListening) {
       _isListening = isDomEvent(event);
-      if (_isListening && _parent != null) {
+
+      // Reflect the node if a dom event added
+      // and the node hasn't been reflected yet
+      if (_isListening && _parent != null && _reflection == null) {
         (_parent as Group)._reflectChild(this);
       }
     }
