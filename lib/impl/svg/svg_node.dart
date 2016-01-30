@@ -320,8 +320,8 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
       _implElement.style.removeProperty(name);
     }
 
-    // stop location checking timer
-    if (_locationCheckTimer != null) {
+    if (name == FILL && _locationCheckTimer != null) {
+      // Fill no longer a pattern or gradient, stop location check timer
       _locationCheckTimer.cancel();
       _locationCheckTimer = null;
     }
