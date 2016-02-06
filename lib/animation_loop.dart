@@ -5,12 +5,20 @@ enum AnimLoopStatus {
   stopped,
 }
 
+class AnimationLoopSubscriber {
+  final String id;
+  final bool repeat;
+  final Function callback;
+
+  AnimationLoopSubscriber(this.id, this.repeat, this.callback);
+}
+
 class AnimationLoop {
 
   static AnimationLoop _instance = null;
 
   AnimLoopStatus _loopStatus = AnimLoopStatus.stopped;
-  final Map<String, Function> _subscribers = {};
+  final Map<String, AnimationLoopSubscriber> _subscribers = {};
 
   static AnimationLoop get instance {
     if (_instance == null) {
@@ -32,19 +40,32 @@ class AnimationLoop {
 
   void onAnimationFrame(num timestamp) {
     if (_loopStatus == AnimLoopStatus.started) {
-      _subscribers.forEach((id, callback) {
-        callback(timestamp);
-      });
+      bool repeat = false;
+      List<AnimationLoopSubscriber> oneTimeSubscribers = [];
+      for (AnimationLoopSubscriber subscriber in _subscribers.values) {
+        subscriber.callback(timestamp);
 
-      dom.window.animationFrame.then(onAnimationFrame);
+        if (subscriber.repeat) {
+          repeat = true;
+          oneTimeSubscribers.add(subscriber);
+        }
+      };
+
+      for (AnimationLoopSubscriber subscriber in oneTimeSubscribers) {
+        unsubscribe(subscriber.id);
+      }
+
+      if (repeat) {
+        dom.window.animationFrame.then(onAnimationFrame);
+      }
     }
   }
 
-  void subscribe(String id, Function callback) {
+  void subscribe(String id, Function callback, {bool repeat: true}) {
     if (_subscribers.isEmpty) {
       _start();
     }
-    _subscribers[id] = callback;
+    _subscribers[id] = new AnimationLoopSubscriber(id, repeat, callback);
   }
 
   void unsubscribe(String id) {
