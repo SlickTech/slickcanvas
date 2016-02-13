@@ -47,6 +47,7 @@ class AnimationLoop {
 
         if (subscriber.repeat) {
           repeat = true;
+        } else {
           oneTimeSubscribers.add(subscriber);
         }
       };
