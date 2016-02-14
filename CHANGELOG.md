@@ -1,6 +1,11 @@
+## 0.2.1+3
+* Add repeat option to animation loop
+* Implement CanvasGroup
+* Fixed an issue where Canvas node still shows after remove.
+
 ## 0.2.1+2
 * Fixed an issue where a node lost fill pattern or gradient
-* Fix an issue where a node coulde reflected twice if the node is resizable and added a dom event later.
+* Fix an issue where a node could reflected twice if the node is resizable and added a dom event later.
 
 ## 0.2.1+1
 * fix Circle BBox
