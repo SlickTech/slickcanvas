@@ -2,13 +2,13 @@ part of smartcanvas.canvas;
 
 class CanvasPolyShape extends CanvasGraphNode {
 
-  CanvasPolyShape(shell):super(shell) {
-    this._useCache = true;
-  }
+  CanvasPolyShape(shell):super(shell);
 
   void _draw(dom.CanvasRenderingContext2D context) {
-    var points = shell.points;
-    var origin = shell.origin;
+    var ployShape = shell as PolyShape;
+
+    var points = ployShape.points;
+    var origin = ployShape.origin;
     var offsetX = origin.x - shell.x;
     var offsetY = origin.y - shell.y;
     for (int i = 0; i < points.length; i++) {
@@ -21,15 +21,13 @@ class CanvasPolyShape extends CanvasGraphNode {
   }
 
   @override
-  void _cacheGraph() {
-    _cacheContext.clearRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
-    _cacheContext.imageSmoothingEnabled = false;
-    _cacheContext.beginPath();
-
-    _draw(_cacheContext);
-
-//    _cacheContext.closePath();
+  void _drawGraph(dom.CanvasRenderingContext2D context) {
+    context.imageSmoothingEnabled = false;
+    context.beginPath();
+    _draw(context);
+    context.closePath();
   }
+
 
   @override
   dynamic getAttribute(String attr, [dynamic defaultValue]) {

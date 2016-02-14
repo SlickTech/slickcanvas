@@ -17,7 +17,7 @@ class SvgPolyline extends SvgPolyShape {
   @override
   bool _setElementAttribute(String attr) {
     if (attr == POINTS) {
-      _implElement.attributes[attr] = shell.pointsString;
+      _implElement.attributes[attr] = (shell as Polyline).pointsString;
       return false;
     }
     return super._setElementAttribute(attr);
@@ -25,13 +25,11 @@ class SvgPolyline extends SvgPolyShape {
 
   void set points(List<num> value) => setAttribute(POINTS, value);
 
-  List<num> get points => getAttribute(POINTS, []);
+  List<num> get points => getAttribute(POINTS, []) as List<num>;
 
   static const String _scPolyline = '__sc_polyline';
 
   @override
   String get _nodeName => _scPolyline;
 
-  @override
-  Polyline get shell => super.shell;
 }

@@ -23,7 +23,7 @@ abstract class SvgGradient extends SvgNode {
   }
 
   List<svg.StopElement> _getStopElements() {
-    var stopElements = [];
+    List<svg.StopElement> stopElements = [];
     stops.forEach((stop) {
       var stopEl = new svg.StopElement();
       stopEl.setAttribute(OFFSET, getValue(stop, OFFSET, '0%'));
@@ -41,5 +41,5 @@ abstract class SvgGradient extends SvgNode {
   }
 
   void set stops(List<Map<String, dynamic>> value) => setAttribute(STOPS, value);
-  List<Map<String, dynamic>> get stops => getAttribute(STOPS, []);
+  List<Map<String, dynamic>> get stops => getAttribute(STOPS, []) as List<Map<String, dynamic>>;
 }

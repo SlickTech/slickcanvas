@@ -6,8 +6,10 @@ class CanvasImage extends CanvasGraphNode {
 
   final List<Function> _pendingDrawings = [];
 
-  CanvasImage(Image shell): super(shell) {
-    _image = new dom.ImageElement(src: shell.href);
+  CanvasImage(Image shell)
+    : super(shell)
+    , _image = new dom.ImageElement(src: shell.href) {
+
     _image.onLoad.listen((e) {
       _imageReady = true;
       _pendingDrawings.forEach((func) => func());
@@ -16,11 +18,7 @@ class CanvasImage extends CanvasGraphNode {
   }
 
   @override
-  void _cacheGraph() {
-  }
-
-  @override
-  void __drawGraph(dom.CanvasRenderingContext2D context) {
+  void _drawGraph(dom.CanvasRenderingContext2D context) {
     if (_imageReady) {
       context.drawImage(_image, 0, 0);
 //      context.drawImage(_image, _image.clientWidth, _image.clientHeight);
@@ -35,7 +33,4 @@ class CanvasImage extends CanvasGraphNode {
       });
     }
   }
-
-  @override
-  Image get shell => super.shell;
 }

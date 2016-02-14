@@ -11,15 +11,17 @@ abstract class CanvasNode extends NodeImpl {
 
   @override
   void remove() {
-    if (parent != null) {
-      if (parent is CanvasLayer) {
-        layer._tiles.forEach((tile) {
-          if (tile.children.contains(this)) {
-            tile.children.remove(this);
-          }
-        });
+    var bbox = getBBox(true);
+    for (CanvasTile tile in _tiles) {
+      if (tile.children.contains(this)) {
+        tile.children.remove(this);
+        tile.nodeDirty(bbox);
+        tile.draw();
       }
-      (parent as Container).children.remove(this);
+    }
+
+    if (parent != null) {
+      (parent as Container).removeChild(this);
     }
     parent = null;
     this._tiles.clear();
@@ -29,5 +31,5 @@ abstract class CanvasNode extends NodeImpl {
   CanvasType get type => CanvasType.canvas;
 
   @override
-  CanvasLayer get layer => shell.layer.impl;
+  CanvasLayer get layer => (shell.layer)?.impl;
 }

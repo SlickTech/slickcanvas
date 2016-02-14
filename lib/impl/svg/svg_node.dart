@@ -97,7 +97,7 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
 
     if (_isReflection) {
       var types = getAttribute(CONTROLS);
-      var controlTypes = [];
+      List<ControlType> controlTypes = [];
       if (types != null && types is List<String>) {
         for (String type in types) {
           switch(type) {
@@ -147,7 +147,7 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
     }
 
     if (this is SvgGroup) {
-      for (var child in children) {
+      for (var child in (this as SvgGroup).children) {
         child._onReflectionComplete();
       }
     }
@@ -163,7 +163,8 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
   void _setClassName() {
     _classNames.add(_nodeName);
     if (shell.hasAttribute(CLASS)) {
-      _classNames.addAll(getAttribute(CLASS).split(space));
+      String className = getAttribute(CLASS);
+      _classNames.addAll(className.split(space));
     }
     setAttribute(CLASS, _classNames.join(space));
   }
@@ -506,7 +507,7 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
   }
 
   void showControlPoints([dom.MouseEvent e]) {
-    _controlGroup.children.forEach((svg.SvgElement el) {
+    _controlGroup.children.forEach((dom.Element el) {
       if (el.classes.contains(SvgControlPoint.csClassName)) {
         el.attributes.remove(DISPLAY);
       }
@@ -522,7 +523,7 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
       return;
     }
 
-    _controlGroup.children.forEach((svg.SvgElement el) {
+    _controlGroup.children.forEach((dom.Element el) {
       if (el.classes.contains(SvgControlPoint.csClassName)) {
         el.setAttribute(DISPLAY, 'none');
       }
@@ -557,7 +558,8 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
 
   @override
   BBox getBBox(bool isAbsolute) {
-    var bbx = hasControls ? _implElement.getBBox() : element.getBBox();
+    svg.GraphicsElement graphEl = hasControls ? _implElement : element;
+    var bbx = graphEl.getBBox();
 
     if (isAbsolute) {
       var absPos = shell.absolutePosition;
@@ -565,7 +567,7 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
     } else {
       return hasControls
         ? new BBox(x: shell.x, y: shell.y, width: bbx.width, height: bbx.height)
-        : bbox;
+        : new BBox(x: bbx.x, y: bbx.y, width: bbx.width, height: bbx.height);
     }
   }
 

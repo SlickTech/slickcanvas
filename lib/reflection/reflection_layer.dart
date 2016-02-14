@@ -3,10 +3,7 @@ part of smartcanvas;
 class _ReflectionLayer extends Layer {
 
   _ReflectionLayer([Map<String, dynamic> config = const {}])
-  : super(CanvasType.svg, merge(config, {
-    ID: '__reflection_layer',
-//    OPACITY: 0
-  }));
+    : super(CanvasType.svg, merge(config, { ID: '__reflection_layer'}));
 
   @override
   NodeImpl _createSvgImpl([bool isReflection = false]) => new SvgLayer(this, true);

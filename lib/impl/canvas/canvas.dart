@@ -11,6 +11,7 @@ part 'canvas_node.dart';
 part 'canvas_layer.dart';
 part 'canvas_tile.dart';
 part 'canvas_graph_node.dart';
+part 'canvas_group.dart';
 
 part 'shapes/canvas_rect.dart';
 part 'shapes/canvas_circle.dart';

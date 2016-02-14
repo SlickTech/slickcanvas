@@ -111,9 +111,9 @@ class CanvasTile extends NodeBase with Container<CanvasGraphNode> {
       bbox.right >= left &&
       bbox.top <= bottom &&
       bbox.bottom >= top) {
-        _context.save();
+//        _context.save();
         node.draw(this.x, this.y, _context);
-        _context.restore();
+//        _context.restore();
       }
     });
     _context.restore();
@@ -181,5 +181,5 @@ class CanvasTile extends NodeBase with Container<CanvasGraphNode> {
 
   num get height => getAttribute(HEIGHT, MAX_HEIGHT);
 
-  bool get dirty => _dirty;
+  bool get isDirty => _dirty;
 }

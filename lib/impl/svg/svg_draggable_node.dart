@@ -47,18 +47,18 @@ class SvgDraggable {
 
     if (_dragMoveHandler == null) {
       if (_isMobile) {
-        _dragMoveHandler = _node.stage.element.onTouchMove.listen(_dragMove);
+        _dragMoveHandler = _node.stage.element.onTouchMove.listen(_touchDragMove);
       } else {
-        _dragMoveHandler = _node.stage.element.onMouseMove.listen(_dragMove);
+        _dragMoveHandler = _node.stage.element.onMouseMove.listen(_mouseDragMove);
       }
     }
     _dragMoveHandler.resume();
 
     if (_dragEndHandler == null) {
       if (_isMobile) {
-        _dragEndHandler = _node.stage.element.onTouchEnd.listen(_dragEnd);
+        _dragEndHandler = _node.stage.element.onTouchEnd.listen(_touchDragEnd);
       } else {
-        _dragEndHandler = _node.stage.element.onMouseUp.listen(_dragEnd);
+        _dragEndHandler = _node.stage.element.onMouseUp.listen(_mouseDragEnd);
       }
     }
     _dragEndHandler.resume();
@@ -70,7 +70,10 @@ class SvgDraggable {
     _preDragPointerPosition = _node.stage.pointerPosition;
   }
 
-  void _dragMove(dom.MouseEvent e) {
+  void _mouseDragMove(dom.MouseEvent e) => _dragMove(e);
+  void _touchDragMove(dom.TouchEvent e) => _dragMove(e);
+
+  void _dragMove(e) {
     if (_dragStarting) {
       e.preventDefault();
       e.stopPropagation();
@@ -97,6 +100,9 @@ class SvgDraggable {
     _node.translate(_node.translateX + diffX, _node.translateY + diffY);
     return true;
   }
+
+  void _touchDragEnd(dom.TouchEvent e) => _dragEnd(e);
+  void _mouseDragEnd(dom.MouseEvent e) => _dragEnd(e);
 
   void _dragEnd([e]) {
     if (e != null) {

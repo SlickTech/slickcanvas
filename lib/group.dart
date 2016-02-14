@@ -47,7 +47,14 @@ class Group extends ContainerNode {
 
   @override
   NodeImpl _createCanvasImpl() {
-    throw ExpNotImplemented;
+    var impl = new CanvasGroup(this);
+    for (Node node in children) {
+      if (node.impl == null || node._impl.type != CanvasType.canvas) {
+        node._impl = node._createCanvasImpl();
+      }
+      impl.addChild(node._impl);
+    }
+    return impl;
   }
 
   @override
@@ -66,12 +73,12 @@ class Group extends ContainerNode {
     }
     return false;
   }
-
-  List get _defs {
-    var defs = [];
-    children.forEach((child) {
-      defs.addAll(child._defs);
-    });
-    return defs;
-  }
+//
+//  List get _defs {
+//    var defs = [];
+//    children.forEach((child) {
+//      defs.addAll(child._defs);
+//    });
+//    return defs;
+//  }
 }

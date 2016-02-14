@@ -16,22 +16,23 @@ class SvgText extends SvgNode {
     return text;
   }
 
-  void _updateTextContent(svg.TextElement text) {
-    text.nodes.clear();
+  void _updateTextContent(svg.TextElement el) {
+    el.nodes.clear();
 
-    var parts = shell.partsOfWrappedText();
+    var text = shell as Text;
+    var parts = text.partsOfWrappedText();
+    var splitter = text.wordSplitter;
+    var fontSize = text.fontSize;
 
-    var preTspan;
     for (num i = 0; i < parts.length; ++i) {
       if (i == 0) {
-        text.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSplitter));
+        el.appendText(parts[i] + (i == parts.length - 1 ? '' : splitter));
       } else {
         svg.TSpanElement tspan = new svg.TSpanElement();
-        tspan.appendText(parts[i] + (i == parts.length - 1 ? '' : shell.wordSplitter));
+        tspan.appendText(parts[i] + (i == parts.length - 1 ? '' : splitter));
         tspan.setAttribute('x', '0');
-        tspan.setAttribute('dy', '${shell.fontSize}');
-        text.append(tspan);
-        preTspan = tspan;
+        tspan.setAttribute('dy', '${fontSize}');
+        el.append(tspan);
       }
     }
   }
@@ -45,12 +46,13 @@ class SvgText extends SvgNode {
 
   @override
   void _setElementStyles() {
+    var text = shell as Text;
     super._setElementStyles();
-    _implElement.style.setProperty(FONT_SIZE, '${shell.fontSize}px');
-    _implElement.style.setProperty(FONT_FAMILY, '${shell.fontFamily}');
-    _implElement.style.setProperty(FONT_WEIGHT, '${shell.fontWeight}');
-    _implElement.style.setProperty(FONT_STYLE, '${shell.fontStyle}');
-    _implElement.style.setProperty(TEXT_ANCHOR, '${shell.textAnchor}');
+    _implElement.style.setProperty(FONT_SIZE, '${text.fontSize}px');
+    _implElement.style.setProperty(FONT_FAMILY, '${text.fontFamily}');
+    _implElement.style.setProperty(FONT_WEIGHT, '${text.fontWeight}');
+    _implElement.style.setProperty(FONT_STYLE, '${text.fontStyle}');
+    _implElement.style.setProperty(TEXT_ANCHOR, '${text.textAnchor}');
   }
 
   @override
@@ -74,6 +76,4 @@ class SvgText extends SvgNode {
   @override
   String get _nodeName => _scText;
 
-  @override
-  Text get shell => super.shell;
 }

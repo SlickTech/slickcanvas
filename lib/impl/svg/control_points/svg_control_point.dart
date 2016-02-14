@@ -6,11 +6,7 @@ enum ControlType {
 
 abstract class SvgControlPoint extends Object with SvgDraggable {
   final svg.GElement _controlGroup;
-  final Node _node;
-  final svg.RectElement _element = new svg.RectElement();
   final ControlType _type;
-
-  Position _dragPositionCache;
 
   static const size = 8;
   static const csClassName = '__svg_control_point';
@@ -38,7 +34,9 @@ abstract class SvgControlPoint extends Object with SvgDraggable {
     }
   }
 
-  SvgControlPoint(this._controlGroup, this._node, this._type, SvgNode reflection) {
+  SvgControlPoint(this._controlGroup, Node node, this._type, SvgNode reflection) {
+
+    initDraggable(node, new svg.RectElement());
 
     _element.attributes.addAll({
       WIDTH: '$size',
@@ -57,7 +55,6 @@ abstract class SvgControlPoint extends Object with SvgDraggable {
       ..onMouseOut.listen(_onMouseOut)
     ;
 
-    initDraggable(_node, _element);
     enableDragging();
 
     _node.on([scaleXChanged, scaleYChanged, scaleChanged, resize], updatePosition);
@@ -73,11 +70,12 @@ abstract class SvgControlPoint extends Object with SvgDraggable {
       pos.y + bbx.y * resizeScaleY
     );
 
-    var tr = _element.transform.baseVal.createSvgTransformFromMatrix(matrix);
-    if (_element.transform.baseVal.numberOfItems == 0) {
-      _element.transform.baseVal.appendItem(tr);
+    var graphEl = (_element as svg.GraphicsElement);
+    var tr = graphEl.transform.baseVal.createSvgTransformFromMatrix(matrix);
+    if (graphEl.transform.baseVal.numberOfItems == 0) {
+      graphEl.transform.baseVal.appendItem(tr);
     } else {
-      _element.transform.baseVal.replaceItem(tr, 0);
+      graphEl.transform.baseVal.replaceItem(tr, 0);
     }
   }
 

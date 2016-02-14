@@ -16,31 +16,19 @@ class _EllipticalArcParam {
 
 class CanvasPath extends CanvasGraphNode {
 
-  CanvasPath(Path shell): super(shell) {
-    this._useCache = true;
-  }
+  CanvasPath(Path shell): super(shell);
 
   @override
-  void _cacheGraph() {
-    _cacheContext.clearRect(0, 0, _cacheCanvas.width, _cacheCanvas.height);
+  void _drawGraph(dom.CanvasRenderingContext2D context) {
     var currentAbsPos = new Position(x: shell.x, y: shell.y);
-    _cacheContext.beginPath();
     List<Map<svg.PathSeg, Position>> preSegs = [];
-    shell.pathSeg.forEach((svg.PathSeg seg) {
-      _drawSeg(_cacheContext, seg, preSegs, currentAbsPos);
-      preSegs.add({seg: new Position(x: currentAbsPos.x, y: currentAbsPos.y)});
-    });
-  }
 
-  @override
-  void __drawGraph(dom.CanvasRenderingContext2D context) {
-    var currentAbsPos = new Position(x: shell.x, y: shell.y);
     context.beginPath();
-    List<Map<svg.PathSeg, Position>> preSegs = [];
     shell.pathSeg.forEach((svg.PathSeg seg) {
       _drawSeg(context, seg, preSegs, currentAbsPos);
       preSegs.add({seg: currentAbsPos});
     });
+    context.closePath();
   }
 
   void _drawSeg(dom.CanvasRenderingContext2D context, svg.PathSeg seg, List<Map<svg.PathSeg, Position>> preSegs,
@@ -492,6 +480,5 @@ class CanvasPath extends CanvasGraphNode {
     }
   }
 
-  @override
-  Path get shell => super.shell;
+  Path get path => shell as Path;
 }

@@ -27,7 +27,7 @@ class Path extends Node {
   NodeImpl _createCanvasImpl() => new CanvasPath(this);
 
   List<svg.PathSeg> get pathSeg {
-    var el = _svgImpl.element;
+    svg.PathElement el = _svgImpl.element;
     if (el is svg.GElement) {
       // impl's reflection has control points
       el = el.children[0];

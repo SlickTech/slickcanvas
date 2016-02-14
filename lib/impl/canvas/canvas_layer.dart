@@ -21,7 +21,8 @@ class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements 
   void _setClassName() {
     _classNames.add(_scCanvas);
     if (shell.hasAttribute(CLASS)) {
-      _classNames.addAll(getAttribute(CLASS).split(space));
+      String className = getAttribute(CLASS);
+      _classNames.addAll(className.split(space));
     }
     setAttribute(CLASS, _classNames.join(space));
   }
@@ -135,7 +136,7 @@ class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements 
   }
 
   void addChild(CanvasGraphNode node) {
-    if (children.isEmpty && stage != null) {
+    if (children.isEmpty) {
       AnimationLoop.instance.subscribe(shell.uid.toString(), _draw);
     }
 
@@ -155,9 +156,14 @@ class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements 
   }
 
   void removeChild(CanvasNode node) {
+    var bbox = node.getBBox(true);
+    var dirtyTiles = [];
+
     _tiles.forEach((tile) {
       if (tile.children.contains(node)) {
         tile.children.remove(node);
+        tile.nodeDirty(bbox);
+        dirtyTiles.add(tile);
       }
     });
 
@@ -166,6 +172,9 @@ class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements 
 
     if (children.isEmpty) {
       AnimationLoop.instance.unsubscribe(shell.uid.toString());
+      for (CanvasTile tile in dirtyTiles) {
+        tile.draw();
+      }
     }
   }
 
@@ -203,8 +212,7 @@ class CanvasLayer extends CanvasNode with Container<CanvasGraphNode> implements 
     parent = null;
   }
 
-  void translate() {
-  }
+  void translate() {}
 
   dom.Element get element => _element;
 

@@ -106,7 +106,7 @@ class Text extends Node {
   /**
    * get font.
    */
-  String get font => '$fontSize' + PX_SPACE + fontFamily;
+  String get font => '${fontStyle} ${fontSize}px ${fontFamily}';
 
   /**
    * set/get padding
