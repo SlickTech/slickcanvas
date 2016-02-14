@@ -24,7 +24,7 @@ class CanvasPath extends CanvasGraphNode {
     List<Map<svg.PathSeg, Position>> preSegs = [];
 
     context.beginPath();
-    shell.pathSeg.forEach((svg.PathSeg seg) {
+    path.pathSeg.forEach((svg.PathSeg seg) {
       _drawSeg(context, seg, preSegs, currentAbsPos);
       preSegs.add({seg: currentAbsPos});
     });

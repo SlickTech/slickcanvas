@@ -7,8 +7,8 @@ class CanvasImage extends CanvasGraphNode {
   final List<Function> _pendingDrawings = [];
 
   CanvasImage(Image shell)
-    : super(shell)
-    , _image = new dom.ImageElement(src: shell.href) {
+    : _image = new dom.ImageElement(src: shell.href)
+    , super(shell) {
 
     _image.onLoad.listen((e) {
       _imageReady = true;

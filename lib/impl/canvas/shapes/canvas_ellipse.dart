@@ -5,13 +5,15 @@ class CanvasEllipse extends CanvasGraphNode {
 
   @override
   void _drawGraph(dom.CanvasRenderingContext2D context) {
+    var ellipse = shell as Ellipse;
+
     context.beginPath();
-    if (shell.rx != shell.ry) {
+    if (ellipse.rx != ellipse.ry) {
       context.save();
-      context.scale(1, shell.ry / shell.rx);
+      context.scale(1, ellipse.ry / ellipse.rx);
       context.restore();
     }
-    context.arc(0, 0, shell.rx, 0, PI * 2, false);
+    context.arc(0, 0, ellipse.rx, 0, PI * 2, false);
     context.closePath();
   }
 }

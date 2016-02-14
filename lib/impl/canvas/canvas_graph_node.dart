@@ -172,7 +172,7 @@ abstract class CanvasGraphNode extends CanvasNode {
         }
         this._tiles = newTiles;
       } else {
-        parent._updateTiles();
+        (parent as CanvasGraphNode)._updateTiles();
       }
     }
   }

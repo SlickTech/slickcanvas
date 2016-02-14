@@ -5,9 +5,10 @@ class CanvasLine extends CanvasGraphNode {
 
   @override
   void _drawGraph(dom.CanvasRenderingContext2D context) {
+    var line = shell as Line;
     context.beginPath();
-    context.moveTo(shell.x1, shell.y1);
-    context.lineTo(shell.x2, shell.y2);
+    context.moveTo(line.x1, line.y1);
+    context.lineTo(line.x2, line.y2);
     context.closePath();
   }
 }
