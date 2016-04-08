@@ -8,17 +8,18 @@ abstract class PolyShape extends Node {
     this
       ..on('translateXChanged translateYChanged', () => _bbox = null)
       ..on('pointsChanged', () {
-      _bbox = null;
-      _points = null;
+        _bbox = null;
+        _points = null;
     });
   }
 
   @override
   BBox getBBox(bool isAbsolute) {
     _getBBox();
+    var pos = isAbsolute ? absolutePosition : position;
     return new BBox(
-      x: this.x,
-      y: this.y,
+      x: pos.x + _bbox.x,
+      y: pos.y + _bbox.y,
       width: _bbox.width * actualScaleX,
       height: _bbox.height * actualScaleY
     );
@@ -37,7 +38,6 @@ abstract class PolyShape extends Node {
         minY = min(minY, points[i].y);
         maxY = max(maxY, points[i].y);
       }
-      var halfStrokeWidth = strokeWidth / 2;
       _bbox = new BBox(
         x: minX,
         y: minY,

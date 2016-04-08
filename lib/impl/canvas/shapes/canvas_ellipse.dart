@@ -17,4 +17,3 @@ class CanvasEllipse extends CanvasGraphNode {
     context.closePath();
   }
 }
-

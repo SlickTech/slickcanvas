@@ -64,9 +64,11 @@ class Path extends Node {
       }
       return _bbox;
     }
+
+    var pos = isAbsolute ? absolutePosition : position;
     return new BBox(
-      x: this.x,
-      y: this.y,
+      x: pos.x,
+      y: pos.y,
       width: getAttribute(WIDTH, 0) * actualScaleX,
       height: getAttribute(HEIGHT, 0) * actualScaleY
     );
