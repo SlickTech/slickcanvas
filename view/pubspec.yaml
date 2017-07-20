@@ -1,0 +1,11 @@
+name: slickcanvas_view
+version: 0.0.1
+authors: SlickCanvas Author(s)
+description: A flexible framework for HTML5 Canvas, SVG and WebGL.
+homepage: http://www.slickcanvas.org
+dependencies:
+  slickcanvas_core:
+    path: ../core
+
+dev_dependencies:
+  test:

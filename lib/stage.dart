@@ -9,16 +9,20 @@ class Stage extends NodeBase with Container<Node> {
   final CanvasType _defaultLayerType;
 
   Position _pointerPosition;
+  Position _pointerScreenPosition;
+
   bool _dragStarting = false;
   bool _dragging = false;
   bool _dragStarted = false;
   Position _preDragPointerPosition;
+  final AnimationLoop _animLoop = new AnimationLoop();
+
   final TransformMatrix _transformMatrix = new TransformMatrix();
 
-  Stage(this._container, {Map<String, dynamic> config: const {}, defaultLayerType: CanvasType.svg})
-  : _defaultLayerType = defaultLayerType
-  , super(config) {
-
+  Stage(this._container,
+      {Map<String, dynamic> config: const {}, defaultLayerType: CanvasType.svg})
+      : _defaultLayerType = defaultLayerType,
+        super(config) {
     _populateConfig(config);
     _createElement();
 
@@ -33,7 +37,9 @@ class Stage extends NodeBase with Container<Node> {
     }
 
     if (isStatic == false) {
-      _reflectionLayer = new _ReflectionLayer({WIDTH: this.width, HEIGHT: this.height});
+      _reflectionLayer =
+          new _ReflectionLayer({WIDTH: this.width, HEIGHT: this.height});
+
       _reflectionLayer.stage = this;
       children.add(_reflectionLayer);
       _element.nodes.add(_reflectionLayer.impl.element);
@@ -46,6 +52,10 @@ class Stage extends NodeBase with Container<Node> {
     _element.onMouseLeave.listen(_setPointerPosition);
     _element.onMouseOver.listen(_setPointerPosition);
     _element.onMouseOut.listen(_setPointerPosition);
+    _element.onMouseOver.listen((e) {
+      _setPointerPosition(e);
+      fire(canvasMouseOver);
+    });
 
     this.on('draggableChanged', (newValue) {
       if (!newValue) {
@@ -130,9 +140,9 @@ class Stage extends NodeBase with Container<Node> {
   void _setPointerPosition(e) {
     var elementClientRect = _element.getBoundingClientRect();
     var x = (e.client.x - elementClientRect.left) / _transformMatrix.scaleX -
-      _transformMatrix.translateX;
+        _transformMatrix.translateX;
     var y = (e.client.y - elementClientRect.top) / _transformMatrix.scaleY -
-      _transformMatrix.translateY;
+        _transformMatrix.translateY;
     this._pointerPosition = new Position(x: x, y: y);
   }
 
@@ -140,7 +150,7 @@ class Stage extends NodeBase with Container<Node> {
     if (_pointerPosition != null) {
       var factor = oldScaleX / newScaleX;
       _pointerPosition.x = _pointerPosition.x * factor +
-        _transformMatrix.translateX * (factor - 1);
+          _transformMatrix.translateX * (factor - 1);
     }
   }
 
@@ -148,17 +158,19 @@ class Stage extends NodeBase with Container<Node> {
     if (_pointerPosition != null) {
       var factor = oldScaleY / newScaleY;
       _pointerPosition.y = _pointerPosition.y * factor +
-        _transformMatrix.translateY * (factor - 1);
+          _transformMatrix.translateY * (factor - 1);
     }
   }
 
-  void _updatePointerPositionXFromTranslateXChange(num newTransX, num oldTransX) {
+  void _updatePointerPositionXFromTranslateXChange(
+      num newTransX, num oldTransX) {
     if (_pointerPosition != null) {
       _pointerPosition.x += oldTransX - newTransX;
     }
   }
 
-  void _updatePointerPositionYFromTranslateYChange(num newTransY, num oldTransY) {
+  void _updatePointerPositionYFromTranslateYChange(
+      num newTransY, num oldTransY) {
     if (_pointerPosition != null) {
       _pointerPosition.y += oldTransY - newTransY;
     }
@@ -191,11 +203,8 @@ class Stage extends NodeBase with Container<Node> {
       }
     } else {
       if (_defaultLayer == null) {
-        _defaultLayer = new Layer(this._defaultLayerType, {
-          ID: '__default_layer',
-          WIDTH: width,
-          HEIGHT: height
-        });
+        _defaultLayer = new Layer(this._defaultLayerType,
+            {ID: '__default_layer', WIDTH: width, HEIGHT: height});
         addChild(_defaultLayer);
       }
       _defaultLayer.addChild(node);
@@ -265,10 +274,8 @@ class Stage extends NodeBase with Container<Node> {
       _dragStarted = true;
     }
 
-    translate(
-      translateX + _pointerPosition.x - _preDragPointerPosition.x,
-      translateY + _pointerPosition.y - _preDragPointerPosition.y
-    );
+    translate(translateX + _pointerPosition.x - _preDragPointerPosition.x,
+        translateY + _pointerPosition.y - _preDragPointerPosition.y);
     _preDragPointerPosition = _pointerPosition;
     fire(dragMove, e);
   }

@@ -1,47 +1,47 @@
-part of smartcanvas;
+import 'dart:html' as dom;
 
-enum AnimLoopStatus {
+enum _AnimationFrameStatus {
   started,
   stopped,
 }
 
-class AnimationLoopSubscriber {
+class AnimationFrameSubscriber {
   final String id;
   final bool repeat;
   final Function callback;
 
-  AnimationLoopSubscriber(this.id, this.repeat, this.callback);
+  AnimationFrameSubscriber(this.id, this.repeat, this.callback);
 }
 
-class AnimationLoop {
+class AnimationFrame {
 
-  static AnimationLoop _instance = null;
+  static AnimationFrame _instance = null;
 
-  var _loopStatus = AnimLoopStatus.stopped;
+  var _loopStatus = _AnimationFrameStatus.stopped;
   var _inAnimFrame = false;
 
-  final _subscribers = <String, AnimationLoopSubscriber> {};
-  final _pendingAddSubscribers = <String, AnimationLoopSubscriber> {};
+  final _subscribers = <String, AnimationFrameSubscriber> {};
+  final _pendingAddSubscribers = <String, AnimationFrameSubscriber> {};
   final _pendingRemoveSubscribers = new Set<String>();
 
-  factory AnimationLoop() {
+  factory AnimationFrame() {
     if (_instance == null) {
-      _instance = new AnimationLoop._internal();
+      _instance = new AnimationFrame._constructor();
     }
     return _instance;
   }
 
-  AnimationLoop._internal();
+  AnimationFrame._constructor();
 
   void _start() {
-    if (_loopStatus != AnimLoopStatus.started) {
-      _loopStatus = AnimLoopStatus.started;
+    if (_loopStatus != _AnimationFrameStatus.started) {
+      _loopStatus = _AnimationFrameStatus.started;
       dom.window.animationFrame.then(onAnimationFrame);
     }
   }
 
   void _stop() {
-    _loopStatus = AnimLoopStatus.stopped;
+    _loopStatus = _AnimationFrameStatus.stopped;
   }
 
   void onAnimationFrame(num timestamp) {
@@ -55,10 +55,10 @@ class AnimationLoop {
       return;
     }
 
-    if (_loopStatus == AnimLoopStatus.started) {
+    if (_loopStatus == _AnimationFrameStatus.started) {
 
       var repeat = false;
-      var oneTimeSubscribers = <AnimationLoopSubscriber> [];
+      var oneTimeSubscribers = <AnimationFrameSubscriber> [];
 
       _inAnimFrame = true;
 
@@ -82,7 +82,7 @@ class AnimationLoop {
         dom.window.animationFrame.then(onAnimationFrame);
       }
 
-      _pendingAddSubscribers.forEach((String id, AnimationLoopSubscriber subscriber) {
+      _pendingAddSubscribers.forEach((String id, AnimationFrameSubscriber subscriber) {
         _subscribers[id] = subscriber;
       });
     }
@@ -94,9 +94,9 @@ class AnimationLoop {
     }
 
     if (_inAnimFrame) {
-      _pendingAddSubscribers[id] = new AnimationLoopSubscriber(id, repeat, callback);
+      _pendingAddSubscribers[id] = new AnimationFrameSubscriber(id, repeat, callback);
     } else {
-      _subscribers[id] = new AnimationLoopSubscriber(id, repeat, callback);
+      _subscribers[id] = new AnimationFrameSubscriber(id, repeat, callback);
     }
   }
 

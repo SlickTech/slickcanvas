@@ -1,0 +1,14 @@
+name: slickcanvas
+version: 0.0.1
+authors: SlickCanvas Author(s)
+description: A flexible framework for HTML5 Canvas, SVG and WebGL.
+homepage: http://www.slickcanvas.org
+dependencies:
+  slickcanvas_core:
+    path: ../core
+dev_dependencies:
+  browser: any
+  test: any
+transformers:
+- test/pub_serve:
+    $include: test/test.dart, test/**_test{.*,}.dart

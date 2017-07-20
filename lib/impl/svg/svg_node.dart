@@ -5,7 +5,6 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
   svg.GElement _controlGroup;
   svg.SvgElement _implElement;
 
-  final Set<String> _classNames = new Set<String>();
   final Set<String> _registeredDOMEvents = new Set<String>();
 
   static final List<ControlType> _resizableControlTypes = [
@@ -24,8 +23,6 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
   num _controlGroupY0 = 0;
 
   SvgNode(Node shell, this._isReflection) : super(shell) {
-
-    _setClassName();
 
     _implElement = _createElement();
 
@@ -159,15 +156,6 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
   svg.SvgElement get element => _controlGroup != null ? _controlGroup : _implElement;
 
   svg.SvgElement _createElement();
-
-  void _setClassName() {
-    _classNames.add(_nodeName);
-    if (shell.hasAttribute(CLASS)) {
-      String className = getAttribute(CLASS);
-      _classNames.addAll(className.split(space));
-    }
-    setAttribute(CLASS, _classNames.join(space));
-  }
 
   Set<String> _getElementAttributeNames() => new Set<String>.from([ID, CLASS]);
 
@@ -315,6 +303,9 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
 
       if (name == STROKE_WIDTH) {
         value /= max(shell.actualScaleX, shell.actualScaleY);
+      } else if (name == OPACITY && _isReflection) {
+        // reflection opacity should always 0
+        return;
       }
       _implElement.style.setProperty(name, '${value}');
     } else {
@@ -405,8 +396,6 @@ abstract class SvgNode extends NodeImpl with SvgDraggable {
         _updateDef(attr, newValue);
       }
       _setElementStyle(attr);
-    } else if (attr == CLASS) {
-      _setClassName();
     } else {
       // apply attribute change to svg element
       var elementAttr = _mapToElementAttr(attr);

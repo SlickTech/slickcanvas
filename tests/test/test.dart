@@ -1,10 +1,10 @@
 library smartcanvas.test;
 
-@TestOn("brower")
+@TestOn("browser")
 
 import 'package:test/test.dart';
 import 'dart:html' as dom;
-import 'package:smartcanvas/smartcanvas.dart';
+import 'package:slickcanvas/smartcanvas.dart';
 import './svg_tests/svg_tests.dart';
 import './canvas_tests/canvas_tests.dart';
 
