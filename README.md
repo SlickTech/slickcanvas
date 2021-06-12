@@ -1,4 +1,4 @@
-#SlickCanvas for Dart
+# SlickCanvas for Dart
 
 SlickCanvas is a dart framework support both SVG and HTML5 Canvas through a unified API.
 
@@ -18,4 +18,4 @@ the ability to create SVG/HTML5 Canvas hybrid applications. SmartCanvas pushs pe
 in high priority, through a innovative method, SmartCanvas can create HTML5 canvas application
 for big screen.
 
-#Tutorial
+# Tutorial
